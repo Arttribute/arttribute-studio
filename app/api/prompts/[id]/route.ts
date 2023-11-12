@@ -1,4 +1,4 @@
-const API_KEY = "sd_wCUBhVtKdcA31jRAAedy7py5Vv4yrF";
+const API_KEY = process.env.ASTRIA_API_KEY;
 
 export async function GET(request: Request) {
   console.log("get request");
