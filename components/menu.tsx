@@ -1,3 +1,4 @@
+"use client";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -16,8 +17,17 @@ import {
 } from "@/components/ui/menubar";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import ConnectButton from "./connect-button";
 
 export function Menu() {
+  const [account, setAccount] = useState<string | null>(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setAccount(user);
+  }, [account]);
+
   return (
     <div className="fixed top-0 left-0 right-0 z-10">
       <Menubar className="rounded-none border-b border-none px-2 lg:px-4">
@@ -181,22 +191,31 @@ export function Menu() {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger className="hidden md:block">Account</MenubarTrigger>
-          <MenubarContent forceMount>
-            <MenubarLabel inset>Switch Account</MenubarLabel>
-            <MenubarSeparator />
-            <MenubarRadioGroup value="benoit">
-              <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
-              <MenubarRadioItem value="benoit">Benoit</MenubarRadioItem>
-              <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
-            </MenubarRadioGroup>
-            <MenubarSeparator />
-            <MenubarItem inset>Manage Famliy...</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem inset>Add Account...</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
+        {account ? (
+          <>
+            <MenubarMenu>
+              <MenubarTrigger className="hidden md:block">
+                Account
+              </MenubarTrigger>
+              <MenubarContent forceMount>
+                <MenubarLabel inset>Switch Account</MenubarLabel>
+                <MenubarSeparator />
+                <MenubarRadioGroup value="benoit">
+                  <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
+                  <MenubarRadioItem value="benoit">Benoit</MenubarRadioItem>
+                  <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
+                </MenubarRadioGroup>
+                <MenubarSeparator />
+                <MenubarItem inset>Manage Famliy...</MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem inset>Add Account...</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+            <ConnectButton action="Disconnect" setAccount={setAccount} />
+          </>
+        ) : (
+          <ConnectButton action="Connect" setAccount={setAccount} />
+        )}
       </Menubar>
     </div>
   );
