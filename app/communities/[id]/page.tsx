@@ -1,27 +1,21 @@
-import { Metadata } from "next"
-import Image from "next/image"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { Metadata } from "next";
+import Image from "next/image";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CollectionArtwork } from "../components/collection-artwork"
-import { Menu } from "../components/menu"
-import { Sidebar } from "../components/sidebar"
-import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
-import { playlists } from "../data/playlists"
+import { CollectionArtwork } from "../../../components/collection-artwork";
+import { Menu } from "../../../components/menu";
+import { Sidebar } from "../../../components/sidebar";
+import { listenNowAlbums, madeForYouAlbums } from "../../../data/albums";
+import { playlists } from "../../../data/playlists";
 
-export default function CreationsPage() {
+export default function MusicPage() {
   return (
     <>
-      
       <div className="md:block">
         <Menu />
         <div className="mt-10 border-t">
@@ -30,31 +24,32 @@ export default function CreationsPage() {
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
-                  <Tabs defaultValue="art" className="h-full space-y-6">
+                  <Tabs defaultValue="music" className="h-full space-y-6">
                     <div className="space-between flex items-center">
                       <TabsList>
-                        <TabsTrigger value="art" className="relative">
-                          Art
+                        <TabsTrigger value="music" className="relative">
+                          Music
                         </TabsTrigger>
-                        <TabsTrigger value="models">Models</TabsTrigger>
-                        <TabsTrigger value="collections">Collections</TabsTrigger>
-                        
+                        <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
+                        <TabsTrigger value="live" disabled>
+                          Live
+                        </TabsTrigger>
                       </TabsList>
                       <div className="ml-auto ">
                         <Button>
                           <PlusCircledIcon className="mr-2 h-4 w-4" />
-                          Create
+                          Add music
                         </Button>
                       </div>
                     </div>
                     <TabsContent
-                      value="art"
+                      value="music"
                       className="border-none p-0 outline-none"
                     >
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <h2 className="text-2xl font-semibold tracking-tight">
-                            Featured Creations
+                            Listen Now
                           </h2>
                           <p className="text-sm text-muted-foreground">
                             Top picks for you. Updated daily.
@@ -81,61 +76,10 @@ export default function CreationsPage() {
                       </div>
                       <div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
-                          Recent Creations
+                          Made for You
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Explore creations from the community.
-                        </p>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                         
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                        
-                      </div>
-                    </TabsContent>
-                    <TabsContent
-                      value="models"
-                      className="h-full flex-col border-none p-0 data-[state=active]:flex"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-semibold tracking-tight">
-                            Featured Models
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            Top picks for you. Updated daily.
-                          </p>
-                        </div>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {listenNowAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
-                              />
-                            ))}
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                      </div>
-                      <div className="mt-6 space-y-1">
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                          Recent Models
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                          Explore creations by the community.
+                          Your personal playlists. Updated daily.
                         </p>
                       </div>
                       <Separator className="my-4" />
@@ -153,26 +97,25 @@ export default function CreationsPage() {
                               />
                             ))}
                           </div>
-                          
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
-                        
                       </div>
                     </TabsContent>
                     <TabsContent
-                      value="collections"
-                      className="border-none p-0 outline-none"
+                      value="podcasts"
+                      className="h-full flex-col border-none p-0 data-[state=active]:flex"
                     >
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <h2 className="text-2xl font-semibold tracking-tight">
-                            Featured Collections
+                            New Episodes
                           </h2>
                           <p className="text-sm text-muted-foreground">
-                            Top picks for you. Updated daily.
+                            Your favorite podcasts. Updated daily.
                           </p>
                         </div>
                       </div>
+                      <Separator className="my-4" />
                     </TabsContent>
                   </Tabs>
                 </div>
@@ -182,5 +125,5 @@ export default function CreationsPage() {
         </div>
       </div>
     </>
-  )
+  );
 }

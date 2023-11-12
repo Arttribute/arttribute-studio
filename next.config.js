@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+    experimental: {
+      serverComponentsExternalPackages:['mongoose']
+    },
+
+    images: {
+      domains: ['images.unsplash.com'],
+    },
+}
 
 module.exports = nextConfig
