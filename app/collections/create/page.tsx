@@ -207,7 +207,9 @@ export default function CreateCollectiion() {
                           )}
                         />
                         <FormItem>
-                          <FormLabel>Upload Image files</FormLabel>
+                          <FormLabel>
+                            Upload Image files {"(Up to 25 files)"}
+                          </FormLabel>
                           <div className="flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg">
                             <input
                               type="file"

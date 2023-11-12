@@ -4,7 +4,7 @@ import Replicate from "replicate";
 
 //example tunne
 
-const API_KEY = "sd_wCUBhVtKdcA31jRAAedy7py5Vv4yrF";
+const API_KEY = process.env.ASTRIA_API_KEY;
 
 export async function POST(request: Request) {
   const model_data = await request.json();
