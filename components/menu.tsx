@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import ConnectButton from "./connect-button";
 
 export function Menu() {
-  const [account, setAccount] = useState<string | null>(null);
+  const [account, setAccount] = useState<string | null>(null); // TODO: make User
 
   useEffect(() => {
     const user = localStorage.getItem("user");

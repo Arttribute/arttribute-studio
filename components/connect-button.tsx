@@ -8,6 +8,24 @@ interface Props {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+const postConnect = async (account: string) => {
+  const res = await fetch("http://localhost:3000/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ web3Address: account }),
+  });
+  if (res.ok) {
+    console.log("Connected to server");
+  } else {
+    console.error("Failed to connect to server");
+  }
+
+  const data = await res.json();
+  return data;
+};
+
 const ConnectButton = ({ action, setAccount }: Props) => {
   const [disabled, setDisabled] = useState(false);
   const { magic } = useMagicContext();
@@ -18,8 +36,11 @@ const ConnectButton = ({ action, setAccount }: Props) => {
       setDisabled(true);
       const accounts = await magic.wallet.connectWithUI();
       setDisabled(false);
-      console.log("Logged in user:", accounts[0]);
-      localStorage.setItem("user", accounts[0]);
+
+      const data = await postConnect(accounts[0]);
+      console.log(data);
+
+      localStorage.setItem("user", data);
       setAccount(accounts[0]);
     } catch (error) {
       setDisabled(false);
