@@ -39,14 +39,14 @@ export function Menu() {
             <MenubarItem>
               {" "}
               <Link href="/" passHref>
-                About Arttribute
+                Studio Home
               </Link>
             </MenubarItem>
             <MenubarSeparator />
             <MenubarItem>
               <Link href="/" passHref>
                 {" "}
-                Studio Home
+                About Arttribute
               </Link>
             </MenubarItem>
           </MenubarContent>
