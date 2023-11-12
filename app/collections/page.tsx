@@ -13,6 +13,7 @@ import { CollectionsEmptyPlaceholder } from "../../components/collections-empty-
 import { Sidebar } from "../../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
+import { CollectionCard } from "@/components/collections-card";
 
 export default function MusicPage() {
   return (
@@ -36,6 +37,16 @@ export default function MusicPage() {
                     </div>
                   </div>
                   <Separator className="my-4" />
+                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                    <CollectionCard />
+                  </div>
                   <CollectionsEmptyPlaceholder />
                 </div>
               </div>

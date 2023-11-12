@@ -13,7 +13,7 @@ import { TunedModelsEmptyPlaceholder } from "../../components/tunedmodels-empty-
 import { Sidebar } from "../../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
-
+import { TunedModelCard } from "@/components/tuned-model-card";
 export default function TunedModels() {
   return (
     <>
@@ -36,6 +36,13 @@ export default function TunedModels() {
                     </div>
                   </div>
                   <Separator className="my-4" />
+                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                    <TunedModelCard />
+                    <TunedModelCard />
+                    <TunedModelCard />
+                    <TunedModelCard />
+                    <TunedModelCard />
+                  </div>
                   <TunedModelsEmptyPlaceholder />
                 </div>
               </div>
