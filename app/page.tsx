@@ -1,27 +1,21 @@
-import { Metadata } from "next"
-import Image from "next/image"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { Metadata } from "next";
+import Image from "next/image";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CollectionArtwork } from "../components/collection-artwork"
-import { Menu } from "../components/menu"
-import { Sidebar } from "../components/sidebar"
-import { listenNowAlbums, madeForYouAlbums } from "../data/albums"
-import { playlists } from "../data/playlists"
+import { CollectionArtwork } from "../components/collection-artwork";
+import { Menu } from "../components/menu";
+import { Sidebar } from "../components/sidebar";
+import { listenNowAlbums, madeForYouAlbums } from "../data/albums";
+import { playlists } from "../data/playlists";
 
 export default function CreationsPage() {
   return (
     <>
-      
       <div className="md:block">
         <Menu />
         <div className="mt-10 border-t">
@@ -37,8 +31,9 @@ export default function CreationsPage() {
                           Art
                         </TabsTrigger>
                         <TabsTrigger value="models">Models</TabsTrigger>
-                        <TabsTrigger value="collections">Collections</TabsTrigger>
-                        
+                        <TabsTrigger value="collections">
+                          Collections
+                        </TabsTrigger>
                       </TabsList>
                       <div className="ml-auto ">
                         <Button>
@@ -89,13 +84,124 @@ export default function CreationsPage() {
                       </div>
                       <Separator className="my-4" />
                       <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                         
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="grid gap-4">
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={330}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={330}
+                              />
+                            </div>
                           </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                        
+                          <div className="grid gap-4">
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={330}
+                              />
+                            </div>
+                          </div>
+                          <div className="grid gap-4">
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={330}
+                              />
+                            </div>
+                          </div>
+                          <div className="grid gap-4">
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={330}
+                              />
+                            </div>
+                            <div>
+                              <Image
+                                className="h-auto max-w-full rounded-lg"
+                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
+                                alt=""
+                                width={250}
+                                height={115}
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </TabsContent>
                     <TabsContent
@@ -153,10 +259,9 @@ export default function CreationsPage() {
                               />
                             ))}
                           </div>
-                          
+
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
-                        
                       </div>
                     </TabsContent>
                     <TabsContent
@@ -182,5 +287,5 @@ export default function CreationsPage() {
         </div>
       </div>
     </>
-  )
+  );
 }
