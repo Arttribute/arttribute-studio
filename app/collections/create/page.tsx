@@ -2,14 +2,13 @@
 import React, { ChangeEvent, useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "../../../data/playlists";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +29,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { Web3Storage } from "web3.storage";
+import axios from "axios";
 
 const profileFormSchema = z.object({
   collection_name: z
@@ -40,19 +41,10 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "collection_name must not be longer than 30 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
+  license: z.string({
+    required_error: "Please select a license for your collection.",
+  }),
   description: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -71,12 +63,9 @@ export default function CreateCollectiion() {
     mode: "onChange",
   });
 
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  });
-
-  function onSubmit(data: ProfileFormValues) {
+  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
+  const storage = new Web3Storage({ token: storageToken });
+  async function onSubmit(data: ProfileFormValues) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -85,6 +74,33 @@ export default function CreateCollectiion() {
         </pre>
       ),
     });
+    try {
+      let storedFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const imagefile = files[i];
+        const storedFile = await storage.put([imagefile]);
+        const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${
+          imagefile.name
+        }`;
+        storedFiles.push(fileUrl);
+        console.log("uploaded:", i, " ", fileUrl);
+      }
+      console.log(storedFiles);
+
+      const collection_data = {
+        owner: "6550dac1e8faf5719ccff30c",
+        collection_name: data.collection_name,
+        description: data.description,
+        license: data.license,
+        images: storedFiles,
+        slug: "my-new-art-collection",
+      };
+      console.log(collection_data);
+      const res = await axios.post("/api/collections", collection_data);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +183,7 @@ export default function CreateCollectiion() {
                         />
                         <FormField
                           control={form.control}
-                          name="email"
+                          name="license"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Collection Licence</FormLabel>
@@ -181,14 +197,10 @@ export default function CreateCollectiion() {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="m@example.com">
-                                    m@example.com
-                                  </SelectItem>
-                                  <SelectItem value="m@google.com">
-                                    m@google.com
-                                  </SelectItem>
-                                  <SelectItem value="m@support.com">
-                                    m@support.com
+                                  <SelectItem value="BY">BY</SelectItem>
+                                  <SelectItem value="BYSA">BY SA</SelectItem>
+                                  <SelectItem value="BYNCSA">
+                                    BY NC SA
                                   </SelectItem>
                                 </SelectContent>
                               </Select>

@@ -1,5 +1,5 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -40,11 +40,9 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "modelname must not be longer than 30 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
+  collection: z.string({
+    required_error: "Select a collection of artwork to train your model on",
+  }),
   description: z.string().max(160).min(4),
   urls: z
     .array(
@@ -63,15 +61,26 @@ const defaultValues: Partial<ProfileFormValues> = {
 };
 
 export default function CreateModel() {
+  const [collections, setCollections] = useState<Array<any>>([]);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (!loaded) {
+      getCollections();
+    }
+  }, [loaded]);
+
+  async function getCollections() {
+    const res = await fetch("/api/collections");
+    const data = await res.json();
+    console.log(data);
+    setCollections(data);
+    setLoaded(true);
+  }
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
     mode: "onChange",
-  });
-
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
   });
 
   function onSubmit(data: ProfileFormValues) {
@@ -83,6 +92,10 @@ export default function CreateModel() {
         </pre>
       ),
     });
+    //map collection name to collection object
+    const collection = collections.find(
+      (collection) => collection._id === data.collection
+    );
   }
 
   return (
@@ -144,12 +157,12 @@ export default function CreateModel() {
                         />
                         <FormField
                           control={form.control}
-                          name="email"
+                          name="collection"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Art Collection</FormLabel>
                               <Select
-                                onValueChange={field.onChange}
+                                onValueChange={(value) => field.onChange(value)}
                                 defaultValue={field.value}
                               >
                                 <FormControl>
@@ -158,15 +171,19 @@ export default function CreateModel() {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="m@example.com">
-                                    m@example.com
-                                  </SelectItem>
-                                  <SelectItem value="m@google.com">
-                                    m@google.com
-                                  </SelectItem>
-                                  <SelectItem value="m@support.com">
-                                    m@support.com
-                                  </SelectItem>
+                                  {collections.length > 0 && loaded ? (
+                                    collections.map((collection) => (
+                                      <SelectItem
+                                        key={collection._id}
+                                        value={collection._id}
+                                        className="flex items-center space-x-2"
+                                      >
+                                        {collection.collection_name}
+                                      </SelectItem>
+                                    ))
+                                  ) : (
+                                    <p>Create a new Collection</p>
+                                  )}
                                 </SelectContent>
                               </Select>
                               <FormDescription>

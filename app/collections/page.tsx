@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -16,6 +18,19 @@ import { playlists } from "../../data/playlists";
 import { CollectionCard } from "@/components/collections-card";
 
 export default function MusicPage() {
+  const [collections, setCollections] = useState<Array<any>>([]);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    getCollections();
+  }, [collections]);
+
+  async function getCollections() {
+    const res = await fetch("/api/collections");
+    const data = await res.json();
+    console.log(data);
+    setCollections(data);
+    setLoaded(true);
+  }
   return (
     <>
       <div className="md:block">
@@ -38,16 +53,13 @@ export default function MusicPage() {
                   </div>
                   <Separator className="my-4" />
                   <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
-                    <CollectionCard />
+                    {collections.map((collection) => (
+                      <CollectionCard key={collection._id} data={collection} />
+                    ))}
                   </div>
-                  <CollectionsEmptyPlaceholder />
+                  {loaded && collections.length === 0 ? (
+                    <CollectionsEmptyPlaceholder />
+                  ) : null}
                 </div>
               </div>
             </div>
