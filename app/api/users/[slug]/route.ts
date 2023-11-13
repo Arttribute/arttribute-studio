@@ -6,7 +6,7 @@ type Params = {
   slug: string;
 };
 
-export async function GET({ params }: { params: Params }) {
+export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
     const user = await User.findOne({ web3Address: params.slug });
@@ -15,6 +15,31 @@ export async function GET({ params }: { params: Params }) {
         status: 404,
       });
     }
+    return new NextResponse(JSON.stringify(user), {
+      status: 200,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
+}
+
+export async function PUT(request: Request, { params }: { params: Params }) {
+  try {
+    await dbConnect();
+    const { name, email, picture } = await request.json();
+
+    const user = await User.findOneAndUpdate(
+      { web3Address: params.slug },
+      {
+        name,
+        email,
+        // picture,
+      },
+      { new: true }
+    );
+
     return new NextResponse(JSON.stringify(user), {
       status: 200,
     });

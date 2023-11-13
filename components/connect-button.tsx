@@ -2,10 +2,11 @@ import { useCallback, useState } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useMagicContext } from "./providers/MagicProvider";
+import { User } from "@/models/User";
 
 interface Props {
   action: "Connect" | "Disconnect";
-  setAccount: React.Dispatch<React.SetStateAction<string | null>>;
+  setAccount: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const postConnect = async (account: string, email?: string) => {
@@ -38,15 +39,13 @@ const ConnectButton = ({ action, setAccount }: Props) => {
       const { email } = await magic.user.requestInfoWithUI({
         scope: { email: "required" },
       });
-
-      console.log(email);
       setDisabled(false);
 
       const data = await postConnect(accounts[0], email);
       console.log(data);
 
-      localStorage.setItem("user", data);
-      setAccount(accounts[0]);
+      localStorage.setItem("user", JSON.stringify(data));
+      setAccount(data);
     } catch (error) {
       setDisabled(false);
       console.error(error);

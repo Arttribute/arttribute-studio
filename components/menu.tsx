@@ -19,14 +19,17 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ConnectButton from "./connect-button";
+import AccountDialog from "./account-dialog";
+import { User } from "@/models/User";
 
 export function Menu() {
-  const [account, setAccount] = useState<string | null>(null); // TODO: make User
+  const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
-  }, [account]);
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-10">
@@ -206,9 +209,9 @@ export function Menu() {
                   <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
                 </MenubarRadioGroup>
                 <MenubarSeparator />
-                <MenubarItem inset>Manage Famliy...</MenubarItem>
-                <MenubarSeparator />
                 <MenubarItem inset>Add Account...</MenubarItem>
+                <MenubarSeparator />
+                <AccountDialog user={account} setAccount={setAccount} />
               </MenubarContent>
             </MenubarMenu>
             <ConnectButton action="Disconnect" setAccount={setAccount} />
