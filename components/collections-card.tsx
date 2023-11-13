@@ -35,6 +35,7 @@ interface CollectionCardProps {
     description: string;
     images: string[];
     license: string;
+    slug: string;
   };
 }
 
@@ -49,7 +50,7 @@ export function CollectionCard({ data }: CollectionCardProps) {
   return (
     <Card>
       <CardHeader className=" items-start gap-2 space-y-0 -m-4">
-        <Link href={`/collections/${12345}`}>
+        <Link href={`/collections/${data.slug}`}>
           {images.length > 3 ? (
             <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
               {images.map((images, index) => (

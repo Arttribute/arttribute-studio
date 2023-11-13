@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -14,7 +16,23 @@ import { Sidebar } from "../../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
 import { TunedModelCard } from "@/components/tuned-model-card";
+
 export default function TunedModels() {
+  const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (!loaded) {
+      getTunedModels();
+    }
+  }, [loaded]);
+
+  async function getTunedModels() {
+    const res = await fetch("/api/tunedmodels");
+    const data = await res.json();
+    console.log(data);
+    setTunedModels(data);
+    setLoaded(true);
+  }
   return (
     <>
       <div className="md:block">
@@ -37,13 +55,13 @@ export default function TunedModels() {
                   </div>
                   <Separator className="my-4" />
                   <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
-                    <TunedModelCard />
-                    <TunedModelCard />
-                    <TunedModelCard />
-                    <TunedModelCard />
-                    <TunedModelCard />
+                    {tunedmodels.map((tunedmodel) => (
+                      <TunedModelCard key={tunedmodel._id} data={tunedmodel} />
+                    ))}
                   </div>
-                  <TunedModelsEmptyPlaceholder />
+                  {loaded && tunedmodels.length === 0 ? (
+                    <TunedModelsEmptyPlaceholder />
+                  ) : null}
                 </div>
               </div>
             </div>

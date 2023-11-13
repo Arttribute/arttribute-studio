@@ -1,35 +1,56 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import Replicate from "replicate";
-// Define interfaces if needed for request and response
-
-//example tunne
+import dbConnect from "@/lib/dbConnect";
+import { NextResponse } from "next/server";
+import TunedModel from "@/models/TunedModel";
 
 const API_KEY = process.env.ASTRIA_API_KEY;
 
 export async function GET() {
-  console.log("get request");
-  const res = await fetch("https://api.astria.ai/tunes", {
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  });
-  const data = await res.json();
+  // const res = await fetch("https://api.astria.ai/tunes", {
+  //   headers: {
+  //     Authorization: `Bearer ${API_KEY}`,
+  //   },
+  // });
+  // const data = await res.json();
 
-  return Response.json({ data });
+  try {
+    await dbConnect();
+    const tunedmodels = await TunedModel.find();
+    return new NextResponse(JSON.stringify(tunedmodels), {
+      status: 200,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
 }
 
 export async function POST(request: Request) {
-  const model_data = await request.json();
-  const res = await fetch("https://api.astria.ai/tunes", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(model_data),
-  });
-  console.log(model_data);
-  const data = await res.json();
-  console.log(data);
-  return Response.json(data);
+  try {
+    await dbConnect();
+    const { model, metadata } = await request.json();
+    const model_data = { tune: model };
+    const tuneRes = await fetch("https://api.astria.ai/tunes", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(model_data),
+    });
+    const tuneData = await tuneRes.json();
+    const modelData = {
+      ...metadata,
+      model_id: tuneData.id.toString(),
+      token: tuneData.token,
+    };
+    const newTunedModel = await TunedModel.create(modelData);
+    return new NextResponse(JSON.stringify(newTunedModel), {
+      status: 201,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
 }

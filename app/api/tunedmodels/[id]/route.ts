@@ -1,15 +1,15 @@
 import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
-import Collection from "@/models/Collection";
+import TunedModel from "@/models/TunedModel";
 
 export async function GET(request: Request) {
   try {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
-    const collection = await Collection.findOne({ slug });
+    const tunedmodel = await TunedModel.findOne({ slug });
 
-    return new NextResponse(JSON.stringify(collection), {
+    return new NextResponse(JSON.stringify(tunedmodel), {
       status: 200,
     });
   } catch (error: any) {
