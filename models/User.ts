@@ -1,3 +1,4 @@
+import { defaultProfile } from "@/data/defaults";
 import { generateName } from "@/lib/utils";
 import mongoose from "mongoose";
 
@@ -5,8 +6,7 @@ export interface User extends mongoose.Document {
   web3Address: string;
   name: string;
   email: string;
-  avatar: string;
-  createdAt: Date;
+  picture: string;
 }
 
 const userSchema = new mongoose.Schema(
@@ -25,14 +25,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: generateName(),
     },
-    avatar: {
+    picture: {
       type: String,
-      default:
-        "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png",
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+      default: defaultProfile,
     },
   },
   { timestamps: true }
