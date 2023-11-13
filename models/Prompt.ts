@@ -3,6 +3,7 @@ const { ObjectId } = mongoose.Schema.Types;
 
 export interface Prompt {
   prompt_id: string;
+  prompt_title: string;
   text: string;
   negative_prompt: string;
   images: string[];
@@ -14,6 +15,10 @@ export interface Prompt {
 const PromptSchema = new mongoose.Schema<Prompt>(
   {
     prompt_id: {
+      type: String,
+      required: true,
+    },
+    prompt_title: {
       type: String,
       required: true,
     },

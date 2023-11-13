@@ -1,10 +1,7 @@
 "use client";
 import { Metadata } from "next";
-import Image from "next/image";
-import { useState, useEffect, use } from "react";
-import Replicate from "replicate";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import ky from "ky";
 
 import { Menu } from "../../../components/menu";
 
@@ -26,9 +23,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
-import { set } from "mongoose";
 
 const FormSchema = z.object({
+  title: z.string().min(2, {
+    message: "Prompt must be at least 3 characters.",
+  }),
   prompt: z.string().min(2, {
     message: "Prompt must be at least 3 characters.",
   }),
@@ -48,6 +47,7 @@ export default function TunedModelPage({
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
   const [progress, setProgress] = useState(0);
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //"prompt_id" is th id provided by Astria.ai while "_id" is the id of the prompt in the db
 
@@ -107,6 +107,7 @@ export default function TunedModelPage({
       });
       const PromptResponse = result.data;
       setUpdated(true);
+      setLoading(false);
     } catch (error) {
       console.error("Error in API call:", error);
     }
@@ -136,7 +137,8 @@ export default function TunedModelPage({
     setPromptId("");
     setUpdated(false);
     setProgress(0);
-    let promptToken = tunedModel.token || "sks style";
+    setLoading(true);
+    let promptToken = `${tunedModel.token} style` || "sks style";
     const prompt_data = {
       model_id: tunedModel.model_id,
       prompt: {
@@ -148,6 +150,7 @@ export default function TunedModelPage({
         callback: 0,
       },
       metadata: {
+        prompt_title: data.title,
         text: data.prompt,
         negative_prompt: data.negative_prompt,
         owner: "6550dac1e8faf5719ccff30c",
@@ -201,8 +204,24 @@ export default function TunedModelPage({
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-5/5 space-y-6"
+                  className="w-5/5 space-y-4"
                 >
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="A title for your creation"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="prompt"
@@ -259,7 +278,11 @@ export default function TunedModelPage({
                       )}
                     />
                   )}
-                  <Button type="submit">Generate Image</Button>
+                  {loading ? (
+                    <Button disabled>Generating...</Button>
+                  ) : (
+                    <Button type="submit">Generate Images</Button>
+                  )}
                 </form>
               </Form>
 

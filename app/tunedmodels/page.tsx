@@ -5,17 +5,15 @@ import Image from "next/image";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CollectionArtwork } from "../../components/collection-artwork";
 import { Menu } from "../../components/menu";
 import { TunedModelsEmptyPlaceholder } from "../../components/tunedmodels-empty-placeholder";
 import { Sidebar } from "../../components/sidebar";
-import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
+
 import { playlists } from "../../data/playlists";
 import { TunedModelCard } from "@/components/tuned-model-card";
+import Link from "next/link";
 
 export default function TunedModels() {
   const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
@@ -48,9 +46,17 @@ export default function TunedModels() {
                       <h2 className="text-2xl font-semibold tracking-tight">
                         My Tuned Models
                       </h2>
+
                       <p className="text-sm text-muted-foreground">
                         Fine-tuned models based on your art collections
                       </p>
+                    </div>
+                    <div className="ml-auto ">
+                      <Link href="/tunedmodels/create" passHref>
+                        <Button size="sm" className="relative">
+                          Create a Tuned Model
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                   <Separator className="my-4" />

@@ -1,9 +1,10 @@
 "use client";
-import { Metadata } from "next";
-import Image from "next/image";
-import { useState, useEffect, use } from "react";
 import { Web3Storage } from "web3.storage";
-import Replicate from "replicate";
+
+import { Metadata } from "next";
+
+import { useState, useEffect, use } from "react";
+
 import axios from "axios";
 import ky from "ky";
 

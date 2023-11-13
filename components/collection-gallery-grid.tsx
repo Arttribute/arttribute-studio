@@ -29,7 +29,7 @@ const CollectionGalleryGrid: React.FC<CollectionGalleryGridProps> = ({
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2">
       {images &&
         images.map((image, index) => (
-          <ContextMenu>
+          <ContextMenu key={index}>
             <ContextMenuTrigger>
               <div className="overflow-hidden rounded-md">
                 <Dialog>
@@ -57,8 +57,8 @@ const CollectionGalleryGrid: React.FC<CollectionGalleryGridProps> = ({
                     <img
                       src={image}
                       alt={collectionName}
-                      width={300}
-                      height={200}
+                      width={500}
+                      height={500}
                     />
                   </DialogContent>
                 </Dialog>
