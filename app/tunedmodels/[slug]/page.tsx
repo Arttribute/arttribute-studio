@@ -24,6 +24,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { playlists } from "../../../data/playlists";
@@ -223,13 +225,26 @@ export default function MusicPage() {
         <div className="mt-10 border-t">
           <div className="bg-background">
             <div className="lg:p-16 lg:pt-8 m-5">
-              <h2 className="text-3xl font-semibold tracking-tight">
-                Model Name
-              </h2>
-              <div className="flex mb-4">
-                <p className="text-sm text-muted-foreground">By Model Author</p>
+              <div className="flex">
+                <Avatar className="h-14 w-14 mb-2 mr-2">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="block">
+                  <h2 className="text-3xl font-semibold tracking-tight">
+                    Model Name
+                  </h2>
+                  <div className="flex mb-4">
+                    <p className="text-sm text-muted-foreground">
+                      By Model Author
+                    </p>
 
-                <p className="text-sm text-muted-foreground ml-3">BY NC</p>
+                    <p className="text-sm text-muted-foreground ml-3">BY NC</p>
+                  </div>
+                </div>
               </div>
 
               <p className="text-sm text-muted-foreground mt-2, mb-2">

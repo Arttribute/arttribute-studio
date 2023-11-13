@@ -8,10 +8,13 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { CollectionArtwork } from "../components/collection-artwork";
-import { Menu } from "../components/menu";
+import { Menu } from "@/components/menu";
 import { Sidebar } from "../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../data/albums";
 import { playlists } from "../data/playlists";
+
+import CollectionGalleryGrid from "@/components/collection-gallery-grid";
+import { mockImages } from "@/data/mockimages";
 
 export default function CreationsPage() {
   return (
@@ -84,124 +87,7 @@ export default function CreationsPage() {
                       </div>
                       <Separator className="my-4" />
                       <div className="relative">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div className="grid gap-4">
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={330}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={330}
-                              />
-                            </div>
-                          </div>
-                          <div className="grid gap-4">
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={330}
-                              />
-                            </div>
-                          </div>
-                          <div className="grid gap-4">
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={330}
-                              />
-                            </div>
-                          </div>
-                          <div className="grid gap-4">
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={330}
-                              />
-                            </div>
-                            <div>
-                              <Image
-                                className="h-auto max-w-full rounded-lg"
-                                src="https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80"
-                                alt=""
-                                width={250}
-                                height={115}
-                              />
-                            </div>
-                          </div>
-                        </div>
+                        <div className="container mx-auto p-4"></div>
                       </div>
                     </TabsContent>
                     <TabsContent
@@ -276,6 +162,10 @@ export default function CreationsPage() {
                           <p className="text-sm text-muted-foreground">
                             Top picks for you. Updated daily.
                           </p>
+                          <CollectionGalleryGrid
+                            images={mockImages}
+                            collectionName={"My collection"}
+                          />
                         </div>
                       </div>
                     </TabsContent>
