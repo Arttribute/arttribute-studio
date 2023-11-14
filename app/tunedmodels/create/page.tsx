@@ -1,4 +1,7 @@
 "use client";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
+import slugify from "slugify";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,7 +86,7 @@ export default function CreateModel() {
     mode: "onChange",
   });
 
-  function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: ProfileFormValues) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -93,9 +96,37 @@ export default function CreateModel() {
       ),
     });
     //map collection name to collection object
-    const collection = collections.find(
+    const collection: any = collections.find(
       (collection) => collection._id === data.collection
     );
+    const model_uuid = uuid();
+    const modelDetails = {
+      model: {
+        title: `${data.modelname}-Arttribute`,
+        name: "style",
+        branch: "sd15",
+        model_type: null,
+        image_urls: collection.images,
+      },
+      metadata: {
+        owner: "6550dac1e8faf5719ccff30c", //TODO: get user id from auth
+        model_name: data.modelname,
+        description: data.description,
+        display_image: collection.images[0],
+        license: collection.license,
+        colection_id: collection._id,
+        example_prompt: "",
+        slug: slugify(`${data.modelname}-${model_uuid}`).toLowerCase(),
+        model_uuid: model_uuid,
+      },
+    };
+    try {
+      const result = await axios.post("/api/tunedmodels", modelDetails);
+      const fineTuneResponse = result.data;
+      console.log(fineTuneResponse);
+    } catch (error) {
+      console.error("Error training model:", error);
+    }
   }
 
   return (
@@ -144,7 +175,7 @@ export default function CreateModel() {
                               <FormLabel>Tuned Model Name</FormLabel>
                               <FormControl>
                                 <Input
-                                  placeholder="My tuned models"
+                                  placeholder="My tuned model"
                                   {...field}
                                 />
                               </FormControl>

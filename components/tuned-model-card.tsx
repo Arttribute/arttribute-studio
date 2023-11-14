@@ -27,18 +27,29 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
-export function TunedModelCard() {
+
+interface TunedModelCardProps {
+  data: {
+    model_name: string;
+    description: string;
+    display_image: string;
+    license: string;
+    status: string;
+    prompt_count: number;
+    slug: string;
+  };
+}
+
+export function TunedModelCard({ data }: TunedModelCardProps) {
   return (
     <Card>
-      <Link href={`/tunedmodels/${12345}`}>
+      <Link href={`/tunedmodels/${data.slug}`}>
         <CardHeader className="grid grid-cols-3 items-start gap-4 space-y-0 -m-2">
           <div className="hidden lg:flex items-center space-x-1 rounded-md ">
             <div className="overflow-hidden rounded-md">
-              <Image
-                src={
-                  "https://images.unsplash.com/photo-1468817814611-b7edf94b5d60"
-                }
-                alt={"Model Name"}
+              <img
+                src={data.display_image}
+                alt={data.model_name}
                 width={120}
                 height={120}
                 className="aspect-[1]"
@@ -46,11 +57,8 @@ export function TunedModelCard() {
             </div>
           </div>
           <div className="space-y-1 col-span-3 lg:col-span-2">
-            <CardTitle>Model Name</CardTitle>
-            <CardDescription>
-              Beautifully designed components built with Radix UI and Tailwind
-              CSS.
-            </CardDescription>
+            <CardTitle>{data.model_name}</CardTitle>
+            <CardDescription>{data.description}</CardDescription>
           </div>
         </CardHeader>
       </Link>
@@ -58,11 +66,11 @@ export function TunedModelCard() {
         <div className="flex space-x-4 text-sm text-muted-foreground">
           <div className="flex items-center">
             <CircleIcon className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
-            Model-ready
+            {data.status}
           </div>
           <div className="flex items-center">
             <StarIcon className="mr-1 h-3 w-3" />
-            20k
+            {data.prompt_count}
           </div>
 
           <Dialog>

@@ -1,18 +1,15 @@
 "use client";
-import { Metadata } from "next";
-import Image from "next/image";
-import { useState, useEffect, use } from "react";
 import { Web3Storage } from "web3.storage";
-import Replicate from "replicate";
+
+import { useState, useEffect, use } from "react";
+
 import axios from "axios";
-import ky from "ky";
 
 import { Menu } from "../../components/menu";
 import { Sidebar } from "../../components/sidebar";
 
 import { playlists } from "../../data/playlists";
 import { Button } from "@/components/ui/button";
-import { model } from "mongoose";
 
 type FineTuneResponse = {
   id: string;
