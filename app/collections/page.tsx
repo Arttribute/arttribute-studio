@@ -1,23 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Metadata } from "next";
-import Image from "next/image";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CollectionArtwork } from "../../components/collection-artwork";
 import { Menu } from "../../components/menu";
 import { CollectionsEmptyPlaceholder } from "../../components/collections-empty-placeholder";
 import { Sidebar } from "../../components/sidebar";
-import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
 import { CollectionCard } from "@/components/collections-card";
 
-export default function MusicPage() {
+import Link from "next/link";
+
+export default function CollectionsPage() {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -49,6 +46,13 @@ export default function MusicPage() {
                       <p className="text-sm text-muted-foreground">
                         Your art collections
                       </p>
+                    </div>
+                    <div className="ml-auto ">
+                      <Link href="/collections/create" passHref>
+                        <Button size="sm" className="relative">
+                          Create a Collection
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                   <Separator className="my-4" />

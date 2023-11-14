@@ -8,14 +8,11 @@ export interface Collection {
   owner: object;
   license: string;
   slug: string;
+  collection_uuid: string;
 }
 
 const CollectionSchema = new mongoose.Schema<Collection>(
   {
-    owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
-    },
     collection_name: {
       type: String,
       required: true,
@@ -28,11 +25,19 @@ const CollectionSchema = new mongoose.Schema<Collection>(
       type: [String],
       required: true,
     },
+    owner: {
+      type: String, //type: ObjectId,
+      required: true, //ref: "User",
+    },
     license: {
       type: String,
       required: true,
     },
     slug: {
+      type: String,
+      required: true,
+    },
+    collection_uuid: {
       type: String,
       required: true,
     },

@@ -30,6 +30,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Web3Storage } from "web3.storage";
+import { v4 as uuid } from "uuid";
+import slugify from "slugify";
 import axios from "axios";
 
 const profileFormSchema = z.object({
@@ -87,13 +89,17 @@ export default function CreateCollectiion() {
       }
       console.log(storedFiles);
 
+      const collection_uuid = uuid();
       const collection_data = {
         owner: "6550dac1e8faf5719ccff30c",
         collection_name: data.collection_name,
         description: data.description,
         license: data.license,
         images: storedFiles,
-        slug: "my-new-art-collection",
+        slug: slugify(
+          `${data.collection_name}-${collection_uuid}`
+        ).toLowerCase(),
+        collection_uuid: collection_uuid,
       };
       console.log(collection_data);
       const res = await axios.post("/api/collections", collection_data);
