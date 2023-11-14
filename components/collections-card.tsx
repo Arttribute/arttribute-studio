@@ -15,18 +15,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import Link from "next/link";
 
 interface CollectionCardProps {

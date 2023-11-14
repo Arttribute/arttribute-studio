@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import {
@@ -11,10 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-context-menu";
-const CreateNewDialog = () => {
+export function CreateNewDialog() {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           Create
@@ -42,6 +43,4 @@ const CreateNewDialog = () => {
       </DialogContent>
     </Dialog>
   );
-};
-
-export default CreateNewDialog;
+}

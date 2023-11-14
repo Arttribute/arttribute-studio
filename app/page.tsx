@@ -18,7 +18,7 @@ import { CollectionCard } from "@/components/collections-card";
 import CollectionGalleryGrid from "@/components/collection-gallery-grid";
 import { mockImages } from "@/data/mockimages";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
-import CreateNewDialog from "@/components/create-new-dialog";
+import { CreateNewDialog } from "@/components/create-new-dialog";
 
 export default function CreationsPage() {
   const [prompts, setPrompts] = useState<Array<any>>([]);
