@@ -55,6 +55,7 @@ export function CollectionCard() {
           <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
             {images.map((images, index) => (
               <Image
+                key={index}
                 src={images.src}
                 alt={images.alt}
                 width={300}

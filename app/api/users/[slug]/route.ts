@@ -6,6 +6,12 @@ type Params = {
   slug: string;
 };
 
+interface Fields {
+  name: string;
+  email: string;
+  fileUrl: string | null;
+}
+
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
@@ -28,14 +34,14 @@ export async function GET(request: Request, { params }: { params: Params }) {
 export async function PUT(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
-    const { name, email, picture } = await request.json();
+    const { name, email, fileUrl }: Fields = await request.json();
 
     const user = await User.findOneAndUpdate(
       { web3Address: params.slug },
       {
         name,
         email,
-        // picture,
+        picture: fileUrl,
       },
       { new: true }
     );

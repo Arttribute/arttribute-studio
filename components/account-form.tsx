@@ -18,6 +18,7 @@ import { DialogFooter } from "./ui/dialog";
 import Image from "next/image";
 import { defaultProfile } from "@/data/defaults";
 import { toast } from "./ui/use-toast";
+import { Web3Storage } from "web3.storage";
 import { useState } from "react";
 import { User } from "@/models/User";
 
@@ -32,7 +33,6 @@ interface Props {
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
-  picture: z.any(),
 });
 
 const InputForm = ({
@@ -43,43 +43,61 @@ const InputForm = ({
   setAccount,
 }: Props) => {
   const [disabled, setDisabled] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+
+  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
+  const storage = new Web3Storage({ token: storageToken });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name,
       email,
-      picture: "",
     },
   });
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
+  };
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setDisabled(true);
-    const res = await fetch(`http://localhost:3000/api/users/${web3Address}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
 
-    if (!res.ok) {
-      console.error("Failed to update user");
-    } else {
-      //   toast({
-      //     title: "Success",
-      //     description: "Successfully updated user",
-      //   });
+    try {
+      let fileUrl = null;
+      if (file) {
+        const storedFile = await storage.put([file]);
+        fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${file.name}`;
+      }
 
-      const resData = await res.json();
+      const res = await fetch(`/api/users/${web3Address}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, fileUrl }),
+      });
 
-      localStorage.setItem("user", JSON.stringify(resData));
-      setDisabled(false);
-      setAccount(resData);
+      if (!res.ok) {
+        console.error("Failed to update user");
+      } else {
+        //   toast({
+        //     title: "Success",
+        //     description: "Successfully updated user",
+        //   });
+
+        const resData = await res.json();
+
+        localStorage.setItem("user", JSON.stringify(resData));
+        setDisabled(false);
+        setAccount(resData);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
-
-  // TODO: fix image upload
 
   return (
     <Form {...form}>
@@ -111,26 +129,24 @@ const InputForm = ({
           )}
         />{" "}
         <div className="flex justify-center items-center space-x-3">
-          <Image
-            src={picture || defaultProfile}
-            alt="profile"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-          <FormField
-            control={form.control}
-            name="picture"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Picture</FormLabel>
-                <FormControl>
-                  <Input type="file" accept="image/*" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+            <div style={{ width: "100%", height: "100%" }}>
+              <Image
+                src={picture || defaultProfile}
+                alt="profile"
+                objectFit="cover"
+                layout="fill"
+              />
+            </div>
+          </div>
+
+          <FormItem>
+            <FormLabel>Picture</FormLabel>
+            <FormControl>
+              <Input type="file" accept="image/*" onChange={handleFileChange} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         </div>
         <DialogFooter>
           <Button type="submit" disabled={disabled}>
