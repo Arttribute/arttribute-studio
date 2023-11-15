@@ -14,6 +14,10 @@ import { playlists } from "../../../data/playlists";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
+import { squircle } from "ldrs";
+squircle.register();
+
 import {
   Form,
   FormControl,
@@ -33,6 +37,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { set } from "mongoose";
 
 const profileFormSchema = z.object({
   modelname: z
@@ -66,6 +71,7 @@ const defaultValues: Partial<ProfileFormValues> = {
 export default function CreateModel() {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!loaded) {
       getCollections();
@@ -87,6 +93,7 @@ export default function CreateModel() {
   });
 
   async function onSubmit(data: ProfileFormValues) {
+    setLoading(true);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -124,6 +131,9 @@ export default function CreateModel() {
       const result = await axios.post("/api/tunedmodels", modelDetails);
       const fineTuneResponse = result.data;
       console.log(fineTuneResponse);
+      setLoading(false);
+      //redirect to tuned model page
+      window.location.href = `/tunedmodels`;
     } catch (error) {
       console.error("Error training model:", error);
     }
@@ -248,8 +258,23 @@ export default function CreateModel() {
                             </FormItem>
                           )}
                         />
-
-                        <Button type="submit"> Create Tuned Model</Button>
+                        {loading ? (
+                          <Button disabled>
+                            Creating Tuned Model
+                            <div className="ml-2 mt-1">
+                              <l-squircle
+                                size="22"
+                                stroke="2"
+                                stroke-length="0.15"
+                                bg-opacity="0.1"
+                                speed="0.9"
+                                color="white"
+                              ></l-squircle>
+                            </div>
+                          </Button>
+                        ) : (
+                          <Button type="submit">Create Tuned Model</Button>
+                        )}
                       </form>
                     </Form>
                   </div>

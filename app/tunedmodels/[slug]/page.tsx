@@ -22,7 +22,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { Progress } from "@/components/ui/progress";
+import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+
+import { squircle } from "ldrs";
+squircle.register();
+
+import { lineWobble } from "ldrs";
+lineWobble.register();
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -45,7 +51,6 @@ export default function TunedModelPage({
   const [promptId, setPromptId] = useState("");
   const [updated, setUpdated] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
-  const [progress, setProgress] = useState(0);
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -60,8 +65,9 @@ export default function TunedModelPage({
     }
 
     if (promptId && generatedImages.length === 0) {
-      fetchPromptData(promptId, tunedModel.model_id);
-      incrementProgress();
+      setTimeout(() => {
+        fetchPromptData(promptId, tunedModel.modeldata.model_id);
+      }, 30000);
     }
 
     if (!updated && promptId && generatedImages.length > 0) {
@@ -121,28 +127,19 @@ export default function TunedModelPage({
     },
   });
 
-  //function to increment progress bar by 10% every 5 seconds
-  function incrementProgress() {
-    if (progress >= 100) {
-      setProgress(0);
-    }
-    setProgress((prevProgress) =>
-      prevProgress >= 100 ? 100 : prevProgress + 10
-    );
-  }
-
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setGeneratedImages([]);
     setPromptData(null);
     setPromptId("");
     setUpdated(false);
-    setProgress(0);
     setLoading(true);
-    let promptToken = `${tunedModel.token} style` || "sks style";
+    let promptToken = `${tunedModel.modeldata.token} style` || "sks style";
+    //<lora:${tunedModel.modeldata.model_id}:0.75>
+    console.log("prompt token", promptToken);
     const prompt_data = {
-      model_id: tunedModel.model_id,
+      model_id: tunedModel.modeldata.model_id,
       prompt: {
-        text: data.prompt + " " + promptToken,
+        text: `${data.prompt} ${promptToken}`,
         negative_prompt: data.negative_prompt,
         super_resolution: true,
         face_correct: true,
@@ -154,7 +151,7 @@ export default function TunedModelPage({
         text: data.prompt,
         negative_prompt: data.negative_prompt,
         owner: "6550dac1e8faf5719ccff30c",
-        tunedmodel_id: tunedModel._id,
+        tunedmodel_id: tunedModel.modeldata._id,
         token: promptToken,
       },
     };
@@ -163,6 +160,15 @@ export default function TunedModelPage({
       const PromptResponse = result.data;
       setPromptData(PromptResponse);
       setPromptId(PromptResponse.prompt_id);
+      if (PromptResponse.prompt_id) {
+        await axios.put(
+          `/api/tunedmodels/${tunedModel.modeldata._id}`,
+          { prompt_count: tunedModel.modeldata.prompt_count + 1 },
+          {
+            params: { id: tunedModel.modeldata._id },
+          }
+        );
+      }
       setPrompted(true);
     } catch (error) {
       console.error("Error in API call:", error);
@@ -178,27 +184,30 @@ export default function TunedModelPage({
             <div className="lg:p-16 lg:pt-8 m-5">
               <div className="flex">
                 <Avatar className="h-14 w-14 mb-2 mr-2">
-                  <AvatarImage src={tunedModel?.display_image} alt="@shadcn" />
+                  <AvatarImage
+                    src={tunedModel?.modeldata.display_image}
+                    alt="@shadcn"
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="block">
                   <h2 className="text-3xl font-semibold tracking-tight">
-                    {tunedModel?.model_name}
+                    {tunedModel?.modeldata.model_name}
                   </h2>
                   <div className="flex mb-4">
                     <p className="text-sm text-muted-foreground">
-                      by {tunedModel?.owner}
+                      by {tunedModel?.modeldata.owner}
                     </p>
 
                     <p className="text-sm text-muted-foreground ml-3">
-                      License: {tunedModel?.license}
+                      License: {tunedModel?.modeldata.license}
                     </p>
                   </div>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground mt-2, mb-2">
-                Generate images using {tunedModel?.model_name}
+                Generate images using {tunedModel?.modeldata.model_name}
               </p>
 
               <Form {...form}>
@@ -279,9 +288,21 @@ export default function TunedModelPage({
                     />
                   )}
                   {loading ? (
-                    <Button disabled>Generating...</Button>
+                    <Button disabled>
+                      Generating{" "}
+                      <div className="ml-2 mt-1">
+                        <l-squircle
+                          size="22"
+                          stroke="2"
+                          stroke-length="0.15"
+                          bg-opacity="0.1"
+                          speed="0.9"
+                          color="white"
+                        ></l-squircle>
+                      </div>
+                    </Button>
                   ) : (
-                    <Button type="submit">Generate Images</Button>
+                    <Button type="submit">Generate Images </Button>
                   )}
                 </form>
               </Form>
@@ -290,7 +311,13 @@ export default function TunedModelPage({
                 {prompted ? (
                   generatedImages.length === 0 ? (
                     <div className="flex items-center justify-center">
-                      <Progress value={progress} className="w-[60%]" />
+                      <l-line-wobble
+                        size="400"
+                        stroke="5"
+                        bg-opacity="0.1"
+                        speed="3"
+                        color="black"
+                      ></l-line-wobble>
                     </div>
                   ) : null
                 ) : (
@@ -307,6 +334,14 @@ export default function TunedModelPage({
                         <img src={image} alt="generated image" />
                       </div>
                     ))}
+                </div>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold tracking-tight">
+                  Explore other Images generated by this model
+                </h3>
+                <div className="container mx-auto p-4">
+                  <PromptGalleryGrid prompts={tunedModel?.prompts} />
                 </div>
               </div>
             </div>

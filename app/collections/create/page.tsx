@@ -34,6 +34,9 @@ import { v4 as uuid } from "uuid";
 import slugify from "slugify";
 import axios from "axios";
 
+import { squircle } from "ldrs";
+squircle.register();
+
 const profileFormSchema = z.object({
   collection_name: z
     .string()
@@ -58,6 +61,7 @@ const defaultValues: Partial<ProfileFormValues> = {
 
 export default function CreateCollectiion() {
   const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -68,6 +72,7 @@ export default function CreateCollectiion() {
   const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
   const storage = new Web3Storage({ token: storageToken });
   async function onSubmit(data: ProfileFormValues) {
+    setLoading(true);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -79,11 +84,10 @@ export default function CreateCollectiion() {
     try {
       let storedFiles = [];
       for (let i = 0; i < files.length; i++) {
-        const imagefile = files[i];
-        const storedFile = await storage.put([imagefile]);
-        const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${
-          imagefile.name
-        }`;
+        const imageFileName = slugify(files[i].name).toLowerCase();
+        const imageFile = new File([files[i]], imageFileName);
+        const storedFile = await storage.put([imageFile]);
+        const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${imageFileName}`;
         storedFiles.push(fileUrl);
         console.log("uploaded:", i, " ", fileUrl);
       }
@@ -104,6 +108,9 @@ export default function CreateCollectiion() {
       console.log(collection_data);
       const res = await axios.post("/api/collections", collection_data);
       console.log(res);
+      setLoading(false);
+      //redirect to collection page
+      window.location.href = `/collections`;
     } catch (err) {
       console.log(err);
     }
@@ -240,7 +247,23 @@ export default function CreateCollectiion() {
                             />
                           </div>
                         </FormItem>
-                        <Button type="submit"> Create Collection</Button>
+                        {loading ? (
+                          <Button disabled>
+                            Creating Collection
+                            <div className="ml-2 mt-1">
+                              <l-squircle
+                                size="22"
+                                stroke="2"
+                                stroke-length="0.15"
+                                bg-opacity="0.1"
+                                speed="0.9"
+                                color="white"
+                              ></l-squircle>
+                            </div>
+                          </Button>
+                        ) : (
+                          <Button type="submit">Create Collection</Button>
+                        )}
                       </form>
                     </Form>
                   </div>

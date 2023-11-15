@@ -39,6 +39,7 @@ export async function POST(request: Request) {
       body: JSON.stringify(model_data),
     });
     const tuneData = await tuneRes.json();
+    console.log(tuneData);
     const modelData = {
       ...metadata,
       model_id: tuneData.id.toString(),

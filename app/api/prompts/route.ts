@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       }
     );
     const promptData = await promptRes.json();
+    console.log(promptData);
     const newPrompt = await Prompt.create({
       ...metadata,
       prompt_id: promptData.id.toString(),

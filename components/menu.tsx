@@ -22,7 +22,7 @@ export function Menu() {
     <div className="fixed top-0 left-0 right-0 z-10">
       <Menubar className="rounded-none border-b border-none px-2 lg:px-4">
         <MenubarMenu>
-          <MenubarTrigger className="font-bold">
+          <MenubarTrigger className="text-md font-bold">
             Arttribute Studio
           </MenubarTrigger>
           <MenubarContent>

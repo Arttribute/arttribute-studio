@@ -84,7 +84,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           <div className="flex text-sm text-muted-foreground">
                             <Avatar className="h-10 w-10 m-2 ml-0">
                               <AvatarImage
-                                src={prompt.tunedmodel_id.display_image} //TODO: add user image
+                                src={prompt.tunedmodel_id?.display_image} //TODO: add user image
                                 alt="@shadcn"
                               />
                               <AvatarFallback>CN</AvatarFallback>
@@ -103,14 +103,14 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           <Label>Model</Label>
                           <div className="flex  shrink-0  rounded-md border border p-1">
                             <Link
-                              href={`/tunedmodels/${prompt.tunedmodel_id.slug}`}
+                              href={`/tunedmodels/${prompt.tunedmodel_id?.slug}`}
                             >
                               <div className="grid grid-cols-3 items-start gap-4 space-y-0 ">
                                 <div className="hidden lg:flex items-center space-x-1 rounded-md ">
                                   <div className="overflow-hidden rounded-md">
                                     <img
-                                      src={prompt.tunedmodel_id.display_image}
-                                      alt={prompt.tunedmodel_id.model_name}
+                                      src={prompt?.tunedmodel_id?.display_image}
+                                      alt={prompt?.tunedmodel_id?.model_name}
                                       width={120}
                                       height={120}
                                       className="aspect-[1]"
@@ -119,10 +119,10 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                                 </div>
                                 <div className="space-y-1 col-span-3 lg:col-span-2 pt-2">
                                   <h1 className="text-1xl font-semibold tracking-tight">
-                                    {prompt.tunedmodel_id.model_name}
+                                    {prompt?.tunedmodel_id?.model_name}
                                   </h1>
                                   <p className="text-xs text-muted-foreground mt-2, mb-2">
-                                    {prompt.tunedmodel_id.description}
+                                    {prompt?.tunedmodel_id?.description}
                                   </p>
                                 </div>
                               </div>
@@ -130,7 +130,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           </div>
                           <div>
                             <p className="text-md text-muted-foreground mt-4">
-                              License: {prompt.tunedmodel_id.license}
+                              License: {prompt.tunedmodel_id?.license}
                             </p>
                           </div>
                         </div>

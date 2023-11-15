@@ -11,6 +11,7 @@ export interface TunedModel {
   collection_id: object;
   license: string;
   token: string;
+  model_strength: string;
   slug: string;
   model_uuid: string;
   example_prompt: string;

@@ -19,6 +19,7 @@ import CollectionGalleryGrid from "@/components/collection-gallery-grid";
 import { mockImages } from "@/data/mockimages";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
 import { CreateNewDialog } from "@/components/create-new-dialog";
+import { TunedModelCard } from "@/components/tuned-model-card";
 
 export default function CreationsPage() {
   const [prompts, setPrompts] = useState<Array<any>>([]);
@@ -187,15 +188,11 @@ export default function CreationsPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
+                          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                            {tunedmodels.map((tunedmodel) => (
+                              <TunedModelCard
+                                key={tunedmodel._id}
+                                data={tunedmodel}
                               />
                             ))}
                           </div>

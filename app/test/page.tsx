@@ -1,7 +1,7 @@
 "use client";
 import { Web3Storage } from "web3.storage";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 
 import axios from "axios";
 
