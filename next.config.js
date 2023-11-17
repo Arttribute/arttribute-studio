@@ -5,7 +5,13 @@ const nextConfig = {
   },
 
   images: {
-    domains: ["images.unsplash.com", "github.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.ipfs.w3s.link',
+      },
+    ],
+    domains: ["images.unsplash.com", "github.com", "cdn1.iconfinder.com"],
   },
 };
 

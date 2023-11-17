@@ -1,13 +1,13 @@
+import { defaultProfile } from "@/data/defaults";
+import { generateName } from "@/lib/utils";
 import mongoose from "mongoose";
 
 export interface User extends mongoose.Document {
   web3Address: string;
-  //   name: string;
-  //   email: string;
-  //   avatar: string;
-  createdAt: Date;
+  name: string;
+  email: string;
+  picture: string;
 }
-// TODO: implement the User schema
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,20 +16,18 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    // name: {
-    //   type: String,
-    //   required: true,
-    // },
-    // email: {
-    //   type: String,
-    //   unique: true,
-    // },
-    // avatar: {
-    //   type: String,
-    // },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    email: {
+      type: String,
+      unique: true,
+      default: null,
+    },
+    name: {
+      type: String,
+      default: generateName(),
+    },
+    picture: {
+      type: String,
+      default: defaultProfile,
     },
   },
   { timestamps: true }
