@@ -143,7 +143,7 @@ export default function CreateModel() {
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />

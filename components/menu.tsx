@@ -16,14 +16,15 @@ import {
 } from "@/components/ui/menubar";
 
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 export function Menu() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-10">
+    <div className="fixed top-0 left-0 right-0 z-10 p-2 bg-white">
       <Menubar className="rounded-none border-b border-none px-2 lg:px-4">
         <MenubarMenu>
-          <MenubarTrigger className="text-md font-bold">
-            Arttribute Studio
+          <MenubarTrigger>
+            <Logo text="Arttribute Studio" />
           </MenubarTrigger>
           <MenubarContent>
             <MenubarItem>

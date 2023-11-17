@@ -179,7 +179,7 @@ export default function TunedModelPage({
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="lg:p-16 lg:pt-8 m-5">
               <div className="flex">

@@ -96,10 +96,13 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
 
                           <Label>Prompt</Label>
 
-                          <Textarea placeholder={prompt.text} />
+                          <Textarea placeholder={prompt.text} readOnly />
 
                           <Label>Negative Prompt</Label>
-                          <Textarea placeholder={prompt.negative_prompt} />
+                          <Textarea
+                            placeholder={prompt.negative_prompt}
+                            readOnly
+                          />
                           <Label>Model</Label>
                           <div className="flex  shrink-0  rounded-md border border p-1">
                             <Link

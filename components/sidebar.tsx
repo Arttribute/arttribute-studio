@@ -15,7 +15,7 @@ export function Sidebar({ className, playlists }: SidebarProps) {
 
   return (
     <div className={cn("pb-12", className)}>
-      <div className="space-y-4 py-4 fixed top-8 left-0 overflow-y-auto w-1/5">
+      <div className="space-y-4 py-4 fixed top-8 left-0 overflow-y-auto w-1/5 mt-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Discover
