@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -13,6 +12,7 @@ import { Sidebar } from "../../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
 import { CommunityCard } from "@/components/community-card";
+import Link from "next/link";
 
 async function getData() {
   const communities = await fetch("http://localhost:3000/api/communities");
@@ -27,10 +27,9 @@ async function getData() {
 
 export default async function CommunitiesPage() {
   const communities = await getData();
-
   return (
     <>
-      <div className="md:block">
+      <div className="">
         {/* <Menu /> */}
         <div className="mt-10 border-t">
           <div className="bg-background">
@@ -57,6 +56,14 @@ export default async function CommunitiesPage() {
                           Create Community
                         </TabsTrigger>
                       </TabsList>
+
+                      <div className="ml-auto">
+                        <Link href="/communities/create" passHref>
+                          <Button size="sm" className="relative">
+                            Create a Community
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                     <TabsContent
                       value="communities-general"
@@ -105,9 +112,9 @@ export default async function CommunitiesPage() {
                           </div>
 
                           <div className="w-full py-5 mx-5 flex justify-center">
-                            <TabsList className="w-full bg-red-50">
+                            <TabsList className="w-full">
                               <TabsTrigger
-                                className="md:w-[70%] sm:w-full flex justify-center py-3 rounded-md gap-2 bg-stone-950 hover:bg-stone-900 text-white dark:text-stone-950 dark:bg-white"
+                                className="w-full flex justify-center py-3 rounded-md gap-2 bg-stone-950 hover:bg-stone-900 text-white dark:text-stone-950 dark:bg-white"
                                 value="browse-communities"
                               >
                                 <svg
@@ -150,25 +157,22 @@ export default async function CommunitiesPage() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {communities.map((community: any) => (
-                              <CommunityCard
-                                key={community._id}
-                                data={community}
-                              />
-                            ))}
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
+                      <div className="w-full">
+                        <div className="flex justify-center items-center gap-2 flex-wrap space-x-4 gap-y-5 pb-4">
+                          {communities.map((community: any) => (
+                            <CommunityCard
+                              key={community._id}
+                              data={community}
+                            />
+                          ))}
+                        </div>
                       </div>
                       <div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
-                          Made for You
+                          Community Creations
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Your personal playlists. Updated daily.
+                          See what different communities have created
                         </p>
                       </div>
                       <Separator className="my-4" />

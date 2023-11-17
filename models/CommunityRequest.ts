@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Schema.Types;
 
-const User = require("./User");
-const TunedModel = require("./TunedModel");
-
-export interface Community extends mongoose.Document {
+export interface CommunityRequest extends mongoose.Document {
   name: String;
   description: String;
   members: any[];
@@ -16,7 +13,7 @@ export interface Community extends mongoose.Document {
 }
 // TODO: implement the community schema
 
-const communitySchema = new mongoose.Schema(
+const communityRequestSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,12 +24,10 @@ const communitySchema = new mongoose.Schema(
       required: true,
     },
     members: {
-      ref: "User",
       type: [ObjectId],
       required: false,
     },
     models: {
-      ref: "TunedModel",
       type: [ObjectId],
       required: false,
     },
@@ -58,7 +53,8 @@ const communitySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const community =
-  mongoose.models.Community || mongoose.model("Community", communitySchema);
+const communityRequest =
+  mongoose.models.community_requests ||
+  mongoose.model("communityRequest", communityRequestSchema);
 
-export default community;
+export default communityRequest;
