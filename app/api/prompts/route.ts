@@ -12,7 +12,9 @@ const API_KEY = process.env.ASTRIA_API_KEY;
 export async function GET() {
   try {
     await dbConnect();
-    const prompts = await Prompt.find().populate("tunedmodel_id"); //.populate("owner");
+    const prompts = await Prompt.find()
+      .populate("tunedmodel_id")
+      .populate("owner");
     return new NextResponse(JSON.stringify(prompts), {
       status: 200,
     });

@@ -22,7 +22,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface ArtGalleryGridProps {
   prompts: {
     _id: string;
-    owner: string;
+    owner: {
+      _id: string;
+      name: string;
+      picture: string;
+    };
     prompt_title: string;
     prompt_name: string;
     description: string;
@@ -84,13 +88,13 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           <div className="flex text-sm text-muted-foreground">
                             <Avatar className="h-10 w-10 m-2 ml-0">
                               <AvatarImage
-                                src={prompt.tunedmodel_id?.display_image} //TODO: add user image
+                                src={prompt.owner?.picture} //TODO: add user image
                                 alt="@shadcn"
                               />
                               <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                             <p className="text-md text-muted-foreground mt-4">
-                              By {prompt.owner}
+                              By {prompt.owner?.name}
                             </p>
                           </div>
 

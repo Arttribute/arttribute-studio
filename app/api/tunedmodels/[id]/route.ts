@@ -8,10 +8,12 @@ export async function GET(request: Request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
-    const modeldata = await TunedModel.findOne({ slug });
+    const modeldata = await TunedModel.findOne({ slug }).populate("owner");
     const prompts = await Prompt.find({
       tunedmodel_id: modeldata._id,
-    }).populate("tunedmodel_id"); //.populate("owner");;
+    })
+      .populate("tunedmodel_id")
+      .populate("owner");
 
     return new NextResponse(JSON.stringify({ modeldata, prompts }), {
       status: 200,

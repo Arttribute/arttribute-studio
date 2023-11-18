@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+import { User } from "@/models/User";
 
 import { squircle } from "ldrs";
 squircle.register();
@@ -53,6 +54,7 @@ export default function TunedModelPage({
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
 
   //"prompt_id" is th id provided by Astria.ai while "_id" is the id of the prompt in the db
 
@@ -60,6 +62,9 @@ export default function TunedModelPage({
   const toggleNegativePrompt = () => setShowNegativePrompt(!showNegativePrompt);
 
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
     if (!tunedModel) {
       getFineTunedModel();
     }
@@ -150,7 +155,7 @@ export default function TunedModelPage({
         prompt_title: data.title,
         text: data.prompt,
         negative_prompt: data.negative_prompt,
-        owner: "6550dac1e8faf5719ccff30c",
+        owner: account?._id, //TODO: account should never be null
         tunedmodel_id: tunedModel.modeldata._id,
         token: promptToken,
       },
@@ -196,7 +201,7 @@ export default function TunedModelPage({
                   </h2>
                   <div className="flex mb-4">
                     <p className="text-sm text-muted-foreground">
-                      by {tunedModel?.modeldata.owner}
+                      by {tunedModel?.modeldata.owner?.name}
                     </p>
 
                     <p className="text-sm text-muted-foreground ml-3">
