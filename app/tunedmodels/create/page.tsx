@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { set } from "mongoose";
+import { User } from "@/models/User";
 
 const profileFormSchema = z.object({
   modelname: z
@@ -72,15 +72,22 @@ export default function CreateModel() {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
     if (!loaded) {
-      getCollections();
+      getCollections(user._id);
     }
   }, [loaded]);
 
-  async function getCollections() {
-    const res = await fetch("/api/collections");
-    const data = await res.json();
+  async function getCollections(userId: string) {
+    const res = await axios.get("/api/collections/users", {
+      params: { userId: userId },
+    });
+    const data = res.data;
     console.log(data);
     setCollections(data);
     setLoaded(true);
@@ -116,7 +123,7 @@ export default function CreateModel() {
         image_urls: collection.images,
       },
       metadata: {
-        owner: "6550dac1e8faf5719ccff30c", //TODO: get user id from auth
+        owner: account?._id, //TODO: account should never be null
         model_name: data.modelname,
         description: data.description,
         display_image: collection.images[0],

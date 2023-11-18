@@ -11,19 +11,27 @@ import { CollectionsEmptyPlaceholder } from "../../components/collections-empty-
 import { Sidebar } from "../../components/sidebar";
 import { playlists } from "../../data/playlists";
 import { CollectionCard } from "@/components/collections-card";
-
+import { User } from "@/models/User";
+import axios from "axios";
 import Link from "next/link";
 
 export default function CollectionsPage() {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+
   useEffect(() => {
-    getCollections();
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
+    getCollections(user._id);
   }, [collections]);
 
-  async function getCollections() {
-    const res = await fetch("/api/collections");
-    const data = await res.json();
+  async function getCollections(userId: string) {
+    const res = await axios.get("/api/collections/users", {
+      params: { userId: userId },
+    });
+    const data = res.data;
     console.log(data);
     setCollections(data);
     setLoaded(true);

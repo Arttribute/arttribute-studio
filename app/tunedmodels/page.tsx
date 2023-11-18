@@ -14,19 +14,29 @@ import { Sidebar } from "../../components/sidebar";
 import { playlists } from "../../data/playlists";
 import { TunedModelCard } from "@/components/tuned-model-card";
 import Link from "next/link";
+import { User } from "@/models/User";
+import axios from "axios";
 
 export default function TunedModels() {
   const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
+
     if (!loaded) {
-      getTunedModels();
+      getTunedModels(user._id);
     }
   }, [loaded]);
 
-  async function getTunedModels() {
-    const res = await fetch("/api/tunedmodels");
-    const data = await res.json();
+  async function getTunedModels(userId: string) {
+    const res = await axios.get("/api/tunedmodels/users", {
+      params: { userId: userId },
+    });
+    const data = res.data;
     console.log(data);
     setTunedModels(data);
     setLoaded(true);
@@ -61,9 +71,13 @@ export default function TunedModels() {
                   </div>
                   <Separator className="my-4" />
                   <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
-                    {tunedmodels.map((tunedmodel) => (
-                      <TunedModelCard key={tunedmodel._id} data={tunedmodel} />
-                    ))}
+                    {tunedmodels.length > 0 &&
+                      tunedmodels.map((tunedmodel) => (
+                        <TunedModelCard
+                          key={tunedmodel._id}
+                          data={tunedmodel}
+                        />
+                      ))}
                   </div>
                   {loaded && tunedmodels.length === 0 ? (
                     <TunedModelsEmptyPlaceholder />

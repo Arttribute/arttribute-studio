@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Web3Storage } from "web3.storage";
 import { v4 as uuid } from "uuid";
+import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 
@@ -62,6 +63,13 @@ const defaultValues: Partial<ProfileFormValues> = {
 export default function CreateCollectiion() {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
+  }, []);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -95,7 +103,7 @@ export default function CreateCollectiion() {
 
       const collection_uuid = uuid();
       const collection_data = {
-        owner: "6550dac1e8faf5719ccff30c",
+        owner: account?._id, //TODO: account should not be null
         collection_name: data.collection_name,
         description: data.description,
         license: data.license,

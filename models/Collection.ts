@@ -26,8 +26,8 @@ const CollectionSchema = new mongoose.Schema<Collection>(
       required: true,
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: "User",
     },
     license: {
       type: String,

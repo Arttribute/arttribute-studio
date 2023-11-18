@@ -35,8 +35,8 @@ const PromptSchema = new mongoose.Schema<Prompt>(
       default: [],
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: "User",
     },
     tunedmodel_id: {
       type: ObjectId,

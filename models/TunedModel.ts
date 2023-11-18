@@ -42,8 +42,8 @@ const TunedModelSchema = new mongoose.Schema<TunedModel>(
       required: true,
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: "User",
     },
     collection_id: {
       type: ObjectId,
