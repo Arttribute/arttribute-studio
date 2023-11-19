@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 export interface User extends mongoose.Document {
   web3Address: string;
   name: string;
+  description: string;
+  tags: string[];
   email: string;
   picture: string;
 }
@@ -20,6 +22,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       default: null,
+    },
+    description: {
+      type: String,
+      default: null,
+    },
+    tags: {
+      type: [String],
+      default: [],
     },
     name: {
       type: String,

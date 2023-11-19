@@ -9,6 +9,8 @@ type Params = {
 interface Fields {
   name: string;
   email: string;
+  bio: string;
+  tags: string[];
   fileUrl: string | null;
 }
 
@@ -34,18 +36,34 @@ export async function GET(request: Request, { params }: { params: Params }) {
 export async function PUT(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
-    const { name, email, fileUrl }: Fields = await request.json();
+    const { name, email, bio, tags, fileUrl }: Fields = await request.json();
 
     const user = await User.findOneAndUpdate(
       { web3Address: params.slug },
       {
         name,
         email,
+        description: bio,
+        tags,
         picture: fileUrl,
       },
       { new: true }
     );
 
+    return new NextResponse(JSON.stringify(user), {
+      status: 200,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(request: Request, { params }: { params: Params }) {
+  try {
+    await dbConnect();
+    const user = await User.findOneAndDelete({ web3Address: params.slug });
     return new NextResponse(JSON.stringify(user), {
       status: 200,
     });
