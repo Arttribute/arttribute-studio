@@ -45,8 +45,8 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                 className="hidden lg:block col-span-1"
               />
               <div className="h-full px-4 py-6 lg:px-8 col-span-4">
-                <div className="flex items-center space-x-4">
-                  <div className="relative rounded-lg overflow-hidden">
+                <div className="flex items-center space-x-2 sm:space-x-4">
+                  <div className="relative rounded-lg">
                     <Image
                       src={user.picture}
                       alt={user.name}
@@ -75,11 +75,11 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                     </TooltipProvider>
                   </div>
 
-                  <div className="flex flex-grow flex-col space-y-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">
+                  <div className="flex md:flex-grow flex-col space-y-1">
+                    <h2 className="text-lg sm:text-2xl font-semibold tracking-tight">
                       {user.name}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-base text-muted-foreground">
                       {user.description || "No bio"}
                     </p>
                     <p>
@@ -91,19 +91,19 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                     </p>
                   </div>
                   <div className="flex">
-                    <div className="flex flex-col items-center w-20">
-                      <p className="text-2xl font-semibold tracking-tight">0</p>
+                    <div className="flex flex-col items-center w-1616 sm:w-20">
+                      <p className="text-xl font-semibold tracking-tight">0</p>
                       <p className="text-sm text-muted-foreground">Works</p>
                     </div>
-                    <div className="flex flex-col items-center w-20">
-                      <p className="text-2xl font-semibold tracking-tight">
-                        {formatCount(1000000)}
+                    <div className="flex flex-col items-center w-16 sm:w-20">
+                      <p className="text-xl font-semibold tracking-tight">
+                        {formatCount(100000)}
                       </p>
                       <p className="text-sm text-muted-foreground">Followers</p>
                     </div>
-                    <div className="flex flex-col items-center w-20">
-                      <p className="text-2xl font-semibold tracking-tight">
-                        {formatCount(0)}
+                    <div className="flex flex-col items-center w-16 sm:w-20">
+                      <p className="text-xl font-semibold tracking-tight">
+                        {formatCount(100000)}
                       </p>
                       <p className="text-sm text-muted-foreground">Following</p>
                     </div>
