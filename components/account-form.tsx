@@ -190,15 +190,14 @@ const InputForm = ({
           )}
         />
         <div className="flex justify-center items-center space-x-3">
-          <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden aspect-w-1 aspect-h-1">
-            <div style={{ width: "100%", height: "100%" }}>
-              <Image
-                src={picture || defaultProfile}
-                alt="profile"
-                objectFit="cover"
-                layout="fill"
-              />
-            </div>
+          <div className="rounded-md overflow-hidden">
+            <Image
+              src={picture || defaultProfile}
+              alt="profile"
+              width={100}
+              height={100}
+              className="h-auto w-auto object-cover aspect-square"
+            />
           </div>
 
           <FormItem>

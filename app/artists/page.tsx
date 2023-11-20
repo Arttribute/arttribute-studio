@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 const getUsers = async () => {
   const res = await fetch(`http://localhost:3000/api/users`, {
-    next: { revalidate: 600 },
+    next: { revalidate: 60 },
   });
   const data = await res.json();
   return data;
