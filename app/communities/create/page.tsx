@@ -294,7 +294,7 @@ export default function CreateCollectiion() {
                                             </li>
                                             <li className="">
                                               <span className="font-bold">
-                                                Public:{" "}
+                                                Private:{" "}
                                               </span>{" "}
                                               Restricted access to create; users
                                               must request to join, but the

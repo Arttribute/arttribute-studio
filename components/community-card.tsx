@@ -1,3 +1,4 @@
+"use client";
 import TunedModel, { TunedModel as TM } from "@/models/TunedModel";
 import { InfoCard } from "./info-card";
 import {
@@ -20,7 +21,7 @@ interface CommunityCard {
 }
 
 export function CommunityCard({ data }: CommunityCard) {
-  console.log(data);
+  console.log(data.members);
   return (
     <a
       href={"/communities/" + data.slug}

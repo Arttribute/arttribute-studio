@@ -7,7 +7,7 @@ const TunedModel = require("./TunedModel");
 export interface Community extends mongoose.Document {
   name: String;
   description: String;
-  members: any[];
+  members: string[];
   models: any[];
   display_image: String;
   banner_image: String;

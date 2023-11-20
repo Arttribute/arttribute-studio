@@ -24,6 +24,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CommunityAvatar } from "@/components/community-avatar";
+import styles from "../communities.module.css";
 
 // async function getData(id: String) {
 //   const community = await fetch("api/communities/" + id);
@@ -56,12 +58,14 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
 
               <div className="col-span-3 lg:col-span-4 lg:border-l min-h-[100vh]">
                 <div className="h-full px-4 py-6 lg:px-8">
-                  <div className="w-full rounded-xl bg-red-50 h-[200px] ">
-                    <img
-                      src={String(community?.banner_image)}
-                      className="w-full h-full cover rounded-xl"
-                      alt=""
-                    />
+                  <div className={styles.box}>
+                    <div className={styles.grid_container}>
+                      <img
+                        src={String(community?.banner_image)}
+                        className="w-full h-full cover rounded-xl"
+                        alt=""
+                      />
+                    </div>
                   </div>
                   <div className="flex mt-5">
                     <Avatar className="h-14 w-14 mb-2 mr-2">
@@ -102,50 +106,51 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                         <ScrollArea>
                           <div className="flex space-x-5">
                             {community?.members.map((user) => (
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                      <img
-                                        className="rounded-full w-9 h-9 contain"
-                                        src={user.picture}
-                                        alt={user.name}
-                                      />
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <div>
-                                      <div className="flex items-end">
-                                        <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                          <img
-                                            className="rounded-full w-9 h-9 contain"
-                                            src={user.picture}
-                                            alt={user.name}
-                                          />
-                                        </div>
-                                        <div className="flex flex-col">
-                                          <h3 className="font-semibold text-base">
-                                            {user.name}
-                                          </h3>
-                                          <p className="text-sm">
-                                            <span className="font-semibold">
-                                              Promts:{" "}
-                                            </span>
-                                            --
-                                          </p>
-                                        </div>
-                                      </div>
+                              // <TooltipProvider>
+                              //   <Tooltip>
+                              //     <TooltipTrigger>
+                              //       <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
+                              //         <img
+                              //           className="rounded-full w-9 h-9 contain"
+                              //           src={user.picture}
+                              //           alt={user.name}
+                              //         />
+                              //       </div>
+                              //     </TooltipTrigger>
+                              //     <TooltipContent>
+                              //       <div>
+                              //         <div className="flex items-end">
+                              //           <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
+                              //             <img
+                              //               className="rounded-full w-9 h-9 contain"
+                              //               src={user.picture}
+                              //               alt={user.name}
+                              //             />
+                              //           </div>
+                              //           <div className="flex flex-col">
+                              //             <h3 className="font-semibold text-base">
+                              //               {user.name}
+                              //             </h3>
+                              //             <p className="text-sm">
+                              //               <span className="font-semibold">
+                              //                 Promts:{" "}
+                              //               </span>
+                              //               --
+                              //             </p>
+                              //           </div>
+                              //         </div>
 
-                                      <hr className="my-3" />
-                                      <div className="pb-4 px-1">
-                                        <a href="#" className="underline">
-                                          See creations
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              //         <hr className="my-3" />
+                              //         <div className="pb-4 px-1">
+                              //           <a href="#" className="underline">
+                              //             See creations
+                              //           </a>
+                              //         </div>
+                              //       </div>
+                              //     </TooltipContent>
+                              //   </Tooltip>
+                              // </TooltipProvider>
+                              <CommunityAvatar user_id={user} />
                             ))}
                           </div>
                           <ScrollBar orientation="horizontal" />

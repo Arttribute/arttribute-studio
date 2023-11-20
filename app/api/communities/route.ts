@@ -6,9 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await dbConnect();
-    const communities = await Community.find()
-      .populate(["members", "models"])
-      .exec();
+    const communities = await Community.find().populate(["models"]).exec();
     return new NextResponse(JSON.stringify(communities), {
       status: 200,
     });
