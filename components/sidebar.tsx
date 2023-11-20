@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Playlist } from "../data/playlists";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  // Fetch Communities from DB
   playlists: Playlist[];
 }
 

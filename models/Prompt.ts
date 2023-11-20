@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "./User";
+import TunedModel from "./TunedModel";
 const { ObjectId } = mongoose.Schema.Types;
 
 export interface Prompt {
@@ -46,7 +47,7 @@ const PromptSchema = new mongoose.Schema<Prompt>(
     },
     tunedmodel_id: {
       type: ObjectId,
-      ref: "TunedModel",
+      ref: TunedModel,
     },
     status: {
       type: String,

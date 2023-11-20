@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Replicate from "replicate";
-// Define interfaces if needed for request and response
 
 //example tunne
 import dbConnect from "@/lib/dbConnect";

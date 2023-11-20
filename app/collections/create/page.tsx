@@ -108,10 +108,7 @@ export default function CreateCollectiion() {
         description: data.description,
         license: data.license,
         images: storedFiles,
-        slug: slugify(
-          `${data.collection_name}-${collection_uuid}`
-        ).toLowerCase(),
-        collection_uuid: collection_uuid,
+        slug: "my-new-art-collection",
       };
       console.log(collection_data);
       const res = await axios.post("/api/collections", collection_data);

@@ -48,8 +48,11 @@ export function TunedModelCard({ data }: TunedModelCardProps) {
             </div>
           </div>
           <div className="space-y-1 col-span-3 lg:col-span-2">
-            <CardTitle>{data.model_name}</CardTitle>
-            <CardDescription>{data.description}</CardDescription>
+            <CardTitle>Model Name</CardTitle>
+            <CardDescription>
+              Beautifully designed components built with Radix UI and Tailwind
+              CSS.
+            </CardDescription>
           </div>
         </CardHeader>
       </Link>
@@ -57,12 +60,11 @@ export function TunedModelCard({ data }: TunedModelCardProps) {
         <div className="flex space-x-4 text-sm text-muted-foreground">
           <div className="flex items-center">
             <CircleIcon className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
-            {data.status}
+            Model-ready
           </div>
           <div className="flex items-center">
-            <div className="mr-1">{promptsIcon}</div>
-
-            {data.prompt_count}
+            <StarIcon className="mr-1 h-3 w-3" />
+            20k
           </div>
 
           {window.location.pathname === "/tunedmodels" ? (
