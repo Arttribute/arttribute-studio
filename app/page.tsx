@@ -1,5 +1,3 @@
-"use client";
-import { useEffect, useState } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -20,59 +18,41 @@ import { mockImages } from "@/data/mockimages";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
 import { CreateNewDialog } from "@/components/create-new-dialog";
 import { TunedModelCard } from "@/components/tuned-model-card";
+import PromptDisplayCard from "@/components/prompt-display-card";
 
-export default function CreationsPage() {
-  const [prompts, setPrompts] = useState<Array<any>>([]);
-  const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
-  const [collections, setCollections] = useState<Array<any>>([]);
-  const [loadedprompts, setLoadedPrompts] = useState(false);
-  const [loadedtunedmodels, setLoadedModels] = useState(false);
-  const [loadedcollections, setLoadedCollections] = useState(false);
-  const [loadingPrompts, setLoadingPrompts] = useState(false);
-  const [loadingTunedModels, setLoadingTunedModels] = useState(false);
-  const [loadingCollections, setLoadingCollections] = useState(false);
+import { Prompt } from "@/models/Prompt";
+import { TunedModel } from "@/models/TunedModel";
+import { Collection } from "@/models/Collection";
 
-  useEffect(() => {
-    if (!loadedprompts) {
-      getPrompts();
-    }
-    if (!loadedtunedmodels) {
-      getTunedModels();
-    }
-    if (!loadedcollections) {
-      getCollections();
-    }
-  }, [prompts, tunedmodels, collections]);
+async function getPrompts() {
+  const res = await fetch("http://localhost:3000/api/prompts", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
 
-  async function getPrompts() {
-    setLoadingPrompts(true);
-    const res = await fetch("/api/prompts");
-    const data = await res.json();
-    console.log(data);
-    setPrompts(data);
-    setLoadedPrompts(true);
-    setLoadingPrompts(false);
-  }
+async function getTunedModels() {
+  const res = await fetch("http://localhost:3000//api/tunedmodels", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
 
-  async function getTunedModels() {
-    setLoadingTunedModels(true);
-    const res = await fetch("/api/tunedmodels");
-    const data = await res.json();
-    console.log(data);
-    setTunedModels(data);
-    setLoadedModels(true);
-    setLoadingTunedModels(false);
-  }
+async function getCollections() {
+  const res = await fetch("http://localhost:3000/api/collections", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
 
-  async function getCollections() {
-    setLoadingCollections(true);
-    const res = await fetch("/api/collections");
-    const data = await res.json();
-    console.log(data);
-    setCollections(data);
-    setLoadedCollections(true);
-    setLoadingCollections(false);
-  }
+export default async function CreationsPage() {
+  const prompts = await getPrompts();
+  const tunedmodels = await getTunedModels();
+  const collections = await getCollections();
+
   return (
     <>
       <div className="md:block">
@@ -116,14 +96,11 @@ export default function CreationsPage() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {listenNowAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
+                            {prompts.map((prompt: any) => (
+                              <PromptDisplayCard
+                                key={prompt._id}
+                                prompt={prompt}
                                 className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
                               />
                             ))}
                           </div>
@@ -162,7 +139,7 @@ export default function CreationsPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
+                          <div className="flex space-x-4 pb-4 ">
                             {listenNowAlbums.map((album) => (
                               <CollectionArtwork
                                 key={album.name}
@@ -189,7 +166,7 @@ export default function CreationsPage() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
-                            {tunedmodels.map((tunedmodel) => (
+                            {tunedmodels.map((tunedmodel: any) => (
                               <TunedModelCard
                                 key={tunedmodel._id}
                                 data={tunedmodel}
@@ -213,33 +190,39 @@ export default function CreationsPage() {
                           <p className="text-sm text-muted-foreground">
                             Top picks for you. Updated daily.
                           </p>
-                          <Separator className="my-4" />
-                          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
-                            {collections.map((collection) => (
-                              <CollectionCard
-                                key={collection._id}
-                                data={collection}
-                              />
-                            ))}
-                          </div>
-                          <div className="mt-6 space-y-1">
-                            <h2 className="text-2xl font-semibold tracking-tight">
-                              Recent Collections
-                            </h2>
-                            <p className="text-sm text-muted-foreground">
-                              Explore creations by the community.
-                            </p>
-                          </div>
-                          <Separator className="my-4" />
-                          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                            {collections.map((collection) => (
-                              <CollectionCard
-                                key={collection._id}
-                                data={collection}
-                              />
-                            ))}
-                          </div>
                         </div>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4 ">
+                            {collections.map((collection: any) => (
+                              <CollectionCard
+                                key={collection._id}
+                                data={collection}
+                                className="w-[260px]"
+                              />
+                            ))}
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </div>
+                      <div className="mt-6 space-y-1">
+                        <h2 className="text-2xl font-semibold tracking-tight">
+                          Recent Collections
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Explore creations by the community.
+                        </p>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        {collections.map((collection: any) => (
+                          <CollectionCard
+                            key={collection._id}
+                            data={collection}
+                          />
+                        ))}
                       </div>
                     </TabsContent>
                   </Tabs>

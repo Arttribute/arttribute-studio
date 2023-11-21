@@ -33,7 +33,7 @@ interface TunedModelCardProps {
 import { EditTunedModel } from "./edit-tuned-model";
 export function TunedModelCard({ data }: TunedModelCardProps) {
   return (
-    <Card>
+    <div>
       <Link href={`/tunedmodels/${data.slug}`}>
         <CardHeader className="grid grid-cols-3 items-start gap-4 space-y-0 -m-2">
           <div className="hidden lg:flex items-center space-x-1 rounded-md ">
@@ -50,29 +50,30 @@ export function TunedModelCard({ data }: TunedModelCardProps) {
           <div className="space-y-1 col-span-3 lg:col-span-2">
             <CardTitle>{data.model_name}</CardTitle>
             <CardDescription>{data.description}</CardDescription>
+            <div className="flex space-x-4 text-sm text-muted-foreground">
+              <div className="flex items-center">
+                <CircleIcon className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
+                {data.status}
+              </div>
+              <div className="flex items-center">
+                <div className="mr-1">{promptsIcon}</div>
+
+                {data.prompt_count}
+              </div>
+            </div>
           </div>
         </CardHeader>
       </Link>
       <CardContent>
-        <div className="flex space-x-4 text-sm text-muted-foreground">
-          <div className="flex items-center">
-            <CircleIcon className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
-            {data.status}
-          </div>
-          <div className="flex items-center">
-            <div className="mr-1">{promptsIcon}</div>
-
-            {data.prompt_count}
-          </div>
-
+        {/* <div className="flex space-x-4 text-sm text-muted-foreground">
           {window.location.pathname === "/tunedmodels" ? (
-            <div>{/*<EditTunedModel details={data} />*/}</div>
+            <div><EditTunedModel details={data} </div>
           ) : (
             <div></div>
           )}
-        </div>
+        </div> */}
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
