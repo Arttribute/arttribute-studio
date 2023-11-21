@@ -1,5 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import Replicate from "replicate";
+import User from "@/models/User";
 
 //example tunne
 import dbConnect from "@/lib/dbConnect";
@@ -46,7 +45,14 @@ export async function POST(request: Request) {
       ...metadata,
       prompt_id: promptData.id.toString(),
     });
-    return new NextResponse(JSON.stringify(newPrompt), {
+
+    const user = await User.findByIdAndUpdate(
+      { _id: metadata.owner },
+      { $inc: { credits: -metadata.cost } },
+      { new: true }
+    );
+
+    return new NextResponse(JSON.stringify({ newPrompt, user }), {
       status: 201,
     });
   } catch (error: any) {

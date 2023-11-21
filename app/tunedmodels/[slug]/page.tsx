@@ -18,6 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Input } from "@/components/ui/input";
@@ -29,6 +36,7 @@ import { squircle } from "ldrs";
 squircle.register();
 
 import { lineWobble } from "ldrs";
+import Link from "next/link";
 lineWobble.register();
 
 const FormSchema = z.object({
@@ -55,7 +63,9 @@ export default function TunedModelPage({
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
+  const [numberOfImages, setNumberOfImages] = useState(1);
 
+  const promptCost = 5; //TODO: get this from the db
   //"prompt_id" is th id provided by Astria.ai while "_id" is the id of the prompt in the db
 
   // Function to toggle the visibility of the negative prompt field
@@ -148,7 +158,7 @@ export default function TunedModelPage({
         negative_prompt: data.negative_prompt,
         super_resolution: true,
         face_correct: true,
-        num_images: 1,
+        num_images: numberOfImages,
         callback: 0,
       },
       metadata: {
@@ -158,13 +168,15 @@ export default function TunedModelPage({
         owner: account?._id, //TODO: account should never be null
         tunedmodel_id: tunedModel.modeldata._id,
         token: promptToken,
+        cost: numberOfImages * promptCost,
       },
     };
     try {
       const result = await axios.post("/api/prompts/", prompt_data);
-      const PromptResponse = result.data;
+      const PromptResponse = result.data.newPrompt;
       setPromptData(PromptResponse);
       setPromptId(PromptResponse.prompt_id);
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       if (PromptResponse.prompt_id) {
         await axios.put(
           `/api/tunedmodels/${tunedModel.modeldata._id}`,
@@ -236,6 +248,14 @@ export default function TunedModelPage({
                       </FormItem>
                     )}
                   />
+                  <Input
+                    type="number"
+                    value={numberOfImages}
+                    onChange={(e) =>
+                      setNumberOfImages(parseInt(e.target.value))
+                    }
+                  />
+
                   <FormField
                     control={form.control}
                     name="prompt"
@@ -292,22 +312,35 @@ export default function TunedModelPage({
                       )}
                     />
                   )}
-                  {loading ? (
-                    <Button disabled>
-                      Generating{" "}
-                      <div className="ml-2 mt-1">
-                        <l-squircle
-                          size="22"
-                          stroke="2"
-                          stroke-length="0.15"
-                          bg-opacity="0.1"
-                          speed="0.9"
-                          color="white"
-                        ></l-squircle>
-                      </div>
-                    </Button>
+                  {account &&
+                  account.credits >= numberOfImages * promptCost ? null : (
+                    <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                      You do not have enough credits to generate the specified
+                      prompt. Please purchase more credits.
+                    </p>
+                  )}
+                  {account && account.credits >= numberOfImages * promptCost ? (
+                    loading ? (
+                      <Button disabled>
+                        Generating{" "}
+                        <div className="ml-2 mt-1">
+                          <l-squircle
+                            size="22"
+                            stroke="2"
+                            stroke-length="0.15"
+                            bg-opacity="0.1"
+                            speed="0.9"
+                            color="white"
+                          ></l-squircle>
+                        </div>
+                      </Button>
+                    ) : (
+                      <Button type="submit">Generate Images </Button>
+                    )
                   ) : (
-                    <Button type="submit">Generate Images </Button>
+                    <Link href="/buy" passHref>
+                      <Button className="mt-2">Buy Credits </Button>
+                    </Link>
                   )}
                 </form>
               </Form>

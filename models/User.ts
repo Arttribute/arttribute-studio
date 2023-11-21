@@ -7,6 +7,8 @@ export interface User extends mongoose.Document {
   name: string;
   email: string;
   picture: string;
+  credits: number;
+  featured: boolean;
 }
 
 const userSchema = new mongoose.Schema(
@@ -28,6 +30,14 @@ const userSchema = new mongoose.Schema(
     picture: {
       type: String,
       default: defaultProfile,
+    },
+    credits: {
+      type: Number,
+      default: 100,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

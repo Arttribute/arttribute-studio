@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import TunedModel from "@/models/TunedModel";
+import User from "@/models/User";
 
 const API_KEY = process.env.ASTRIA_API_KEY;
 
@@ -46,7 +47,12 @@ export async function POST(request: Request) {
       token: tuneData.token,
     };
     const newTunedModel = await TunedModel.create(modelData);
-    return new NextResponse(JSON.stringify(newTunedModel), {
+    const user = await User.findByIdAndUpdate(
+      { _id: metadata.owner },
+      { $inc: { credits: -metadata.cost } },
+      { new: true }
+    );
+    return new NextResponse(JSON.stringify({ newTunedModel, user }), {
       status: 201,
     });
   } catch (error: any) {

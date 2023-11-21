@@ -96,7 +96,6 @@ export default function CreationsPage() {
                       </TabsList>
                       <div className="ml-auto ">
                         <CreateNewDialog />
-                        <CreateNewDialog />
                       </div>
                     </div>
                     <TabsContent

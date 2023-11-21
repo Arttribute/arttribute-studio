@@ -48,7 +48,7 @@ export default function CollectionPage({
                     </h2>
                     <div className="flex mb-4">
                       <p className="text-sm text-muted-foreground">
-                        By {collection?.owner}
+                        By {collection?.owner?.name}
                       </p>
                       <p className="text-sm text-muted-foreground ml-3">
                         license: {collection?.license}
