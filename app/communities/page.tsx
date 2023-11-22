@@ -16,7 +16,9 @@ import Link from "next/link";
 import { Menu } from "../../components/menu";
 
 async function getData() {
-  const communities = await fetch("http://localhost:3000/api/communities");
+  const communities = await fetch(
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/communities`
+  );
 
   if (!communities.ok) {
     // This will activate the closest `error.js` Error Boundary

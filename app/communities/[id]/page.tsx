@@ -38,7 +38,7 @@ import {
 export default function CommunityPage({ params }: { params: { id: string } }) {
   const [community, setCommunity] = useState<Community>();
   useEffect(() => {
-    fetch("http://localhost:3000/api/communities/" + params.id)
+    fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/communities/` + params.id)
       .then((res) => res.json())
       .then((data) => {
         setCommunity(data);
