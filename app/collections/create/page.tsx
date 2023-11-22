@@ -92,7 +92,7 @@ export default function CreateCollectiion() {
       ),
     });
     try {
-      let storedFiles = [];
+      let storedFiles: any = [];
       for (let i = 0; i < files.length; i++) {
         const imageFileName = slugify(files[i].name).toLowerCase();
         const imageFile = new File([files[i]], imageFileName);
