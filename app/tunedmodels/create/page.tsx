@@ -15,6 +15,7 @@ import { playlists } from "../../../data/playlists";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+import { squircle } from "ldrs";
 import { redirect } from "next/navigation";
 import {
   Form,
@@ -37,7 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { User } from "@/models/User";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const CreateModel = () => {
   const [collections, setCollections] = useState<Array<any>>([]);
@@ -48,6 +49,7 @@ const CreateModel = () => {
   const [trainingCost, setTrainingCost] = useState(55);
   const { push } = useRouter();
   useEffect(() => {
+    squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setLoadedAccount(true);
@@ -284,7 +286,19 @@ const CreateModel = () => {
                               )}
                             />
                             {loading ? (
-                              <Button disabled>Creating Tuned Model ...</Button>
+                              <Button disabled>
+                                Creating Tuned Model
+                                <div className="ml-2 mt-1">
+                                  <l-squircle
+                                    size="22"
+                                    stroke="2"
+                                    stroke-length="0.15"
+                                    bg-opacity="0.1"
+                                    speed="0.9"
+                                    color="white"
+                                  ></l-squircle>
+                                </div>
+                              </Button>
                             ) : (
                               <Button type="submit">Create Tuned Model</Button>
                             )}
