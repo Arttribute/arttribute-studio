@@ -4,7 +4,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "../../../data/playlists";
@@ -65,7 +65,7 @@ export default function CreateCollectiion() {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
-  const { push } = useRouter();
+  //const { push } = useRouter();
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
@@ -123,7 +123,7 @@ export default function CreateCollectiion() {
       console.log(res);
       setLoading(false);
       //redirect to collection page
-      push("/collections");
+      //push("/collections");
     } catch (err) {
       console.log(err);
     }
@@ -283,11 +283,11 @@ export default function CreateCollectiion() {
                     </div>
                   </div>
                 ) : null}
-                {loadedAccount && !account ? (
+                {/*loadedAccount && !account ? (
                   <div className="m-12">
                     <RequireAuthPlaceholder />{" "}
                   </div>
-                ) : null}
+                ) : null*/}
               </div>
             </div>
           </div>
