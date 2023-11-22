@@ -35,8 +35,6 @@ import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { squircle } from "ldrs";
-squircle.register();
 
 const CreateCollectiion = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -260,19 +258,7 @@ const CreateCollectiion = () => {
                             </div>
                           </FormItem>
                           {loading ? (
-                            <Button disabled>
-                              Creating Collection
-                              <div className="ml-2 mt-1">
-                                <l-squircle
-                                  size="22"
-                                  stroke="2"
-                                  stroke-length="0.15"
-                                  bg-opacity="0.1"
-                                  speed="0.9"
-                                  color="white"
-                                ></l-squircle>
-                              </div>
-                            </Button>
+                            <Button disabled>Creating Collection ...</Button>
                           ) : (
                             <Button type="submit">Create Collection</Button>
                           )}

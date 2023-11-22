@@ -15,8 +15,6 @@ import { playlists } from "../../../data/playlists";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-import { squircle } from "ldrs";
-squircle.register();
 import { redirect } from "next/navigation";
 import {
   Form,
@@ -286,19 +284,7 @@ const CreateModel = () => {
                               )}
                             />
                             {loading ? (
-                              <Button disabled>
-                                Creating Tuned Model
-                                <div className="ml-2 mt-1">
-                                  <l-squircle
-                                    size="22"
-                                    stroke="2"
-                                    stroke-length="0.15"
-                                    bg-opacity="0.1"
-                                    speed="0.9"
-                                    color="white"
-                                  ></l-squircle>
-                                </div>
-                              </Button>
+                              <Button disabled>Creating Tuned Model ...</Button>
                             ) : (
                               <Button type="submit">Create Tuned Model</Button>
                             )}
