@@ -3,6 +3,10 @@ import Community from "@/models/Community";
 // import CommunityRequest from "@/models/CommunityRequest";
 import { NextResponse } from "next/server";
 
+type Params = {
+  visibility: string;
+};
+
 export async function GET() {
   try {
     await dbConnect();
@@ -24,6 +28,7 @@ export async function POST(req: Request) {
     const {
       name,
       description,
+      admins,
       members,
       models,
       visibility,
@@ -31,12 +36,14 @@ export async function POST(req: Request) {
       banner_image,
       slug,
       community_uuid,
+      approved,
     } = await req.json();
 
     // Create a new document using the model
     const newCommunity = new Community({
       name,
       description,
+      admins,
       members,
       models,
       visibility,
@@ -44,6 +51,7 @@ export async function POST(req: Request) {
       banner_image,
       slug,
       community_uuid,
+      approved,
     });
 
     // Save the new item to the database

@@ -21,7 +21,6 @@ async function getData() {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
-
   return communities.json();
 }
 
@@ -81,12 +80,14 @@ export default async function CommunitiesPage() {
                       <Separator className="my-4" />
                       <div className="w-full">
                         <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
-                          {communities.map((community: any) => (
-                            <CommunityCard
-                              key={community._id}
-                              data={community}
-                            />
-                          ))}
+                          {communities
+                            .filter((comm: any) => comm?.approved)
+                            .map((community: any) => (
+                              <CommunityCard
+                                key={community._id}
+                                data={community}
+                              />
+                            ))}
                         </div>
                       </div>
                       <div className="mt-6 space-y-1">
