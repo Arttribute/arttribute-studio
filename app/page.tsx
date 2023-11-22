@@ -20,42 +20,35 @@ import { CreateNewDialog } from "@/components/create-new-dialog";
 import { TunedModelCard } from "@/components/tuned-model-card";
 import PromptDisplayCard from "@/components/prompt-display-card";
 
-import { Prompt } from "@/models/Prompt";
-import { TunedModel } from "@/models/TunedModel";
-import { Collection } from "@/models/Collection";
+import dbConnect from "@/lib/dbConnect";
+import Prompt from "@/models/Prompt";
+import TunedModel from "@/models/TunedModel";
+import Collection from "@/models/Collection";
+import User from "@/models/User";
 
 async function getPrompts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/prompts`, {
-    next: { revalidate: 600 },
-  });
-  const data = await res.json();
-  return data;
+  await dbConnect();
+  const prompts = await Prompt.find()
+    .sort({ createdAt: -1 })
+    .populate("tunedmodel_id")
+    .populate("owner");
+  return prompts;
 }
 
 async function getTunedModels() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL}//api/tunedmodels`,
-    {
-      next: { revalidate: 600 },
-    }
-  );
-  const data = await res.json();
-  return data;
+  await dbConnect();
+  const tunedmodels = await TunedModel.find().sort({ createdAt: -1 });
+  return tunedmodels;
 }
 
 async function getCollections() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/collections`,
-    {
-      next: { revalidate: 600 },
-    }
-  );
-  const data = await res.json();
-  return data;
+  await dbConnect();
+  const collections = await Collection.find().sort({ createdAt: -1 });
+  return collections;
 }
 
 export default async function CreationsPage() {
-  const prompts = await getPrompts();
+  const prompts: any = await getPrompts();
   const tunedmodels = await getTunedModels();
   const collections = await getCollections();
 

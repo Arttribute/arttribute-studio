@@ -32,6 +32,8 @@ export function CommunityCard({ data }: CommunityCard) {
         className="object-cover w-full rounded-t-lg h-96 h-full md:w-48 md:rounded-none md:rounded-s-lg"
         src={data.display_image}
         alt=""
+        width={400}
+        height={400}
       />
       <div className="bg-white hover:bg-opacity-[50%] bg-opacity-[20%] hover:backdrop-blur-sm ease-in duration-100 backdrop-blur-xs absolute bottom-0 w-full h-auto md:w-48 text-center py-1">
         <p className="flex gap-x-1 text-sm duration-200 items-center justify-center">
