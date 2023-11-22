@@ -1,16 +1,18 @@
+"use client";
 import { useCallback, useState } from "react";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useMagicContext } from "./providers/MagicProvider";
 import { User } from "@/models/User";
 
 interface Props {
   action: "Connect" | "Disconnect";
+  buttonVariant?: "ghost" | "outline";
   setAccount: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const postConnect = async (account: string, email?: string) => {
-  const res = await fetch("${process.env.NEXT_PUBLIC_BASE_URL}/api/users", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +29,7 @@ const postConnect = async (account: string, email?: string) => {
   return data;
 };
 
-const ConnectButton = ({ action, setAccount }: Props) => {
+const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
   const [disabled, setDisabled] = useState(false);
   const { magic } = useMagicContext();
 
@@ -68,7 +70,7 @@ const ConnectButton = ({ action, setAccount }: Props) => {
 
   return (
     <Button
-      variant="ghost"
+      variant={buttonVariant || "ghost"}
       size="sm"
       disabled={disabled}
       onClick={action == "Connect" ? connect : disconnect}
