@@ -58,11 +58,11 @@ export function RequireAuthPlaceholder() {
           account.
         </p>
 
-        <ConnectButton
+        {/*<ConnectButton
           action="Connect"
           setAccount={setAccount}
           buttonVariant="outline"
-        />
+        />*/}
       </div>
     </div>
   );
