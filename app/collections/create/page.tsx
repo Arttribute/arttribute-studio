@@ -1,15 +1,14 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "../../../data/playlists";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +29,14 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { Web3Storage } from "web3.storage";
+import { v4 as uuid } from "uuid";
+import { User } from "@/models/User";
+import slugify from "slugify";
+import axios from "axios";
+
+import { squircle } from "ldrs";
+squircle.register();
 
 const profileFormSchema = z.object({
   collection_name: z
@@ -40,19 +47,10 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "collection_name must not be longer than 30 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
+  license: z.string({
+    required_error: "Please select a license for your collection.",
+  }),
   description: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -64,6 +62,14 @@ const defaultValues: Partial<ProfileFormValues> = {
 
 export default function CreateCollectiion() {
   const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
+  }, []);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -71,12 +77,10 @@ export default function CreateCollectiion() {
     mode: "onChange",
   });
 
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  });
-
-  function onSubmit(data: ProfileFormValues) {
+  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
+  const storage = new Web3Storage({ token: storageToken });
+  async function onSubmit(data: ProfileFormValues) {
+    setLoading(true);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -85,6 +89,39 @@ export default function CreateCollectiion() {
         </pre>
       ),
     });
+    try {
+      let storedFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const imageFileName = slugify(files[i].name).toLowerCase();
+        const imageFile = new File([files[i]], imageFileName);
+        const storedFile = await storage.put([imageFile]);
+        const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${imageFileName}`;
+        storedFiles.push(fileUrl);
+        console.log("uploaded:", i, " ", fileUrl);
+      }
+      console.log(storedFiles);
+
+      const collection_uuid = uuid();
+      const collection_data = {
+        owner: account?._id, //TODO: account should not be null
+        collection_name: data.collection_name,
+        description: data.description,
+        license: data.license,
+        images: storedFiles,
+        slug: slugify(
+          `${data.collection_name}-${collection_uuid}`
+        ).toLowerCase(),
+        collection_uuid: collection_uuid,
+      };
+      console.log(collection_data);
+      const res = await axios.post("/api/collections", collection_data);
+      console.log(res);
+      setLoading(false);
+      //redirect to collection page
+      window.location.href = `/collections`;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +134,7 @@ export default function CreateCollectiion() {
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
@@ -167,7 +204,7 @@ export default function CreateCollectiion() {
                         />
                         <FormField
                           control={form.control}
-                          name="email"
+                          name="license"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Collection Licence</FormLabel>
@@ -181,14 +218,10 @@ export default function CreateCollectiion() {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="m@example.com">
-                                    m@example.com
-                                  </SelectItem>
-                                  <SelectItem value="m@google.com">
-                                    m@google.com
-                                  </SelectItem>
-                                  <SelectItem value="m@support.com">
-                                    m@support.com
+                                  <SelectItem value="BY">BY</SelectItem>
+                                  <SelectItem value="BYSA">BY SA</SelectItem>
+                                  <SelectItem value="BYNCSA">
+                                    BY NC SA
                                   </SelectItem>
                                 </SelectContent>
                               </Select>
@@ -222,7 +255,23 @@ export default function CreateCollectiion() {
                             />
                           </div>
                         </FormItem>
-                        <Button type="submit"> Create Collection</Button>
+                        {loading ? (
+                          <Button disabled>
+                            Creating Collection
+                            <div className="ml-2 mt-1">
+                              <l-squircle
+                                size="22"
+                                stroke="2"
+                                stroke-length="0.15"
+                                bg-opacity="0.1"
+                                speed="0.9"
+                                color="white"
+                              ></l-squircle>
+                            </div>
+                          </Button>
+                        ) : (
+                          <Button type="submit">Create Collection</Button>
+                        )}
                       </form>
                     </Form>
                   </div>

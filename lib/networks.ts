@@ -1,22 +1,22 @@
 export enum Network {
-  POLYGON_MUMBAI = 'polygon-mumbai',
-  POLYGON = 'polygon',
-  ETHEREUM_GOERLI = 'ethereum-goerli',
-  ETHEREUM = 'ethereum',
+  POLYGON_MUMBAI = "polygon-mumbai",
+  POLYGON = "polygon",
+  ETHEREUM_GOERLI = "ethereum-goerli",
+  ETHEREUM = "ethereum",
 }
 
 export const getNetworkUrl = () => {
   switch (process.env.NEXT_PUBLIC_BLOCKCHAIN_NETWORK) {
     case Network.POLYGON:
-      return 'https://polygon-rpc.com/';
+      return "https://polygon-rpc.com/";
     case Network.POLYGON_MUMBAI:
-      return 'https://rpc-mumbai.maticvigil.com/';
+      return "https://rpc-mumbai.maticvigil.com/";
     case Network.ETHEREUM_GOERLI:
-      return 'https://eth-goerli.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD';
+      return "https://eth-goerli.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
     case Network.ETHEREUM:
-      return 'https://eth-mainnet.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD';
-    default:
-      throw new Error('Network not supported');
+      return "https://eth-mainnet.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
+    //default:
+    //throw new Error("Network not supported");
   }
 };
 
@@ -37,32 +37,32 @@ export const getNetworkToken = () => {
   switch (process.env.NEXT_PUBLIC_BLOCKCHAIN_NETWORK) {
     case Network.POLYGON_MUMBAI:
     case Network.POLYGON:
-      return 'MATIC';
+      return "MATIC";
     case Network.ETHEREUM:
     case Network.ETHEREUM_GOERLI:
-      return 'ETH';
+      return "ETH";
   }
 };
 
 export const getFaucetUrl = () => {
   switch (process.env.NEXT_PUBLIC_BLOCKCHAIN_NETWORK) {
     case Network.POLYGON_MUMBAI:
-      return 'https://faucet.polygon.technology/';
+      return "https://faucet.polygon.technology/";
     case Network.ETHEREUM_GOERLI:
-      return 'https://goerlifaucet.com/';
+      return "https://goerlifaucet.com/";
   }
 };
 
 export const getNetworkName = () => {
   switch (process.env.NEXT_PUBLIC_BLOCKCHAIN_NETWORK) {
     case Network.POLYGON:
-      return 'Polygon (Mainnet)';
+      return "Polygon (Mainnet)";
     case Network.POLYGON_MUMBAI:
-      return 'Polygon (Mumbai)';
+      return "Polygon (Mumbai)";
     case Network.ETHEREUM_GOERLI:
-      return 'Ethereum (Goerli)';
+      return "Ethereum (Goerli)";
     case Network.ETHEREUM:
-      return 'Ethereum (Mainnet)';
+      return "Ethereum (Mainnet)";
   }
 };
 

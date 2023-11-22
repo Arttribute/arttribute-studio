@@ -19,6 +19,8 @@ export interface User extends mongoose.Document {
   collections: Collection[];
   works: string[];
   createdAt: Date;
+  credits: number;
+  featured: boolean;
 }
 
 const userSchema = new mongoose.Schema(
@@ -72,6 +74,14 @@ const userSchema = new mongoose.Schema(
     works: {
       type: [String],
       default: [],
+    },
+    credits: {
+      type: Number,
+      default: 100,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

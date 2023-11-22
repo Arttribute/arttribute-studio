@@ -1,14 +1,9 @@
 "use client";
 import { Metadata } from "next";
-import Image from "next/image";
-import { useState, useEffect, use } from "react";
-import { Web3Storage } from "web3.storage";
-import Replicate from "replicate";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import ky from "ky";
 
 import { Menu } from "../../../components/menu";
-import { Sidebar } from "../../../components/sidebar";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,186 +13,126 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { playlists } from "../../../data/playlists";
+import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+import { User } from "@/models/User";
+
+import { squircle } from "ldrs";
+squircle.register();
+
+import { lineWobble } from "ldrs";
+import Link from "next/link";
+lineWobble.register();
 
 const FormSchema = z.object({
+  title: z.string().min(2, {
+    message: "Prompt must be at least 3 characters.",
+  }),
   prompt: z.string().min(2, {
     message: "Prompt must be at least 3 characters.",
   }),
   negative_prompt: z.string(),
 });
 
-type FineTuneResponse = {
-  id: string;
-  status: string;
-  message: string;
-  data: string;
-};
-
-type ModelListResponse = {
-  status: string;
-  message: string;
-  data: [
-    {
-      created_at: string;
-      updated_at: string;
-      id: string;
-      orig_images: string;
-      title: string;
-    }
-  ];
-};
-
-type DreamboothResponse = {
-  status: string;
-  id: string;
-  output: Array<string>;
-};
-
-export default function MusicPage() {
-  const [images, setImages] = useState<Array<File>>([]);
-  const [imageUrls, setImageUrls] = useState<Array<string>>([]);
+export default function TunedModelPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const [tunedModel, setTunedModel] = useState<any>(null);
+  const [prompted, setPrompted] = useState(false);
+  const [promptData, setPromptData] = useState<any>(null);
+  const [promptId, setPromptId] = useState("");
+  const [updated, setUpdated] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
-  const [generationId, setGenerationId] = useState("");
-  const [tunedModelId, setTunedModelId] = useState("864640");
-  const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
-  const [listOfModels, setListOfModels] = useState<Array<any>>([]);
-  const [instancePrompt, setInstancePrompt] = useState("");
-  const [classPrompt, setClassPrompt] = useState("");
-  const [seed, setSeed] = useState("");
-  const [trainingType, setTrainingType] = useState("");
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [account, setAccount] = useState<User | null>(null);
+  const [numberOfImages, setNumberOfImages] = useState(1);
 
-  // Function to toggle the visibility
+  const promptCost = 5; //TODO: get this from the db
+  //"prompt_id" is th id provided by Astria.ai while "_id" is the id of the prompt in the db
+
+  // Function to toggle the visibility of the negative prompt field
   const toggleNegativePrompt = () => setShowNegativePrompt(!showNegativePrompt);
 
-  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
-  const storage = new Web3Storage({ token: storageToken });
-
   useEffect(() => {
-    //if image generation function has been called and generated images is empty, call fetchDreamboothData\
-    if (generationId && generatedImages && generatedImages.length == 0) {
-      //fetchDreamboothData(generationId);
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
+    if (!tunedModel) {
+      getFineTunedModel();
     }
-  }, [generatedImages]);
 
-  //upload to web3 storage
-  const uploadToWeb3Storage = async () => {
-    let storedFiles = [];
-    for (let i = 0; i < images.length; i++) {
-      const imagefile = images[i];
-      const storedFile = await storage.put([imagefile]);
-      const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${
-        imagefile.name
-      }`;
-      storedFiles.push(fileUrl);
-      console.log("uploaded:", i, " ", fileUrl);
+    if (promptId && generatedImages.length === 0) {
+      setTimeout(() => {
+        fetchPromptData(promptId, tunedModel.modeldata.model_id);
+      }, 30000);
     }
-    console.log(storedFiles);
-    setImageUrls(storedFiles);
-  };
 
-  //train fine tuned model training funstion
-  const trainModel = async (imageUrls: string[]): Promise<void> => {
-    const modelDetails = {
-      tune: {
-        title: "bashy-sdxl1",
-        name: "style",
-        branch: "sd15",
-        model_type: "lora",
-        image_urls: imageUrls,
-      },
-    };
+    if (!updated && promptId && generatedImages.length > 0) {
+      updatePromptData(promptData._id);
+    }
+  }, [tunedModel, generatedImages, promptId]);
+
+  //Fetch Tunedmodel by slug
+  async function getFineTunedModel() {
     try {
-      const result = await axios.post("api/tunedmodels", modelDetails);
-      const fineTuneResponse = result.data;
-      console.log(fineTuneResponse);
+      const { slug } = params;
+      const result = await axios.get(`/api/tunedmodels/${slug}`, {
+        params: { slug: slug },
+      });
+      const tunedModel = result.data;
+      setTunedModel(tunedModel);
     } catch (error) {
-      console.error("Error training model:", error);
-    }
-  };
-
-  //Check fine tuned model training status
-  async function checkFineTuneStatus(model_id: string) {
-    try {
-    } catch (error) {
-      console.error("Error in API call:", error);
-    }
-  }
-
-  //Fetch list of all fine tuned models
-  async function fetchFineTuneList() {
-    try {
-      const result = await axios.get("api/tunedmodels");
-      const fineTuneResponse = result.data.data;
-      setListOfModels(fineTuneResponse);
-      console.log(fineTuneResponse);
-    } catch (error) {
-      console.error("Error in API call:", error);
-    }
-  }
-
-  //Generate image from fine tuned model
-  async function CreatePrompt(model_id: string) {
-    const prompt_data = {
-      model_id: model_id,
-      prompt: {
-        text: "Girrafe painitng in sks style",
-        negative_prompt: "anime",
-        super_resolution: true,
-        face_correct: true,
-        num_images: 1,
-        callback: 0,
-      },
-    };
-    try {
-      const result = await axios.post(`api/prompts/`, prompt_data);
-      const PromptResponse = result.data;
-      console.log(PromptResponse);
-    } catch (error) {
-      console.error("Error in API call:", error);
+      console.error(error);
     }
   }
 
   async function fetchPromptData(promptId: string, modelId: string) {
     try {
-      const result = await axios.get(`api/prompts/${promptId}`, {
+      const result = await axios.get(`/api/prompts/${promptId}`, {
         params: { model_id: modelId, prompt_id: promptId },
       });
       const promptImages = result.data.data.images;
       setGeneratedImages(promptImages);
-      console.log(promptImages);
     } catch (error) {
       console.error("Error in API call:", error);
     }
   }
 
-  const handleImagesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const filesArray: Array<File> = Array.from(files);
-      setImages(filesArray);
-    }
-  };
-
-  const handleFetchList = async () => {
+  //update prompt db on fetch complete
+  async function updatePromptData(promptId: string) {
+    const prompt_data = {
+      images: generatedImages,
+      status: "completed",
+    };
     try {
-      await fetchFineTuneList();
+      const result = await axios.put(`/api/prompts/${promptId}`, prompt_data, {
+        params: { id: promptId },
+      });
+      const PromptResponse = result.data;
+      setUpdated(true);
+      setLoading(false);
     } catch (error) {
-      console.error("API call failed:", error);
+      console.error("Error in API call:", error);
     }
-  };
+  }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -207,55 +142,120 @@ export default function MusicPage() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setGeneratedImages([]);
+    setPromptData(null);
+    setPromptId("");
+    setUpdated(false);
+    setLoading(true);
+    let promptToken = `${tunedModel.modeldata.token} style` || "sks style";
+    //<lora:${tunedModel.modeldata.model_id}:0.75>
+    console.log("prompt token", promptToken);
+    const prompt_data = {
+      model_id: tunedModel.modeldata.model_id,
+      prompt: {
+        text: `${data.prompt} ${promptToken}`,
+        negative_prompt: data.negative_prompt,
+        super_resolution: true,
+        face_correct: true,
+        num_images: numberOfImages,
+        callback: 0,
+      },
+      metadata: {
+        prompt_title: data.title,
+        text: data.prompt,
+        negative_prompt: data.negative_prompt,
+        owner: account?._id, //TODO: account should never be null
+        tunedmodel_id: tunedModel.modeldata._id,
+        token: promptToken,
+        cost: numberOfImages * promptCost,
+      },
+    };
+    try {
+      const result = await axios.post("/api/prompts/", prompt_data);
+      const PromptResponse = result.data.newPrompt;
+      setPromptData(PromptResponse);
+      setPromptId(PromptResponse.prompt_id);
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+      if (PromptResponse.prompt_id) {
+        await axios.put(
+          `/api/tunedmodels/${tunedModel.modeldata._id}`,
+          { prompt_count: tunedModel.modeldata.prompt_count + 1 },
+          {
+            params: { id: tunedModel.modeldata._id },
+          }
+        );
+      }
+      setPrompted(true);
+    } catch (error) {
+      console.error("Error in API call:", error);
+    }
   }
 
   return (
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="lg:p-16 lg:pt-8 m-5">
               <div className="flex">
                 <Avatar className="h-14 w-14 mb-2 mr-2">
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
+                    src={tunedModel?.modeldata.display_image}
                     alt="@shadcn"
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="block">
                   <h2 className="text-3xl font-semibold tracking-tight">
-                    Model Name
+                    {tunedModel?.modeldata.model_name}
                   </h2>
                   <div className="flex mb-4">
                     <p className="text-sm text-muted-foreground">
-                      By Model Author
+                      by {tunedModel?.modeldata.owner?.name}
                     </p>
 
-                    <p className="text-sm text-muted-foreground ml-3">BY NC</p>
+                    <p className="text-sm text-muted-foreground ml-3">
+                      License: {tunedModel?.modeldata.license}
+                    </p>
                   </div>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground mt-2, mb-2">
-                Generate images using model name
+                Generate images using {tunedModel?.modeldata.model_name}
               </p>
 
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-5/5 space-y-6"
+                  className="w-5/5 space-y-4"
                 >
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="A title for your creation"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Input
+                    type="number"
+                    value={numberOfImages}
+                    onChange={(e) =>
+                      setNumberOfImages(parseInt(e.target.value))
+                    }
+                  />
+
                   <FormField
                     control={form.control}
                     name="prompt"
@@ -312,25 +312,75 @@ export default function MusicPage() {
                       )}
                     />
                   )}
-                  <Button type="submit">Generate Image</Button>
+                  {account &&
+                  account.credits >= numberOfImages * promptCost ? null : (
+                    <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                      You do not have enough credits to generate the specified
+                      prompt. Please purchase more credits.
+                    </p>
+                  )}
+                  {account && account.credits >= numberOfImages * promptCost ? (
+                    loading ? (
+                      <Button disabled>
+                        Generating{" "}
+                        <div className="ml-2 mt-1">
+                          <l-squircle
+                            size="22"
+                            stroke="2"
+                            stroke-length="0.15"
+                            bg-opacity="0.1"
+                            speed="0.9"
+                            color="white"
+                          ></l-squircle>
+                        </div>
+                      </Button>
+                    ) : (
+                      <Button type="submit">Generate Images </Button>
+                    )
+                  ) : (
+                    <Link href="/buy" passHref>
+                      <Button className="mt-2">Buy Credits </Button>
+                    </Link>
+                  )}
                 </form>
               </Form>
 
               <div className="rounded-md border border-dashed p-10 mt-4">
-                {images.length === 0 ? (
+                {prompted ? (
+                  generatedImages.length === 0 ? (
+                    <div className="flex items-center justify-center">
+                      <l-line-wobble
+                        size="400"
+                        stroke="5"
+                        bg-opacity="0.1"
+                        speed="3"
+                        color="black"
+                      ></l-line-wobble>
+                    </div>
+                  ) : null
+                ) : (
                   <div className="flex items-center justify-center">
                     <p className="text-sm text-muted-foreground">
                       Genrated images will appear here
                     </p>
                   </div>
-                ) : null}
-
-                {generatedImages &&
-                  generatedImages.map((image) => (
-                    <div key={image}>
-                      <img src={image} alt="generated image" />
-                    </div>
-                  ))}
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2">
+                  {generatedImages &&
+                    generatedImages.map((image) => (
+                      <div className="overflow-hidden rounded-md" key={image}>
+                        <img src={image} alt="generated image" />
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold tracking-tight">
+                  Explore other Images generated by this model
+                </h3>
+                <div className="container mx-auto p-4">
+                  <PromptGalleryGrid prompts={tunedModel?.prompts} />
+                </div>
               </div>
             </div>
           </div>

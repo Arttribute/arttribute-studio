@@ -1,12 +1,11 @@
-"use client";
-import { TunedModel as TM } from "@/models/TunedModel";
+import TunedModel, { TunedModel as TM } from "@/models/TunedModel";
+import { InfoCard } from "./info-card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
 
 interface CommunityCard {
   data: {
@@ -21,9 +20,9 @@ interface CommunityCard {
 }
 
 export function CommunityCard({ data }: CommunityCard) {
-  console.log(data.members);
+  console.log(data);
   return (
-    <Link
+    <a
       href={"/communities/" + data.slug}
       className="relative flex h-64 flex-col items-center md:basis-96 min-w-[400px] md:max-w-[70%] grow bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
     >
@@ -78,8 +77,8 @@ export function CommunityCard({ data }: CommunityCard) {
               Models: ({data.models.length})
             </span>{" "}
             <div className="mt-2 bg-green-50 py-1 px-2 gap-3 flex border-solid border-green-900 rounded-full">
-              {data.models.map((model, i) => (
-                <TooltipProvider key={i}>
+              {data.models.map((model) => (
+                <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
@@ -122,6 +121,6 @@ export function CommunityCard({ data }: CommunityCard) {
           </div>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }
