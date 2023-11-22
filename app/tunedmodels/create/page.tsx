@@ -288,7 +288,7 @@ const CreateModel = () => {
                             {loading ? (
                               <Button disabled>
                                 Creating Tuned Model
-                                {/*<div className="ml-2 mt-1">
+                                <div className="ml-2 mt-1">
                                   <l-squircle
                                     size="22"
                                     stroke="2"
@@ -297,7 +297,7 @@ const CreateModel = () => {
                                     speed="0.9"
                                     color="white"
                                   ></l-squircle>
-                                </div>*/}
+                                </div>
                               </Button>
                             ) : (
                               <Button type="submit">Create Tuned Model</Button>
