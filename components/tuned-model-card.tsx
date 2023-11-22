@@ -38,7 +38,7 @@ export function TunedModelCard({ data }: TunedModelCardProps) {
         <CardHeader className="grid grid-cols-3 items-start gap-4 space-y-0 -m-2">
           <div className="hidden lg:flex items-center space-x-1 rounded-md ">
             <div className="overflow-hidden rounded-md">
-              <img
+              <Image
                 src={data.display_image}
                 alt={data.model_name}
                 width={120}

@@ -53,7 +53,7 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
           <div className="overflow-hidden rounded-md">
             <Dialog>
               <DialogTrigger>
-                <img
+                <Image
                   src={prompt.images[0]}
                   alt={prompt.text}
                   width={500}
@@ -74,7 +74,7 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
                   </DialogHeader>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     <div className=" col-span-3 overflow-hidden rounded-m mt-2">
-                      <img
+                      <Image
                         src={prompt.images[0]}
                         alt={prompt.text}
                         width={490}
@@ -109,7 +109,7 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
                           <div className="grid grid-cols-3 items-start gap-4 space-y-0 ">
                             <div className="hidden lg:flex items-center space-x-1 rounded-md ">
                               <div className="overflow-hidden rounded-md">
-                                <img
+                                <Image
                                   src={prompt?.tunedmodel_id?.display_image}
                                   alt={prompt?.tunedmodel_id?.model_name}
                                   width={120}
@@ -140,7 +140,7 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-1 rounded-md mt-2">
                       {prompt.images.slice(1).map((image, index) => (
                         <div className="overflow-hidden" key={index}>
-                          <img
+                          <Image
                             src={image}
                             alt={prompt.text}
                             width={2}

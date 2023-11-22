@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import Image from "next/image";
 import { Menu } from "../../../components/menu";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -377,7 +377,12 @@ export default function TunedModelPage({
                             className="overflow-hidden rounded-md"
                             key={image}
                           >
-                            <img src={image} alt="generated image" />
+                            <Image
+                              src={image}
+                              alt="generated image"
+                              width={400}
+                              height={400}
+                            />
                           </div>
                         ))}
                     </div>

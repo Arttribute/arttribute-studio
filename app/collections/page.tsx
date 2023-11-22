@@ -30,7 +30,7 @@ export default function CollectionsPage() {
     if (!loaded && user) {
       getCollections(user._id);
     }
-  }, [collections]);
+  }, [collections, loaded]);
 
   async function getCollections(userId: string) {
     const res = await axios.get("/api/collections/users", {
