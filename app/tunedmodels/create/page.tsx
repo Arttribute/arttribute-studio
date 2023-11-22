@@ -41,7 +41,7 @@ import { User } from "@/models/User";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { useRouter } from "next/router";
 
-export default function CreateModel() {
+const CreateModel = () => {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -337,7 +337,9 @@ export default function CreateModel() {
       </div>
     </>
   );
-}
+};
+
+export default CreateModel;
 const modelIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

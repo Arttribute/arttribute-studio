@@ -38,7 +38,7 @@ import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { squircle } from "ldrs";
 squircle.register();
 
-export default function CreateCollectiion() {
+const CreateCollectiion = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
@@ -293,4 +293,6 @@ export default function CreateCollectiion() {
       </div>
     </>
   );
-}
+};
+
+export default CreateCollectiion;
