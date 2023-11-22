@@ -17,7 +17,7 @@ import { Menu } from "../../components/menu";
 
 async function getData() {
   const communities = await fetch(
-    "${process.env.NEXT_PUBLIC_BASE_URL}/api/communities"
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/communities`
   );
 
   if (!communities.ok) {

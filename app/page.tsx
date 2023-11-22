@@ -25,7 +25,7 @@ import { TunedModel } from "@/models/TunedModel";
 import { Collection } from "@/models/Collection";
 
 async function getPrompts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/prompts`, {
     next: { revalidate: 600 },
   });
   const data = await res.json();
@@ -34,7 +34,7 @@ async function getPrompts() {
 
 async function getTunedModels() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}//api/tunedmodels`,
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}//api/tunedmodels`,
     {
       next: { revalidate: 600 },
     }
@@ -45,7 +45,7 @@ async function getTunedModels() {
 
 async function getCollections() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections`,
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/collections`,
     {
       next: { revalidate: 600 },
     }
