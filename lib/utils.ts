@@ -1,3 +1,4 @@
+import { User } from "@/models/User";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -72,3 +73,9 @@ export function generateName() {
 
   return `${randomAdjective} ${randomNoun}`;
 }
+
+export const getLoggedUser = (): User | null => {
+  const user = localStorage.getItem("user");
+  if (!user) return null;
+  return JSON.parse(user);
+};

@@ -5,20 +5,14 @@ import { User } from "@/models/User";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { formatCount } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Plus, Check, CheckCircle } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { CheckCircle } from "lucide-react";
 import { CommunityCard } from "@/components/community-card";
 import { TunedModelCard } from "@/components/tuned-model-card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { madeForYouAlbums } from "@/data/albums";
 import { CollectionArtwork } from "@/components/collection-artwork";
 import { CollectionCard } from "@/components/collections-card";
+import FollowButton from "@/components/follow-button";
 
 interface Params {
   params: {
@@ -211,9 +205,6 @@ const getUserByAddress = async (web3Address: string) => {
 export default async function ArtistsPage({ params: { slug } }: Params) {
   const user: User = await getUserByAddress(slug);
 
-  const isFollowed = true; // TODO: Idk what to do here
-  const isVerified = true;
-
   return (
     <>
       <div className="md:block">
@@ -237,31 +228,13 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         className="object-cover aspect-square"
                       />
                     </div>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            className="rounded-full w-8 h-8 absolute bottom-0 right-0"
-                          >
-                            {isFollowed ? (
-                              <Check className="h-5 w-5" />
-                            ) : (
-                              <Plus className="h-5 w-5" />
-                            )}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{isFollowed ? "Unfollow" : "Follow"}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <FollowButton uid={user._id} />
                   </div>
 
                   <div className="flex md:flex-grow flex-col space-y-1">
                     <h2 className="flex items-center text-lg sm:text-2xl font-semibold tracking-tight">
                       {user.name}
-                      {isVerified && (
+                      {user.featured && (
                         <CheckCircle className="ml-1 h-4 w-4 text-sky-600" />
                       )}
                     </h2>
@@ -382,24 +355,14 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                             {/* TODO: This is temporary */}
 
                             {madeForYouAlbums.map((album) => (
-                              <>
-                                <CollectionArtwork
-                                  key={album.name}
-                                  album={album}
-                                  className="w-[150px]"
-                                  aspectRatio="square"
-                                  width={150}
-                                  height={150}
-                                />
-                                <CollectionArtwork
-                                  key={album.name}
-                                  album={album}
-                                  className="w-[150px]"
-                                  aspectRatio="square"
-                                  width={150}
-                                  height={150}
-                                />
-                              </>
+                              <CollectionArtwork
+                                key={album.name}
+                                album={album}
+                                className="w-[150px]"
+                                aspectRatio="square"
+                                width={150}
+                                height={150}
+                              />
                             ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
