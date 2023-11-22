@@ -73,7 +73,7 @@ interface Model {
 }
 
 // async function getData() {
-//   const model_data2 = await fetch("http://localhost:3000/api/tunedmodels");
+//   const model_data2 = await fetch("${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels");
 
 //   if (!model_data2.ok) {
 //     // This will activate the closest `error.js` Error Boundary
@@ -88,7 +88,7 @@ export default function CreateCollectiion() {
   const [selectedModels, setModels] = useState([]);
   const [model_data, setModelData] = useState<TunedModelOut[]>([]);
   useEffect(() => {
-    fetch("http://localhost:3000/api/tunedmodels")
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels`)
       .then((res) => res.json())
       .then((data) => {
         setModelData(data);

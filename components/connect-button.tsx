@@ -10,7 +10,7 @@ interface Props {
 }
 
 const postConnect = async (account: string, email?: string) => {
-  const res = await fetch("http://localhost:3000/api/users", {
+  const res = await fetch("${process.env.NEXT_PUBLIC_BASE_URL}/api/users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

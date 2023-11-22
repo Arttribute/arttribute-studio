@@ -6,7 +6,7 @@ import ArtistCard from "@/components/artist-card";
 import { Separator } from "@/components/ui/separator";
 
 const getUsers = async () => {
-  const res = await fetch(`http://localhost:3000/api/users`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
     next: { revalidate: 600 },
   });
   const data = await res.json();
