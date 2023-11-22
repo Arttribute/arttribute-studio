@@ -41,7 +41,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
   }
 }
 
-export async function PUT(request: Request, { params }: { params: Params }) {
+export async function PATCH(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
     const { name, email, bio, tags, fileUrl }: Fields = await request.json();

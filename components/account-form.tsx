@@ -86,7 +86,7 @@ const InputForm = ({
       }
 
       const res = await fetch(`/api/users/${web3Address}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
