@@ -77,8 +77,8 @@ export function CommunityCard({ data }: CommunityCard) {
               Models: ({data.models.length})
             </span>{" "}
             <div className="mt-2 bg-green-50 py-1 px-2 gap-3 flex border-solid border-green-900 rounded-full">
-              {data.models.map((model) => (
-                <TooltipProvider>
+              {data.models.map((model, i) => (
+                <TooltipProvider key={i}>
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
