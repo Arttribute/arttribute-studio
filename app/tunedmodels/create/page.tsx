@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 
 import { squircle } from "ldrs";
 squircle.register();
-
+import { redirect } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -39,7 +39,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { User } from "@/models/User";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-
+import { useRouter } from "next/router";
 const profileFormSchema = z.object({
   modelname: z
     .string()
@@ -76,7 +76,7 @@ export default function CreateModel() {
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [trainingCost, setTrainingCost] = useState(55);
-
+  const { push } = useRouter();
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
@@ -152,7 +152,7 @@ export default function CreateModel() {
       setLoading(false);
       localStorage.setItem("user", JSON.stringify(fineTuneResponse.user));
       //redirect to tuned model page
-      window.location.href = `/tunedmodels`;
+      push("/tunedmodels");
     } catch (error) {
       console.error("Error training model:", error);
     }
