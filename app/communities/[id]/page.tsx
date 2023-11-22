@@ -101,8 +101,8 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                       <div className="bg-green-100 bg-rounded-xl w-full flex items-start rounded-xl py-3 px-5 mt-5 justify-start">
                         <ScrollArea>
                           <div className="flex space-x-5">
-                            {community?.members.map((user) => (
-                              <TooltipProvider>
+                            {community?.members.map((user, i) => (
+                              <TooltipProvider key={i}>
                                 <Tooltip>
                                   <TooltipTrigger>
                                     <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">

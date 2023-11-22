@@ -2,6 +2,10 @@ import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
 
+require("@/models/Community");
+require("@/models/Collection");
+require("@/models/TunedModel");
+
 type Params = {
   slug: string;
 };
@@ -17,7 +21,11 @@ interface Fields {
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
-    const user = await User.findOne({ web3Address: params.slug });
+    const user = await User.findOne({ web3Address: params.slug }).populate([
+      "communities",
+      "models",
+      "collections",
+    ]);
     if (!user) {
       return new NextResponse("User Not Found", {
         status: 404,
