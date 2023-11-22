@@ -313,32 +313,22 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         <h2 className="text-xl font-semibold tracking-tight">
                           Member&apos;s Collections
                         </h2>
-                        <div className="w-full">
-                          <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
-                            <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
-                              {/* TODO: change to actual user collections */}
-                              <div className="flex gap-4">
-                                {collections.length !== 0 ? (
-                                  collections.map((collection: any) => (
-                                    <div
-                                      key={collection._id}
-                                      className="w-[250px]"
-                                    >
-                                      <CollectionCard data={collection} />
-                                    </div>
-                                  ))
-                                ) : (
-                                  <p>No collections yet</p>
-                                )}
-                              </div>
-
-                              <ScrollBar
-                                orientation="horizontal"
-                                className="bg-gray-400 rounded-md"
-                              />
-                            </ScrollArea>
+                        <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
+                          {/* TODO: change to actual user collections */}
+                          <div className="flex w-max space-x-4 p-4">
+                            {collections.length !== 0 ? (
+                              collections.map((collection: any) => (
+                                <div key={collection._id} className="w-60">
+                                  <CollectionCard data={collection} />
+                                </div>
+                              ))
+                            ) : (
+                              <p>No collections yet</p>
+                            )}
                           </div>
-                        </div>
+
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
                     </div>
                     <Separator className="my-4" />
@@ -347,28 +337,24 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         <h2 className="text-xl font-semibold tracking-tight">
                           Member&apos;s Models
                         </h2>
-                        <div className="w-full">
-                          <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
-                            <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
-                              {/* TODO: change to actual user models */}
-                              <div className="flex gap-4">
-                                {models.length !== 0 ? (
-                                  models.map((model: any) => (
-                                    <div className="w-[500px]" key={model._id}>
-                                      <TunedModelCard data={model} />
-                                    </div>
-                                  ))
-                                ) : (
-                                  <p>No models tuned yet</p>
-                                )}
-                              </div>
-                              <ScrollBar
-                                orientation="horizontal"
-                                className="bg-gray-400 rounded-md"
-                              />
-                            </ScrollArea>
+                        <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
+                          {/* TODO: change to actual user models */}
+                          <div className="flex w-max space-x-4 p-4">
+                            {models.length !== 0 ? (
+                              models.map((model: any) => (
+                                <div
+                                  key={model._id}
+                                  className="border-2 rounded-md"
+                                >
+                                  <TunedModelCard data={model} />
+                                </div>
+                              ))
+                            ) : (
+                              <p>No models tuned yet</p>
+                            )}
                           </div>
-                        </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
                     </div>
                     <Separator className="my-4" />
@@ -377,54 +363,47 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         <h2 className="text-xl font-semibold tracking-tight">
                           Member&apos;s Works
                         </h2>
-                        <div className="w-full">
-                          <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
-                            <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
-                              <div className="flex space-x-4 pb-4">
-                                {user.works.length !== 0 ? (
-                                  user.works.map((work: any) => (
-                                    <CollectionArtwork
-                                      key={work._id}
-                                      album={work}
-                                      className="w-[150px]"
-                                      aspectRatio="square"
-                                      width={150}
-                                      height={150}
-                                    />
-                                  ))
-                                ) : (
-                                  <p>No works yet</p>
-                                )}
-                                {/* TODO: This is temporary */}
+                        <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
+                          <div className="flex w-max space-x-4 p-4">
+                            {user.works.length !== 0 ? (
+                              user.works.map((work: any) => (
+                                <CollectionArtwork
+                                  key={work._id}
+                                  album={work}
+                                  className="w-[150px]"
+                                  aspectRatio="square"
+                                  width={150}
+                                  height={150}
+                                />
+                              ))
+                            ) : (
+                              <p>No works yet</p>
+                            )}
+                            {/* TODO: This is temporary */}
 
-                                {madeForYouAlbums.map((album) => (
-                                  <>
-                                    <CollectionArtwork
-                                      key={album.name}
-                                      album={album}
-                                      className="w-[150px]"
-                                      aspectRatio="square"
-                                      width={150}
-                                      height={150}
-                                    />
-                                    <CollectionArtwork
-                                      key={album.name}
-                                      album={album}
-                                      className="w-[150px]"
-                                      aspectRatio="square"
-                                      width={150}
-                                      height={150}
-                                    />
-                                  </>
-                                ))}
-                              </div>
-                              <ScrollBar
-                                orientation="horizontal"
-                                className="bg-gray-400 rounded-md"
-                              />
-                            </ScrollArea>
+                            {madeForYouAlbums.map((album) => (
+                              <>
+                                <CollectionArtwork
+                                  key={album.name}
+                                  album={album}
+                                  className="w-[150px]"
+                                  aspectRatio="square"
+                                  width={150}
+                                  height={150}
+                                />
+                                <CollectionArtwork
+                                  key={album.name}
+                                  album={album}
+                                  className="w-[150px]"
+                                  aspectRatio="square"
+                                  width={150}
+                                  height={150}
+                                />
+                              </>
+                            ))}
                           </div>
-                        </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
                     </div>
                     <Separator className="my-4" />
@@ -433,9 +412,9 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         <h2 className="text-xl font-semibold tracking-tight">
                           Member&apos;s Communities
                         </h2>
-                        <div className="w-full">
-                          <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
-                            {/* TODO: change to actual user communities. Scroll area?? */}
+                        <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
+                          <div className="flex w-max space-x-4 p-4">
+                            {/* TODO: change to actual user communities */}
                             {communities.length !== 0 ? (
                               communities.map((community: any) => (
                                 <CommunityCard
@@ -447,7 +426,8 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                               <p>No communities yet</p>
                             )}
                           </div>
-                        </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
                     </div>
                   </div>
