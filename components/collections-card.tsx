@@ -50,7 +50,7 @@ export function CollectionCard({ data, className }: CollectionCardProps) {
                     alt={images.alt}
                     className={cn(
                       "h-auto w-auto object-cover transition-all ",
-                      "aspect-[11/12]"
+                      "aspect-[13/14]"
                     )}
                   />
                   <div className="absolute inset-0 bg-black opacity-10"></div>{" "}
@@ -64,7 +64,7 @@ export function CollectionCard({ data, className }: CollectionCardProps) {
                 alt={images[0].alt}
                 className={cn(
                   "h-auto w-auto object-cover transition-all ",
-                  "aspect-[11/12]"
+                  "aspect-[13/14]"
                 )}
               />
             </div>

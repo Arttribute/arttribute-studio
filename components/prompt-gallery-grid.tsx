@@ -46,7 +46,7 @@ interface ArtGalleryGridProps {
 
 const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+    <div className="grid grid-cols-4 lg:grid-cols-5 gap-2">
       {prompts &&
         prompts.map((prompt, index) => (
           <ContextMenu key={index}>
@@ -57,8 +57,6 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                     <img
                       src={prompt.images[0]}
                       alt={prompt.text}
-                      width={500}
-                      height={300}
                       className={cn(
                         "h-auto w-auto object-cover transition-all hover:scale-105",
                         "aspect-[3/4]"

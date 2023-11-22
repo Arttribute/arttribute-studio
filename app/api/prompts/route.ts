@@ -11,8 +11,10 @@ export async function GET() {
   try {
     await dbConnect();
     const prompts = await Prompt.find()
+      .sort({ createdAt: -1 })
       .populate("tunedmodel_id")
       .populate("owner");
+
     return new NextResponse(JSON.stringify(prompts), {
       status: 200,
     });

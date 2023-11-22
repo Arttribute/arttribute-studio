@@ -7,7 +7,9 @@ export async function GET(request: Request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
-    const collection = await Collection.find({ owner: userId });
+    const collection = await Collection.find({ owner: userId }).sort({
+      createdAt: -1,
+    });
 
     return new NextResponse(JSON.stringify(collection), {
       status: 200,

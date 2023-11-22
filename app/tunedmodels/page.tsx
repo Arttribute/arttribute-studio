@@ -16,21 +16,24 @@ import { TunedModelCard } from "@/components/tuned-model-card";
 import Link from "next/link";
 import { User } from "@/models/User";
 import axios from "axios";
+import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 
 export default function TunedModels() {
   const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
+  const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
     setAccount(user);
 
-    if (!loaded) {
+    if (!loaded && user) {
       getTunedModels(user._id);
     }
-  }, [loaded]);
+  }, [loaded, loadedAccount]);
 
   async function getTunedModels(userId: string) {
     const res = await axios.get("/api/tunedmodels/users", {
@@ -50,39 +53,46 @@ export default function TunedModels() {
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
-                <div className="h-full px-4 py-6 lg:px-8">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <h2 className="text-2xl font-semibold tracking-tight">
-                        My Tuned Models
-                      </h2>
+                {account != null ? (
+                  <div className="h-full px-4 py-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <h2 className="text-2xl font-semibold tracking-tight">
+                          My Tuned Models
+                        </h2>
 
-                      <p className="text-sm text-muted-foreground">
-                        Fine-tuned models based on your art collections
-                      </p>
+                        <p className="text-sm text-muted-foreground">
+                          Fine-tuned models based on your art collections
+                        </p>
+                      </div>
+                      <div className="ml-auto ">
+                        <Link href="/tunedmodels/create" passHref>
+                          <Button size="sm" className="relative">
+                            Create a Tuned Model
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
-                    <div className="ml-auto ">
-                      <Link href="/tunedmodels/create" passHref>
-                        <Button size="sm" className="relative">
-                          Create a Tuned Model
-                        </Button>
-                      </Link>
+                    <Separator className="my-4" />
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                      {tunedmodels.length > 0 &&
+                        tunedmodels.map((tunedmodel) => (
+                          <TunedModelCard
+                            key={tunedmodel._id}
+                            data={tunedmodel}
+                          />
+                        ))}
                     </div>
+                    {loaded && tunedmodels.length === 0 ? (
+                      <TunedModelsEmptyPlaceholder />
+                    ) : null}
                   </div>
-                  <Separator className="my-4" />
-                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
-                    {tunedmodels.length > 0 &&
-                      tunedmodels.map((tunedmodel) => (
-                        <TunedModelCard
-                          key={tunedmodel._id}
-                          data={tunedmodel}
-                        />
-                      ))}
+                ) : null}
+                {loadedAccount && !account ? (
+                  <div className="m-12">
+                    <RequireAuthPlaceholder />{" "}
                   </div>
-                  {loaded && tunedmodels.length === 0 ? (
-                    <TunedModelsEmptyPlaceholder />
-                  ) : null}
-                </div>
+                ) : null}
               </div>
             </div>
           </div>

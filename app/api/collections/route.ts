@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await dbConnect();
-    const collections = await Collection.find();
+    const collections = await Collection.find().sort({ createdAt: -1 });
     return new NextResponse(JSON.stringify(collections), {
       status: 200,
     });

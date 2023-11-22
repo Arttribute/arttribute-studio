@@ -59,7 +59,7 @@ export default async function CreationsPage() {
         <Menu />
         <div className="mt-14 border-t">
           <div className="bg-background">
-            <div className="grid lg:grid-cols-5">
+            <div className="lg:grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
@@ -116,7 +116,7 @@ export default async function CreationsPage() {
                         </p>
                       </div>
                       <Separator className="my-4" />
-                      <div className="relative">
+                      <div className="flex">
                         <div className="container mx-auto p-4">
                           <PromptGalleryGrid prompts={prompts} />
                         </div>
@@ -165,7 +165,7 @@ export default async function CreationsPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
                             {tunedmodels.map((tunedmodel: any) => (
                               <TunedModelCard
                                 key={tunedmodel._id}
@@ -216,7 +216,7 @@ export default async function CreationsPage() {
                         </p>
                       </div>
                       <Separator className="my-4" />
-                      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {collections.map((collection: any) => (
                           <CollectionCard
                             key={collection._id}

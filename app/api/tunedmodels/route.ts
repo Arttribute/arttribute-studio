@@ -15,7 +15,7 @@ export async function GET() {
 
   try {
     await dbConnect();
-    const tunedmodels = await TunedModel.find();
+    const tunedmodels = await TunedModel.find().sort({ createdAt: -1 });
     return new NextResponse(JSON.stringify(tunedmodels), {
       status: 200,
     });

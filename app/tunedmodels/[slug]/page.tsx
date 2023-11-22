@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
 import { User } from "@/models/User";
-
+import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { squircle } from "ldrs";
 squircle.register();
 
@@ -62,6 +62,7 @@ export default function TunedModelPage({
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
   const [showNegativePrompt, setShowNegativePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [numberOfImages, setNumberOfImages] = useState(1);
 
@@ -74,6 +75,7 @@ export default function TunedModelPage({
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
     setAccount(user);
     if (!tunedModel) {
       getFineTunedModel();
@@ -227,153 +229,166 @@ export default function TunedModelPage({
                 Generate images using {tunedModel?.modeldata.model_name}
               </p>
 
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-5/5 space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Title</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="A title for your creation"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Input
-                    type="number"
-                    value={numberOfImages}
-                    onChange={(e) =>
-                      setNumberOfImages(parseInt(e.target.value))
-                    }
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="prompt"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prompt</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="A detailed desctiption of the image you want to generate"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex items-center">
-                    <button
-                      type="button"
-                      onClick={toggleNegativePrompt}
-                      aria-label={
-                        showNegativePrompt
-                          ? "Hide Negative Prompt"
-                          : "Show Negative Prompt"
-                      }
+              {account != null ? (
+                <>
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="w-5/5 space-y-4"
                     >
-                      {showNegativePrompt ? (
-                        <p className="text-sm text-foreground">
-                          - Hide negative prompt
-                        </p>
-                      ) : (
-                        <p className="text-sm text-foreground">
-                          + Include negative prompt to avoid certain items in
-                          your image
-                        </p>
-                      )}
-                    </button>
-                  </div>
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Title</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="A title for your creation"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Input
+                        type="number"
+                        value={numberOfImages}
+                        onChange={(e) =>
+                          setNumberOfImages(parseInt(e.target.value))
+                        }
+                      />
 
-                  {showNegativePrompt && (
-                    <FormField
-                      control={form.control}
-                      name="negative_prompt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Negative Prompt</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Items you don't want in your image"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  )}
-                  {account &&
-                  account.credits >= numberOfImages * promptCost ? null : (
-                    <p className="mb-4 mt-2 text-sm text-muted-foreground">
-                      You do not have enough credits to generate the specified
-                      prompt. Please purchase more credits.
-                    </p>
-                  )}
-                  {account && account.credits >= numberOfImages * promptCost ? (
-                    loading ? (
-                      <Button disabled>
-                        Generating{" "}
-                        <div className="ml-2 mt-1">
-                          <l-squircle
-                            size="22"
-                            stroke="2"
-                            stroke-length="0.15"
-                            bg-opacity="0.1"
-                            speed="0.9"
-                            color="white"
-                          ></l-squircle>
-                        </div>
-                      </Button>
-                    ) : (
-                      <Button type="submit">Generate Images </Button>
-                    )
-                  ) : (
-                    <Link href="/buy" passHref>
-                      <Button className="mt-2">Buy Credits </Button>
-                    </Link>
-                  )}
-                </form>
-              </Form>
-
-              <div className="rounded-md border border-dashed p-10 mt-4">
-                {prompted ? (
-                  generatedImages.length === 0 ? (
-                    <div className="flex items-center justify-center">
-                      <l-line-wobble
-                        size="400"
-                        stroke="5"
-                        bg-opacity="0.1"
-                        speed="3"
-                        color="black"
-                      ></l-line-wobble>
-                    </div>
-                  ) : null
-                ) : (
-                  <div className="flex items-center justify-center">
-                    <p className="text-sm text-muted-foreground">
-                      Genrated images will appear here
-                    </p>
-                  </div>
-                )}
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2">
-                  {generatedImages &&
-                    generatedImages.map((image) => (
-                      <div className="overflow-hidden rounded-md" key={image}>
-                        <img src={image} alt="generated image" />
+                      <FormField
+                        control={form.control}
+                        name="prompt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Prompt</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="A detailed desctiption of the image you want to generate"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex items-center">
+                        <button
+                          type="button"
+                          onClick={toggleNegativePrompt}
+                          aria-label={
+                            showNegativePrompt
+                              ? "Hide Negative Prompt"
+                              : "Show Negative Prompt"
+                          }
+                        >
+                          {showNegativePrompt ? (
+                            <p className="text-sm text-foreground">
+                              - Hide negative prompt
+                            </p>
+                          ) : (
+                            <p className="text-sm text-foreground">
+                              + Include negative prompt to avoid certain items
+                              in your image
+                            </p>
+                          )}
+                        </button>
                       </div>
-                    ))}
+
+                      {showNegativePrompt && (
+                        <FormField
+                          control={form.control}
+                          name="negative_prompt"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Negative Prompt</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Items you don't want in your image"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      {account &&
+                      account.credits >= numberOfImages * promptCost ? null : (
+                        <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                          You do not have enough credits to generate the
+                          specified prompt. Please purchase more credits.
+                        </p>
+                      )}
+                      {account &&
+                      account.credits >= numberOfImages * promptCost ? (
+                        loading ? (
+                          <Button disabled>
+                            Generating{" "}
+                            <div className="ml-2 mt-1">
+                              <l-squircle
+                                size="22"
+                                stroke="2"
+                                stroke-length="0.15"
+                                bg-opacity="0.1"
+                                speed="0.9"
+                                color="white"
+                              ></l-squircle>
+                            </div>
+                          </Button>
+                        ) : (
+                          <Button type="submit">Generate Images </Button>
+                        )
+                      ) : (
+                        <Link href="/buy" passHref>
+                          <Button className="mt-2">Buy Credits </Button>
+                        </Link>
+                      )}
+                    </form>
+                  </Form>
+
+                  <div className="rounded-md border border-dashed p-10 mt-4">
+                    {prompted ? (
+                      generatedImages.length === 0 ? (
+                        <div className="flex items-center justify-center">
+                          <l-line-wobble
+                            size="400"
+                            stroke="5"
+                            bg-opacity="0.1"
+                            speed="3"
+                            color="black"
+                          ></l-line-wobble>
+                        </div>
+                      ) : null
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <p className="text-sm text-muted-foreground">
+                          Genrated images will appear here
+                        </p>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2">
+                      {generatedImages &&
+                        generatedImages.map((image) => (
+                          <div
+                            className="overflow-hidden rounded-md"
+                            key={image}
+                          >
+                            <img src={image} alt="generated image" />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              {loadedAccount && !account ? (
+                <div className="m-2">
+                  <RequireAuthPlaceholder />{" "}
                 </div>
-              </div>
+              ) : null}
               <div className="mt-8">
                 <h3 className="text-xl font-semibold tracking-tight">
                   Explore other Images generated by this model

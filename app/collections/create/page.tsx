@@ -34,7 +34,7 @@ import { v4 as uuid } from "uuid";
 import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
-
+import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { squircle } from "ldrs";
 squircle.register();
 
@@ -64,11 +64,13 @@ export default function CreateCollectiion() {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
+  const [loadedAccount, setLoadedAccount] = useState(true);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
+    setLoadedAccount(true);
   }, []);
 
   const form = useForm<ProfileFormValues>({
@@ -139,143 +141,150 @@ export default function CreateCollectiion() {
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
-                <div className="h-full px-4 py-6 lg:px-8">
-                  <div className="flex items-center ">
-                    <Link href="/collections" passHref className="ml-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-black cursor-pointer"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="{3}"
-                          d="M10 19l-7-7m0 0l7-7m-7 "
-                        />
-                      </svg>
-                    </Link>
-                    <h2 className="text-2xl font-semibold tracking-tight ml-1">
-                      New Art Collection
-                    </h2>
-                  </div>
+                {account != null ? (
+                  <div className="h-full px-4 py-6 lg:px-8">
+                    <div className="flex items-center ">
+                      <Link href="/collections" passHref className="ml-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-black cursor-pointer"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="{3}"
+                            d="M10 19l-7-7m0 0l7-7m-7 "
+                          />
+                        </svg>
+                      </Link>
+                      <h2 className="text-2xl font-semibold tracking-tight ml-1">
+                        New Art Collection
+                      </h2>
+                    </div>
 
-                  <div className="rounded-md border border-dashed p-10 pt-6 m-4 ">
-                    <Form {...form}>
-                      <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-6"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="collection_name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Collection Name</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="My Art Collection"
-                                  {...field}
-                                />
-                              </FormControl>
-
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Description</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Describe your collection."
-                                  className="resize-none"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="license"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Collection Licence</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
+                    <div className="rounded-md border border-dashed p-10 pt-6 m-4 ">
+                      <Form {...form}>
+                        <form
+                          onSubmit={form.handleSubmit(onSubmit)}
+                          className="space-y-6"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="collection_name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Collection Name</FormLabel>
                                 <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a Licence for your Collection" />
-                                  </SelectTrigger>
+                                  <Input
+                                    placeholder="My Art Collection"
+                                    {...field}
+                                  />
                                 </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="BY">BY</SelectItem>
-                                  <SelectItem value="BYSA">BY SA</SelectItem>
-                                  <SelectItem value="BYNCSA">
-                                    BY NC SA
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormDescription>
-                                What are{" "}
-                                <Link
-                                  href="/collections"
-                                  className=" underline"
+
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Describe your collection."
+                                    className="resize-none"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="license"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Collection Licence</FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
                                 >
-                                  Arttribute licenses
-                                </Link>
-                                ?
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormItem>
-                          <FormLabel>
-                            Upload Image files {"(Up to 25 files)"}
-                          </FormLabel>
-                          <div className="flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              multiple
-                              onChange={handleFileChange}
-                              className="w-full p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select a Licence for your Collection" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="BY">BY</SelectItem>
+                                    <SelectItem value="BYSA">BY SA</SelectItem>
+                                    <SelectItem value="BYNCSA">
+                                      BY NC SA
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormDescription>
+                                  What are{" "}
+                                  <Link
+                                    href="/collections"
+                                    className=" underline"
+                                  >
+                                    Arttribute licenses
+                                  </Link>
+                                  ?
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormItem>
+                            <FormLabel>
+                              Upload Image files {"(Up to 25 files)"}
+                            </FormLabel>
+                            <div className="flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleFileChange}
+                                className="w-full p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
                         file:rounded file:border-0 file:text-sm file:font-semibold
                         file:bg-violet-50 file:text-gray-00 hover:file:bg-violet-100"
-                            />
-                          </div>
-                        </FormItem>
-                        {loading ? (
-                          <Button disabled>
-                            Creating Collection
-                            <div className="ml-2 mt-1">
-                              <l-squircle
-                                size="22"
-                                stroke="2"
-                                stroke-length="0.15"
-                                bg-opacity="0.1"
-                                speed="0.9"
-                                color="white"
-                              ></l-squircle>
+                              />
                             </div>
-                          </Button>
-                        ) : (
-                          <Button type="submit">Create Collection</Button>
-                        )}
-                      </form>
-                    </Form>
+                          </FormItem>
+                          {loading ? (
+                            <Button disabled>
+                              Creating Collection
+                              <div className="ml-2 mt-1">
+                                <l-squircle
+                                  size="22"
+                                  stroke="2"
+                                  stroke-length="0.15"
+                                  bg-opacity="0.1"
+                                  speed="0.9"
+                                  color="white"
+                                ></l-squircle>
+                              </div>
+                            </Button>
+                          ) : (
+                            <Button type="submit">Create Collection</Button>
+                          )}
+                        </form>
+                      </Form>
+                    </div>
                   </div>
-                </div>
+                ) : null}
+                {loadedAccount && !account ? (
+                  <div className="m-12">
+                    <RequireAuthPlaceholder />{" "}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

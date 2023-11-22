@@ -22,7 +22,7 @@ import ConnectButton from "./connect-button";
 import AccountDialog from "./account-dialog";
 import { User } from "@/models/User";
 import { Logo } from "@/components/logo";
-
+import { MobileMenu } from "./mobile-menu";
 export function Menu() {
   const [account, setAccount] = useState<User | null>(null);
 
@@ -36,6 +36,9 @@ export function Menu() {
     <div className="fixed top-0 left-0 right-0 z-10 p-2 bg-white">
       <Menubar className="rounded-none border-b border-none px-2 lg:px-4">
         <MenubarMenu>
+          <div className=" lg:hidden">
+            <MobileMenu />
+          </div>
           <MenubarTrigger>
             <Logo text="Arttribute Studio" />
           </MenubarTrigger>
@@ -71,15 +74,17 @@ export function Menu() {
                 </MenubarRadioGroup>
                 <MenubarSeparator />
                 <MenubarItem inset>
-                  <div className="mr-2"> {coinsIcon}</div>
+                  <Link href="/buy" passHref className="flex">
+                    <div className="mt-0.5 mr-2"> {coinsIcon}</div>
 
-                  {account.credits}
-                  <div className="ml-2">
-                    {" "}
-                    <Link href="/buy" passHref className="font-semibold">
-                      Get more
-                    </Link>
-                  </div>
+                    {account.credits}
+                    <div className="ml-2">
+                      {" "}
+                      <Link href="/buy" passHref className="font-semibold">
+                        Get more
+                      </Link>
+                    </div>
+                  </Link>
                 </MenubarItem>
                 <MenubarSeparator />
                 <AccountDialog user={account} setAccount={setAccount} />
