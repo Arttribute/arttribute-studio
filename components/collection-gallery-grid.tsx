@@ -35,7 +35,7 @@ const CollectionGalleryGrid: React.FC<CollectionGalleryGridProps> = ({
                 <Dialog>
                   <DialogTrigger>
                     <div className="relative">
-                      <img
+                      <Image
                         src={image}
                         alt={collectionName}
                         width={500}
@@ -54,7 +54,7 @@ const CollectionGalleryGrid: React.FC<CollectionGalleryGridProps> = ({
                       <DialogDescription>Image {index}</DialogDescription>
                     </DialogHeader>
 
-                    <img
+                    <Image
                       src={image}
                       alt={collectionName}
                       width={500}

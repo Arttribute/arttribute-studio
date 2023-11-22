@@ -43,7 +43,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
       .then((data) => {
         setCommunity(data);
       });
-  }, []);
+  }, [params.id]);
   // const community: Community = await getData(params.id);
   return (
     <>
@@ -57,7 +57,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
               <div className="col-span-3 lg:col-span-4 lg:border-l min-h-[100vh]">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="w-full rounded-xl bg-red-50 h-[200px] ">
-                    <img
+                    <Image
                       src={String(community?.banner_image)}
                       className="w-full h-full cover rounded-xl"
                       alt=""
@@ -106,7 +106,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                                 <Tooltip>
                                   <TooltipTrigger>
                                     <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                      <img
+                                      <Image
                                         className="rounded-full w-9 h-9 contain"
                                         src={user.picture}
                                         alt={user.name}
@@ -117,10 +117,12 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                                     <div>
                                       <div className="flex items-end">
                                         <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                          <img
+                                          <Image
                                             className="rounded-full w-9 h-9 contain"
                                             src={user.picture}
                                             alt={user.name}
+                                            width={120}
+                                            height={120}
                                           />
                                         </div>
                                         <div className="flex flex-col">

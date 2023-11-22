@@ -19,6 +19,8 @@ interface CommunityCard {
   };
 }
 
+import Image from "next/image";
+
 export function CommunityCard({ data }: CommunityCard) {
   console.log(data);
   return (
@@ -26,7 +28,7 @@ export function CommunityCard({ data }: CommunityCard) {
       href={"/communities/" + data.slug}
       className="relative flex h-64 flex-col items-center md:basis-96 min-w-[400px] md:max-w-[70%] grow bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
     >
-      <img
+      <Image
         className="object-cover w-full rounded-t-lg h-96 h-full md:w-48 md:rounded-none md:rounded-s-lg"
         src={data.display_image}
         alt=""
@@ -82,10 +84,12 @@ export function CommunityCard({ data }: CommunityCard) {
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                        <img
+                        <Image
                           className="rounded-full w-9 h-9 contain"
                           src={model.display_image}
                           alt={model.model_name}
+                          width={120}
+                          height={120}
                         />
                       </div>
                     </TooltipTrigger>
@@ -93,7 +97,7 @@ export function CommunityCard({ data }: CommunityCard) {
                       <div>
                         <div className="flex items-end">
                           <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                            <img
+                            <Image
                               className="rounded-full w-9 h-9 contain"
                               src={model.display_image}
                               alt={model.model_name}

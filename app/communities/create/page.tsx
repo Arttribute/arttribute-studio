@@ -134,7 +134,7 @@ export default function CreateCollectiion() {
       }`;
       console.log("uploaded:", profileImage?.name, " ", profilePhotoUrl);
 
-      //Uploading Banner img
+      //Uploading Banner Image
       const storedBanner = await storage.put([banner]);
       const bannerUrl = `https://${storedBanner.toString()}.ipfs.w3s.link/${
         banner?.name

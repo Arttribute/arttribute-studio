@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import Link from "next/link";
+import Image from "next/image";
 
 interface CollectionCardProps {
   data: {
@@ -45,9 +46,11 @@ export function CollectionCard({ data, className }: CollectionCardProps) {
             <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
               {images.map((images, index) => (
                 <div className="relative" key={index}>
-                  <img
+                  <Image
                     src={images.src}
                     alt={images.alt}
+                    width={400}
+                    height={400}
                     className={cn(
                       "h-auto w-auto object-cover transition-all ",
                       "aspect-[13/14]"
@@ -59,9 +62,11 @@ export function CollectionCard({ data, className }: CollectionCardProps) {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-0 overflow-hidden rounded-md">
-              <img
+              <Image
                 src={images[0].src}
                 alt={images[0].alt}
+                width={400}
+                height={400}
                 className={cn(
                   "h-auto w-auto object-cover transition-all ",
                   "aspect-[13/14]"

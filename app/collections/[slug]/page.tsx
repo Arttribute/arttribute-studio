@@ -18,8 +18,11 @@ export default function CollectionPage({
   const [collection, setCollction] = useState<any>(null);
 
   useEffect(() => {
-    getCollection();
+    if (collection == null) {
+      getCollection();
+    }
   }, [collection]);
+
   async function getCollection() {
     try {
       const { slug } = params;

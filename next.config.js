@@ -7,11 +7,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.ipfs.w3s.link',
+        protocol: "https",
+        hostname: "**.ipfs.w3s.link",
       },
     ],
-    domains: ["images.unsplash.com", "github.com", "cdn1.iconfinder.com"],
+    domains: [
+      "images.unsplash.com",
+      "github.com",
+      "cdn1.iconfinder.com",
+      "api.astria.ai",
+    ],
   },
 };
 
