@@ -88,9 +88,12 @@ export default function CreateModel() {
   }, [loaded]);
 
   async function getCollections(userId: string) {
-    const res = await axios.get("/api/collections/users", {
-      params: { userId: userId },
-    });
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections/users`,
+      {
+        params: { userId: userId },
+      }
+    );
     const data = res.data;
     console.log(data);
     setCollections(data);
@@ -140,7 +143,10 @@ export default function CreateModel() {
       },
     };
     try {
-      const result = await axios.post("/api/tunedmodels", modelDetails);
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels`,
+        modelDetails
+      );
       const fineTuneResponse = result.data;
       console.log(fineTuneResponse);
       setLoading(false);

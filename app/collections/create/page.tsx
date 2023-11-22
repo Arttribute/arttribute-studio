@@ -116,7 +116,10 @@ export default function CreateCollectiion() {
         collection_uuid: collection_uuid,
       };
       console.log(collection_data);
-      const res = await axios.post("/api/collections", collection_data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections`,
+        collection_data
+      );
       console.log(res);
       setLoading(false);
       //redirect to collection page
