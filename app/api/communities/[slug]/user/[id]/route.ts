@@ -57,9 +57,6 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
             });
           } else {
             community?.requested?.push(user_id);
-            return new NextResponse(JSON.stringify(community.requested), {
-              status: 200,
-            });
           }
         } else {
           //TODO: Add community to user
