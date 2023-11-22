@@ -36,7 +36,7 @@ const FollowButton = ({ uid }: Props) => {
   const handleChangeFollow = async (action: "follow" | "unfollow") => {
     setDisabled(true);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users/${loggedUser?.web3Address}/follows`,
+      `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users/${loggedUser?.web3Address}/follows`,
       {
         method: "PATCH",
         headers: {

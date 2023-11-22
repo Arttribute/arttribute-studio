@@ -196,7 +196,7 @@ const collections = [
 
 const getUserByAddress = async (web3Address: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users/${web3Address}`,
+    `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users/${web3Address}`,
     {
       next: { revalidate: 60 },
     }

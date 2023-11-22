@@ -6,9 +6,12 @@ import ArtistCard from "@/components/artist-card";
 import { Separator } from "@/components/ui/separator";
 
 const getUsers = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users`, {
-    next: { revalidate: 600 },
-  });
+  const res = await fetch(
+    `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users`,
+    {
+      next: { revalidate: 600 },
+    }
+  );
   const data = await res.json();
   return data;
 };
