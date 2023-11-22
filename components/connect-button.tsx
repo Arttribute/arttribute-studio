@@ -11,27 +11,27 @@ interface Props {
   setAccount: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-const postConnect = async (account: string, email?: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ web3Address: account, email }),
-  });
-  if (res.ok) {
-    console.log("Connected to server");
-  } else {
-    console.error("Failed to connect to server");
-  }
-
-  const data = await res.json();
-  return data;
-};
-
 const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
   const [disabled, setDisabled] = useState(false);
   const { magic } = useMagicContext();
+
+  const postConnect = async (account: string, email?: string) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ web3Address: account, email }),
+    });
+    if (res.ok) {
+      console.log("Connected to server");
+    } else {
+      console.error("Failed to connect to server");
+    }
+
+    const data = await res.json();
+    return data;
+  };
 
   const connect = useCallback(async () => {
     if (!magic) return;
