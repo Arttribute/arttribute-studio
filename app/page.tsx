@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -13,17 +12,54 @@ import { Sidebar } from "../components/sidebar";
 import { listenNowAlbums, madeForYouAlbums } from "../data/albums";
 import { playlists } from "../data/playlists";
 
+import { CollectionCard } from "@/components/collections-card";
 import CollectionGalleryGrid from "@/components/collection-gallery-grid";
 import { mockImages } from "@/data/mockimages";
+import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+import { CreateNewDialog } from "@/components/create-new-dialog";
+import { TunedModelCard } from "@/components/tuned-model-card";
+import PromptDisplayCard from "@/components/prompt-display-card";
 
-export default function CreationsPage() {
+import { Prompt } from "@/models/Prompt";
+import { TunedModel } from "@/models/TunedModel";
+import { Collection } from "@/models/Collection";
+
+async function getPrompts() {
+  const res = await fetch("http://localhost:3000/api/prompts", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
+
+async function getTunedModels() {
+  const res = await fetch("http://localhost:3000//api/tunedmodels", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
+
+async function getCollections() {
+  const res = await fetch("http://localhost:3000/api/collections", {
+    next: { revalidate: 600 },
+  });
+  const data = await res.json();
+  return data;
+}
+
+export default async function CreationsPage() {
+  const prompts = await getPrompts();
+  const tunedmodels = await getTunedModels();
+  const collections = await getCollections();
+
   return (
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
-            <div className="grid lg:grid-cols-5">
+            <div className="lg:grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
@@ -39,10 +75,7 @@ export default function CreationsPage() {
                         </TabsTrigger>
                       </TabsList>
                       <div className="ml-auto ">
-                        <Button>
-                          <PlusCircledIcon className="mr-2 h-4 w-4" />
-                          Create
-                        </Button>
+                        <CreateNewDialog />
                       </div>
                     </div>
                     <TabsContent
@@ -63,14 +96,11 @@ export default function CreationsPage() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {listenNowAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
+                            {prompts.map((prompt: any) => (
+                              <PromptDisplayCard
+                                key={prompt._id}
+                                prompt={prompt}
                                 className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
                               />
                             ))}
                           </div>
@@ -86,8 +116,10 @@ export default function CreationsPage() {
                         </p>
                       </div>
                       <Separator className="my-4" />
-                      <div className="relative">
-                        <div className="container mx-auto p-4"></div>
+                      <div className="flex">
+                        <div className="container mx-auto p-4">
+                          <PromptGalleryGrid prompts={prompts} />
+                        </div>
                       </div>
                     </TabsContent>
                     <TabsContent
@@ -107,7 +139,7 @@ export default function CreationsPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
+                          <div className="flex space-x-4 pb-4 ">
                             {listenNowAlbums.map((album) => (
                               <CollectionArtwork
                                 key={album.name}
@@ -133,15 +165,11 @@ export default function CreationsPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
+                          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                            {tunedmodels.map((tunedmodel: any) => (
+                              <TunedModelCard
+                                key={tunedmodel._id}
+                                data={tunedmodel}
                               />
                             ))}
                           </div>
@@ -162,11 +190,39 @@ export default function CreationsPage() {
                           <p className="text-sm text-muted-foreground">
                             Top picks for you. Updated daily.
                           </p>
-                          <CollectionGalleryGrid
-                            images={mockImages}
-                            collectionName={"My collection"}
-                          />
                         </div>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4 ">
+                            {collections.map((collection: any) => (
+                              <CollectionCard
+                                key={collection._id}
+                                data={collection}
+                                className="w-[260px]"
+                              />
+                            ))}
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </div>
+                      <div className="mt-6 space-y-1">
+                        <h2 className="text-2xl font-semibold tracking-tight">
+                          Recent Collections
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Explore creations by the community.
+                        </p>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        {collections.map((collection: any) => (
+                          <CollectionCard
+                            key={collection._id}
+                            data={collection}
+                          />
+                        ))}
                       </div>
                     </TabsContent>
                   </Tabs>

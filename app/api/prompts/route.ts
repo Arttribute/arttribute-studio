@@ -1,39 +1,65 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import Replicate from "replicate";
-// Define interfaces if needed for request and response
+import User from "@/models/User";
 
 //example tunne
+import dbConnect from "@/lib/dbConnect";
+import { NextResponse } from "next/server";
+import Prompt from "@/models/Prompt";
 
 const API_KEY = process.env.ASTRIA_API_KEY;
 
-export async function POST(request: Request) {
-  const { model_id, prompt } = await request.json();
+export async function GET() {
+  try {
+    await dbConnect();
+    const prompts = await Prompt.find()
+      .sort({ createdAt: -1 })
+      .populate("tunedmodel_id")
+      .populate("owner");
 
-  const res = await fetch(`https://api.astria.ai/tunes/${model_id}/prompts`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(prompt),
-  });
-  console.log(prompt);
-  const data = await res.json();
-  console.log(data);
-  return Response.json(data);
+    return new NextResponse(JSON.stringify(prompts), {
+      status: 200,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
 }
 
-export async function GET() {
-  console.log("get request");
-  const res = await fetch(
-    "https://api.astria.ai/tunes/864530/prompts/11927426",
-    {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    }
-  );
-  const data = await res.json();
+export async function POST(request: Request) {
+  const { model_id, prompt, metadata } = await request.json();
 
-  return Response.json({ data });
+  try {
+    await dbConnect();
+    const promptRes = await fetch(
+      `https://api.astria.ai/tunes/${model_id}/prompts`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(prompt),
+      }
+    );
+    const promptData = await promptRes.json();
+    console.log(promptData);
+    const newPrompt = await Prompt.create({
+      ...metadata,
+      prompt_id: promptData.id.toString(),
+    });
+
+    const user = await User.findByIdAndUpdate(
+      { _id: metadata.owner },
+      { $inc: { credits: -metadata.cost } },
+      { new: true }
+    );
+
+    return new NextResponse(JSON.stringify({ newPrompt, user }), {
+      status: 201,
+    });
+  } catch (error: any) {
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
 }
