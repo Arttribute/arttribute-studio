@@ -1,5 +1,8 @@
 import { defaultProfile } from "@/data/defaults";
 import { generateName } from "@/lib/utils";
+import { Collection } from "./Collection";
+import { Community } from "./Community";
+import { TunedModel } from "./TunedModel";
 import mongoose from "mongoose";
 
 export interface User extends mongoose.Document {
@@ -9,6 +12,13 @@ export interface User extends mongoose.Document {
   tags: string[];
   email: string;
   picture: string;
+  followers: User[];
+  following: User[];
+  communities: Community[];
+  models: TunedModel[];
+  collections: Collection[];
+  works: string[];
+  createdAt: Date;
 }
 
 const userSchema = new mongoose.Schema(
@@ -39,6 +49,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: defaultProfile,
     },
+    followers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
+    following: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
+    communities: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Community" }],
+      default: [],
+    },
+    models: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "TunedModel" }],
+      default: [],
+    },
+    collections: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
+      default: [],
+    },
+    works: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true }
 );
@@ -46,3 +80,5 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
+
+// TODO: figure out an efficient way to do this

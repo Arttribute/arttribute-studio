@@ -10,8 +10,19 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.ipfs.w3s.link',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn1.iconfinder.com',
+      },
     ],
-    domains: ["images.unsplash.com", "github.com", "cdn1.iconfinder.com"],
   },
 };
 

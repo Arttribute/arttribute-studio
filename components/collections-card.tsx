@@ -15,67 +15,60 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import Link from "next/link";
 
-const images = [
-  {
-    alt: "React Rendezvous",
-    src: "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
-  },
-  {
-    alt: "Async Awakenings",
-    src: "https://images.unsplash.com/photo-1468817814611-b7edf94b5d60?w=300&dpr=2&q=80",
-  },
-  {
-    alt: "The Art of Reusability",
-    src: "https://images.unsplash.com/photo-1528143358888-6d3c7f67bd5d?w=300&dpr=2&q=80",
-  },
-  {
-    alt: "Stateful Symphony",
-    src: "https://github.com/shadcn.png",
-  },
-];
-export function CollectionCard() {
+interface CollectionCardProps {
+  data: {
+    collection_name: string;
+    description: string;
+    images: string[];
+    license: string;
+    slug: string;
+  };
+}
+
+export function CollectionCard({ data }: CollectionCardProps) {
+  //return only first 4 images
+  const images = data.images.slice(0, 4).map((image) => {
+    return {
+      src: image,
+      alt: data.collection_name,
+    };
+  });
   return (
     <Card>
       <CardHeader className=" items-start gap-2 space-y-0 -m-4">
-        <Link href={`/collections/${12345}`}>
-          <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
-            {images.map((images, index) => (
-              <Image
-                key={index}
-                src={images.src}
-                alt={images.alt}
-                width={300}
-                height={80}
-                objectFit="cover"
+        <Link href={`/collections/${data.slug}`}>
+          {images.length > 3 ? (
+            <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
+              {images.map((images, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={images.src}
+                    alt={images.alt}
+                    className="aspect-[5/4]"
+                  />
+                  <div className="absolute inset-0 bg-black opacity-10"></div>{" "}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-0 overflow-hidden rounded-md">
+              <img
+                src={images[0].src}
+                alt={images[0].alt}
                 className="aspect-[5/4]"
               />
-            ))}
-          </div>
+            </div>
+          )}
         </Link>
       </CardHeader>
       <CardContent className="mt-1 -ml-2">
         <Link href={`/collections/${12345}`}>
-          <h4>My Art collection</h4>
+          <h4>{data.collection_name}</h4>
         </Link>
-        <p className="text-xs text-muted-foreground">
-          {" "}
-          Breif description of the model
-        </p>
-        <p className="text-xs text-foreground"> 10 images</p>
+        <p className="text-xs text-muted-foreground"> {data.description} </p>
+        <p className="text-xs text-foreground"> {data.images.length} images</p>
       </CardContent>
     </Card>
   );
