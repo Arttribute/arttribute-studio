@@ -4,7 +4,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import { useRouter } from "next/navigation";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "../../../data/playlists";
@@ -65,7 +65,7 @@ export default function CreateCollectiion() {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
-
+  const { push } = useRouter();
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
@@ -116,11 +116,14 @@ export default function CreateCollectiion() {
         collection_uuid: collection_uuid,
       };
       console.log(collection_data);
-      const res = await axios.post("/api/collections", collection_data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections`,
+        collection_data
+      );
       console.log(res);
       setLoading(false);
       //redirect to collection page
-      window.location.href = `/collections`;
+      push("/collections");
     } catch (err) {
       console.log(err);
     }

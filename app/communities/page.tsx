@@ -14,18 +14,15 @@ import { playlists } from "../../data/playlists";
 import { CommunityCard } from "@/components/community-card";
 import Link from "next/link";
 import { Menu } from "../../components/menu";
+import dbConnect from "@/lib/dbConnect";
+import Community from "@/models/Community";
 
 async function getData() {
-  const communities = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/communities`
-  );
-
-  if (!communities.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-
-  return communities.json();
+  await dbConnect();
+  const communities = await Community.find()
+    .populate(["members", "models"])
+    .exec();
+  return communities;
 }
 
 export default async function CommunitiesPage() {
