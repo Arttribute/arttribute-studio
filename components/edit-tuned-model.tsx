@@ -147,7 +147,7 @@ export function EditTunedModel({ details }: EditTunedModelProps) {
                       <Input placeholder="My tuned model" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is your tuned model's display name.
+                      {"This is your tuned model's display name."}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
