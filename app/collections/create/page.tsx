@@ -35,7 +35,7 @@ import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { squircle } from "ldrs";
+//import { squircle } from "ldrs";
 
 const CreateCollectiion = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -44,7 +44,7 @@ const CreateCollectiion = () => {
   const [loadedAccount, setLoadedAccount] = useState(true);
   const { push } = useRouter();
   useEffect(() => {
-    squircle.register();
+    //squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
@@ -262,7 +262,7 @@ const CreateCollectiion = () => {
                           {loading ? (
                             <Button disabled>
                               Creating Collection
-                              <div className="ml-2 mt-1">
+                              {/*<div className="ml-2 mt-1">
                                 <l-squircle
                                   size="22"
                                   stroke="2"
@@ -271,7 +271,7 @@ const CreateCollectiion = () => {
                                   speed="0.9"
                                   color="white"
                                 ></l-squircle>
-                              </div>
+                          </div>*/}
                             </Button>
                           ) : (
                             <Button type="submit">Create Collection</Button>

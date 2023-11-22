@@ -15,7 +15,7 @@ import { playlists } from "../../../data/playlists";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-import { squircle } from "ldrs";
+//import { squircle } from "ldrs";
 import { redirect } from "next/navigation";
 import {
   Form,
@@ -49,7 +49,7 @@ const CreateModel = () => {
   const [trainingCost, setTrainingCost] = useState(55);
   const { push } = useRouter();
   useEffect(() => {
-    squircle.register();
+    //squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setLoadedAccount(true);
@@ -288,7 +288,7 @@ const CreateModel = () => {
                             {loading ? (
                               <Button disabled>
                                 Creating Tuned Model
-                                <div className="ml-2 mt-1">
+                                {/*<div className="ml-2 mt-1">
                                   <l-squircle
                                     size="22"
                                     stroke="2"
@@ -297,7 +297,7 @@ const CreateModel = () => {
                                     speed="0.9"
                                     color="white"
                                   ></l-squircle>
-                                </div>
+                                </div>*/}
                               </Button>
                             ) : (
                               <Button type="submit">Create Tuned Model</Button>
