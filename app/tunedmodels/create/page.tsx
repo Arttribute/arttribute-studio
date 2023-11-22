@@ -205,7 +205,7 @@ export default function CreateModel() {
                                     />
                                   </FormControl>
                                   <FormDescription>
-                                    This is your tuned model's display name.
+                                    {"This is your tuned model's display name."}
                                   </FormDescription>
                                   <FormMessage />
                                 </FormItem>
