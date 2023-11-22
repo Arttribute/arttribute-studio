@@ -38,7 +38,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { User } from "@/models/User";
-//import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { useRouter } from "next/router";
 
 export default function CreateModel() {
@@ -325,11 +325,11 @@ export default function CreateModel() {
                     )}
                   </div>
                 ) : null}
-                {/*loadedAccount && !account ? (
+                {loadedAccount && !account ? (
                   <div className="m-12">
                     <RequireAuthPlaceholder />{" "}
                   </div>
-                ) : null*/}
+                ) : null}
               </div>
             </div>
           </div>

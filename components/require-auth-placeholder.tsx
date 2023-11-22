@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { User } from "@/models/User";
-import ConnectButton from "./connect-button";
+import dynamic from "next/dynamic";
+
+const ConnectButton = dynamic(() => import("./connect-button"), { ssr: false });
 
 export function RequireAuthPlaceholder() {
   const [account, setAccount] = useState<User | null>(null);
