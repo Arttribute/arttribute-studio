@@ -35,44 +35,42 @@ import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { squircle } from "ldrs";
-squircle.register();
+//import { squircle } from "ldrs";
 
-const profileFormSchema = z.object({
-  collection_name: z
-    .string()
-    .min(2, {
-      message: "collection_name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "collection_name must not be longer than 30 characters.",
-    }),
-  license: z.string({
-    required_error: "Please select a license for your collection.",
-  }),
-  description: z.string().max(160).min(4),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  description: "A collection of my favorite art pieces.",
-};
-
-export default function CreateCollectiion() {
+const CreateCollectiion = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
   const { push } = useRouter();
   useEffect(() => {
+    //squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setAccount(user);
     setLoadedAccount(true);
   }, []);
+  const profileFormSchema = z.object({
+    collection_name: z
+      .string()
+      .min(2, {
+        message: "collection_name must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "collection_name must not be longer than 30 characters.",
+      }),
+    license: z.string({
+      required_error: "Please select a license for your collection.",
+    }),
+    description: z.string().max(160).min(4),
+  });
 
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+  // This can come from your database or API.
+  const defaultValues: Partial<ProfileFormValues> = {
+    description: "A collection of my favorite art pieces.",
+  };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -264,7 +262,7 @@ export default function CreateCollectiion() {
                           {loading ? (
                             <Button disabled>
                               Creating Collection
-                              <div className="ml-2 mt-1">
+                              {/*<div className="ml-2 mt-1">
                                 <l-squircle
                                   size="22"
                                   stroke="2"
@@ -273,7 +271,7 @@ export default function CreateCollectiion() {
                                   speed="0.9"
                                   color="white"
                                 ></l-squircle>
-                              </div>
+                          </div>*/}
                             </Button>
                           ) : (
                             <Button type="submit">Create Collection</Button>
@@ -295,4 +293,6 @@ export default function CreateCollectiion() {
       </div>
     </>
   );
-}
+};
+
+export default CreateCollectiion;

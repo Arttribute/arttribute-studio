@@ -15,8 +15,7 @@ import { playlists } from "../../../data/playlists";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-import { squircle } from "ldrs";
-squircle.register();
+//import { squircle } from "ldrs";
 import { redirect } from "next/navigation";
 import {
   Form,
@@ -39,37 +38,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { User } from "@/models/User";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { useRouter } from "next/router";
-const profileFormSchema = z.object({
-  modelname: z
-    .string()
-    .min(2, {
-      message: "modelname must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "modelname must not be longer than 30 characters.",
-    }),
-  collection: z.string({
-    required_error: "Select a collection of artwork to train your model on",
-  }),
-  description: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
-});
+import { useRouter } from "next/navigation";
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  description: "A tuned model trained on my art collection.",
-};
-
-export default function CreateModel() {
+const CreateModel = () => {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,6 +49,7 @@ export default function CreateModel() {
   const [trainingCost, setTrainingCost] = useState(55);
   const { push } = useRouter();
   useEffect(() => {
+    //squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setLoadedAccount(true);
@@ -99,7 +71,34 @@ export default function CreateModel() {
     setCollections(data);
     setLoaded(true);
   }
+  const profileFormSchema = z.object({
+    modelname: z
+      .string()
+      .min(2, {
+        message: "modelname must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "modelname must not be longer than 30 characters.",
+      }),
+    collection: z.string({
+      required_error: "Select a collection of artwork to train your model on",
+    }),
+    description: z.string().max(160).min(4),
+    urls: z
+      .array(
+        z.object({
+          value: z.string().url({ message: "Please enter a valid URL." }),
+        })
+      )
+      .optional(),
+  });
 
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+  // This can come from your database or API.
+  const defaultValues: Partial<ProfileFormValues> = {
+    description: "A tuned model trained on my art collection.",
+  };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -289,7 +288,7 @@ export default function CreateModel() {
                             {loading ? (
                               <Button disabled>
                                 Creating Tuned Model
-                                <div className="ml-2 mt-1">
+                                {/*<div className="ml-2 mt-1">
                                   <l-squircle
                                     size="22"
                                     stroke="2"
@@ -298,7 +297,7 @@ export default function CreateModel() {
                                     speed="0.9"
                                     color="white"
                                   ></l-squircle>
-                                </div>
+                                </div>*/}
                               </Button>
                             ) : (
                               <Button type="submit">Create Tuned Model</Button>
@@ -338,7 +337,9 @@ export default function CreateModel() {
       </div>
     </>
   );
-}
+};
+
+export default CreateModel;
 const modelIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

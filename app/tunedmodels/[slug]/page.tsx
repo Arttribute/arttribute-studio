@@ -33,11 +33,9 @@ import PromptGalleryGrid from "@/components/prompt-gallery-grid";
 import { User } from "@/models/User";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { squircle } from "ldrs";
-squircle.register();
 
 import { lineWobble } from "ldrs";
 import Link from "next/link";
-lineWobble.register();
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -73,6 +71,8 @@ export default function TunedModelPage({
   const toggleNegativePrompt = () => setShowNegativePrompt(!showNegativePrompt);
 
   useEffect(() => {
+    squircle.register();
+    lineWobble.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setLoadedAccount(true);
