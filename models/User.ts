@@ -3,6 +3,7 @@ import { generateName } from "@/lib/utils";
 import { Collection } from "./Collection";
 import { Community } from "./Community";
 import { TunedModel } from "./TunedModel";
+import { Prompt } from "./Prompt";
 import mongoose from "mongoose";
 
 export interface User extends mongoose.Document {
@@ -17,7 +18,7 @@ export interface User extends mongoose.Document {
   communities: Community[];
   models: TunedModel[];
   collections: Collection[];
-  works: string[];
+  works: Prompt[];
   createdAt: Date;
   credits: number;
   featured: boolean;
@@ -72,7 +73,7 @@ const userSchema = new mongoose.Schema(
       default: [],
     },
     works: {
-      type: [String],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Prompt" }],
       default: [],
     },
     credits: {

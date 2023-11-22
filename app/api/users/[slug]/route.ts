@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 require("@/models/Community");
 require("@/models/Collection");
 require("@/models/TunedModel");
+require("@/models/Prompt");
 
 type Params = {
   slug: string;
@@ -25,6 +26,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
       "communities",
       "models",
       "collections",
+      "works",
     ]);
     if (!user) {
       return new NextResponse("User Not Found", {

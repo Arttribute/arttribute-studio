@@ -13,6 +13,7 @@ import { madeForYouAlbums } from "@/data/albums";
 import { CollectionArtwork } from "@/components/collection-artwork";
 import { CollectionCard } from "@/components/collections-card";
 import FollowButton from "@/components/follow-button";
+import PromptDisplayCard from "@/components/prompt-display-card";
 
 interface Params {
   params: {
@@ -287,7 +288,6 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                           Member&apos;s Collections
                         </h2>
                         <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
-                          {/* TODO: change to actual user collections */}
                           <div className="flex w-max space-x-4 p-4">
                             {user.collections.length !== 0 ? (
                               user.collections.map((collection: any) => (
@@ -311,7 +311,6 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                           Member&apos;s Models
                         </h2>
                         <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
-                          {/* TODO: change to actual user models */}
                           <div className="flex w-max space-x-4 p-4">
                             {user.models.length !== 0 ? (
                               user.models.map((model: any) => (
@@ -340,21 +339,17 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                           <div className="flex w-max space-x-4 p-4">
                             {user.works.length !== 0 ? (
                               user.works.map((work: any) => (
-                                <CollectionArtwork
+                                <PromptDisplayCard
                                   key={work._id}
-                                  album={work}
-                                  className="w-[150px]"
-                                  aspectRatio="square"
-                                  width={150}
-                                  height={150}
+                                  prompt={work}
+                                  className="w-[250px]"
                                 />
                               ))
                             ) : (
                               <p>No works yet</p>
                             )}
-                            {/* TODO: This is temporary */}
 
-                            {madeForYouAlbums.map((album) => (
+                            {/* {madeForYouAlbums.map((album) => (
                               <CollectionArtwork
                                 key={album.name}
                                 album={album}
@@ -363,7 +358,7 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                                 width={150}
                                 height={150}
                               />
-                            ))}
+                            ))} */}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -377,7 +372,6 @@ export default async function ArtistsPage({ params: { slug } }: Params) {
                         </h2>
                         <ScrollArea className="w-[90vw] md:w-[95vw] lg:w-[75vw] whitespace-nowrap">
                           <div className="flex w-max space-x-4 p-4">
-                            {/* TODO: change to actual user communities */}
                             {user.communities.length !== 0 ? (
                               user.communities.map((community: any) => (
                                 // TODO: issue with md:max-w-[70%] in community-card.tsx
