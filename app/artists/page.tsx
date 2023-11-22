@@ -1,23 +1,19 @@
 import { Menu } from "../../components/menu";
 import { Sidebar } from "../../components/sidebar";
 import { playlists } from "../../data/playlists";
-import { User } from "@/models/User";
 import ArtistCard from "@/components/artist-card";
 import { Separator } from "@/components/ui/separator";
+import dbConnect from "@/lib/dbConnect";
+import User from "@/models/User";
 
 const getUsers = async () => {
-  const res = await fetch(
-    `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/users`,
-    {
-      next: { revalidate: 600 },
-    }
-  );
-  const data = await res.json();
-  return data;
+  await dbConnect();
+  const users = await User.find().sort({ createdAt: -1 });
+  return users;
 };
 
 export default async function ArtistsPage() {
-  const users: User[] = await getUsers();
+  const users: any = await getUsers();
 
   return (
     <>
@@ -40,7 +36,7 @@ export default async function ArtistsPage() {
                   <Separator className="my-4" />
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {users &&
-                      users.map((user) => (
+                      users.map((user: any) => (
                         <ArtistCard key={user._id} user={user} />
                       ))}
                   </div>
