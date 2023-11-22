@@ -38,36 +38,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { User } from "@/models/User";
-import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-//import { useRouter } from "next/router";
-const profileFormSchema = z.object({
-  modelname: z
-    .string()
-    .min(2, {
-      message: "modelname must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "modelname must not be longer than 30 characters.",
-    }),
-  collection: z.string({
-    required_error: "Select a collection of artwork to train your model on",
-  }),
-  description: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  description: "A tuned model trained on my art collection.",
-};
+//import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { useRouter } from "next/router";
 
 export default function CreateModel() {
   const [collections, setCollections] = useState<Array<any>>([]);
@@ -76,7 +48,7 @@ export default function CreateModel() {
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [trainingCost, setTrainingCost] = useState(55);
-  //const { push } = useRouter();
+  const { push } = useRouter();
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
@@ -99,7 +71,34 @@ export default function CreateModel() {
     setCollections(data);
     setLoaded(true);
   }
+  const profileFormSchema = z.object({
+    modelname: z
+      .string()
+      .min(2, {
+        message: "modelname must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "modelname must not be longer than 30 characters.",
+      }),
+    collection: z.string({
+      required_error: "Select a collection of artwork to train your model on",
+    }),
+    description: z.string().max(160).min(4),
+    urls: z
+      .array(
+        z.object({
+          value: z.string().url({ message: "Please enter a valid URL." }),
+        })
+      )
+      .optional(),
+  });
 
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+  // This can come from your database or API.
+  const defaultValues: Partial<ProfileFormValues> = {
+    description: "A tuned model trained on my art collection.",
+  };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -152,7 +151,7 @@ export default function CreateModel() {
       setLoading(false);
       localStorage.setItem("user", JSON.stringify(fineTuneResponse.user));
       //redirect to tuned model page
-      //push("/tunedmodels");
+      push("/tunedmodels");
     } catch (error) {
       console.error("Error training model:", error);
     }
