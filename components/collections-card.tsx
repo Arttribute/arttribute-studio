@@ -44,7 +44,7 @@ export function CollectionCard({ data, className }: CollectionCardProps) {
           {images.length > 3 ? (
             <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-md">
               {images.map((images, index) => (
-                <div className="relative">
+                <div className="relative" key={index}>
                   <img
                     src={images.src}
                     alt={images.alt}
