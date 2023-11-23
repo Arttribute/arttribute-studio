@@ -10,7 +10,9 @@ type Fields = {
 export async function GET() {
   try {
     await dbConnect();
-    const users = await User.find();
+    const users = await User.find().sort({
+      createdAt: -1,
+    });
     return new NextResponse(JSON.stringify(users), {
       status: 200,
     });

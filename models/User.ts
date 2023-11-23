@@ -3,6 +3,7 @@ import { generateName } from "@/lib/utils";
 import { Collection } from "./Collection";
 import { Community } from "./Community";
 import { TunedModel } from "./TunedModel";
+import { Prompt } from "./Prompt";
 import mongoose from "mongoose";
 
 export interface User extends mongoose.Document {
@@ -17,7 +18,7 @@ export interface User extends mongoose.Document {
   communities: Community[];
   models: TunedModel[];
   collections: Collection[];
-  works: string[];
+  works: Prompt[];
   createdAt: Date;
   credits: number;
   featured: boolean;
@@ -35,13 +36,17 @@ const userSchema = new mongoose.Schema(
       unique: true,
       default: null,
     },
-    name: {
+    description: {
       type: String,
-      default: generateName(),
+      default: null,
     },
     tags: {
       type: [String],
       default: [],
+    },
+    name: {
+      type: String,
+      default: generateName(),
     },
     picture: {
       type: String,
@@ -55,13 +60,25 @@ const userSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
       default: [],
     },
+    communities: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Community" }],
+      default: [],
+    },
+    models: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "TunedModel" }],
+      default: [],
+    },
+    collections: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
+      default: [],
+    },
+    works: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Prompt" }],
+      default: [],
+    },
     credits: {
       type: Number,
       default: 100,
-    },
-    description: {
-      type: String,
-      default: null,
     },
     featured: {
       type: Boolean,
@@ -74,3 +91,5 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
+
+// TODO: figure out an efficient way to do this

@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -26,31 +28,62 @@ import TunedModel from "@/models/TunedModel";
 import Collection from "@/models/Collection";
 import User from "@/models/User";
 
-async function getPrompts() {
-  await dbConnect();
-  const prompts = await Prompt.find()
-    .sort({ createdAt: -1 })
-    .populate("tunedmodel_id")
-    .populate("owner");
-  return prompts;
-}
+export default function CreationsPage() {
+  const [prompts, setPrompts] = useState<Array<any>>([]);
+  const [tunedmodels, setTunedModels] = useState<Array<any>>([]);
+  const [collections, setCollections] = useState<Array<any>>([]);
+  const [loadedprompts, setLoadedPrompts] = useState(false);
+  const [loadedtunedmodels, setLoadedModels] = useState(false);
+  const [loadedcollections, setLoadedCollections] = useState(false);
+  const [loadingPrompts, setLoadingPrompts] = useState(false);
+  const [loadingTunedModels, setLoadingTunedModels] = useState(false);
+  const [loadingCollections, setLoadingCollections] = useState(false);
 
-async function getTunedModels() {
-  await dbConnect();
-  const tunedmodels = await TunedModel.find().sort({ createdAt: -1 });
-  return tunedmodels;
-}
+  useEffect(() => {
+    if (!loadedprompts) {
+      getPrompts();
+    }
+    if (!loadedtunedmodels) {
+      getTunedModels();
+    }
+    if (!loadedcollections) {
+      getCollections();
+    }
+  }, [prompts, tunedmodels, collections]);
 
-async function getCollections() {
-  await dbConnect();
-  const collections = await Collection.find().sort({ createdAt: -1 });
-  return collections;
-}
+  async function getPrompts() {
+    setLoadingPrompts(true);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts`);
+    const data = await res.json();
+    console.log(data);
+    setPrompts(data);
+    setLoadedPrompts(true);
+    setLoadingPrompts(false);
+  }
 
-export default async function CreationsPage() {
-  const prompts: any = await getPrompts();
-  const tunedmodels = await getTunedModels();
-  const collections = await getCollections();
+  async function getTunedModels() {
+    setLoadingTunedModels(true);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels`
+    );
+    const data = await res.json();
+    console.log(data);
+    setTunedModels(data);
+    setLoadedModels(true);
+    setLoadingTunedModels(false);
+  }
+
+  async function getCollections() {
+    setLoadingCollections(true);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections`
+    );
+    const data = await res.json();
+    console.log(data);
+    setCollections(data);
+    setLoadedCollections(true);
+    setLoadingCollections(false);
+  }
 
   return (
     <>
@@ -125,40 +158,12 @@ export default async function CreationsPage() {
                       value="models"
                       className="h-full flex-col border-none p-0 data-[state=active]:flex"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-semibold tracking-tight">
-                            Featured Models
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            Top picks for you. Updated daily.
-                          </p>
-                        </div>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4 ">
-                            {listenNowAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
-                              />
-                            ))}
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                      </div>
                       <div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
                           Recent Models
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Explore creations by the community.
+                          Explore models by the community.
                         </p>
                       </div>
                       <Separator className="my-4" />
