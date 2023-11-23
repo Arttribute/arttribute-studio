@@ -15,8 +15,8 @@ export const getNetworkUrl = () => {
       return "https://eth-goerli.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
     case Network.ETHEREUM:
       return "https://eth-mainnet.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
-    //default:
-    //throw new Error("Network not supported");
+    default:
+      throw new Error("Network not supported");
   }
 };
 

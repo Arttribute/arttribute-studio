@@ -114,10 +114,10 @@ export default async function CommunitiesPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <h2 className="text-3xl font-semibold tracking-tight">
+                          <h2 className="text-3xl font-semibold tracking-tight m-2">
                             What are Arttribute Communities
                           </h2>
-                          <p className="text-lg text-muted-foreground">
+                          <p className="text-md text-muted-foreground m-2">
                             Welcome to the vibrant world of Arttribute
                             Communities, where artistry meets innovation! 🎨✨
                             In the heart of Arttribute Studio, Communities are
