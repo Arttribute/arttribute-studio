@@ -90,7 +90,7 @@ export default function TunedModelPage({
     if (!updated && promptId && generatedImages.length > 0) {
       updatePromptData(promptData._id);
     }
-  }, [tunedModel, generatedImages, promptId]);
+  }, [tunedModel, generatedImages, promptId, updated]);
 
   //Fetch Tunedmodel by slug
   async function getFineTunedModel() {
@@ -174,7 +174,7 @@ export default function TunedModelPage({
       },
     };
     try {
-      const result = await axios.post("/api/prompts/", prompt_data);
+      const result = await axios.post(`/api/prompts/`, prompt_data);
       const PromptResponse = result.data.newPrompt;
       setPromptData(PromptResponse);
       setPromptId(PromptResponse.prompt_id);
