@@ -5,6 +5,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 
 interface User {
@@ -31,22 +32,30 @@ export function CommunityAvatar(user_id: any) {
       <Tooltip>
         <TooltipTrigger>
           <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-            <img
-              className="rounded-full w-9 h-9 contain"
-              src={user?.picture}
-              alt={user?.name}
-            />
+            {user && (
+              <Image
+                src={user.picture}
+                alt={user.name}
+                width={120}
+                height={120}
+                className="rounded-full w-9 h-9 contain"
+              />
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>
           <div>
             <div className="flex items-end">
               <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                <img
-                  className="rounded-full w-9 h-9 contain"
-                  src={user?.picture}
-                  alt={user?.name}
-                />
+                {user && (
+                  <Image
+                    className="rounded-full w-9 h-9 contain"
+                    src={user.picture}
+                    alt={user.name}
+                    width={120}
+                    height={120}
+                  />
+                )}
               </div>
               <div className="flex flex-col">
                 <h3 className="font-semibold text-base">{user?.name}</h3>
