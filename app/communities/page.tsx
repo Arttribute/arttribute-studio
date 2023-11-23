@@ -154,7 +154,7 @@ export default async function CommunitiesPage() {
                             />
                           </div>
 
-                          <div className="w-full py-5 mx-5 flex justify-center">
+                          <div className=" py-5 mx-5 ">
                             <TabsList className="w-full">
                               <TabsTrigger
                                 className="w-full flex justify-center py-3 rounded-md gap-2 bg-stone-950 hover:bg-stone-900 text-white dark:text-stone-950 dark:bg-white"
@@ -181,7 +181,6 @@ export default async function CommunitiesPage() {
                           </div>
                         </div>
                       </div>
-                      <Separator className="my-4" />
                     </TabsContent>
                   </Tabs>
                 </div>
