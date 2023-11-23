@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./User";
 const { ObjectId } = mongoose.Schema.Types;
 
 export interface Collection {
@@ -7,6 +8,7 @@ export interface Collection {
   images: string[];
   owner: object;
   license: string;
+  featured: boolean;
   slug: string;
   collection_uuid: string;
 }
@@ -26,8 +28,8 @@ const CollectionSchema = new mongoose.Schema<Collection>(
       required: true,
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: User,
     },
     license: {
       type: String,
@@ -36,6 +38,10 @@ const CollectionSchema = new mongoose.Schema<Collection>(
     slug: {
       type: String,
       required: true,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
     collection_uuid: {
       type: String,

@@ -32,7 +32,7 @@ export function CreateNewDialog() {
         </Link>
         <Link href="/collections/create" passHref>
           <div className="flex  shrink-0  rounded-md border border p-3">
-            <Label> Art collection</Label>
+            <Label> Art collectiion</Label>
           </div>
         </Link>
         <Link href="/tunedmodels/create" passHref>

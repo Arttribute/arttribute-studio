@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./User";
 const { ObjectId } = mongoose.Schema.Types;
 
 export interface TunedModel {
@@ -11,6 +12,8 @@ export interface TunedModel {
   collection_id: object;
   license: string;
   token: string;
+  featured: boolean;
+  model_strength: string;
   slug: string;
   model_uuid: string;
   example_prompt: string;
@@ -41,8 +44,8 @@ const TunedModelSchema = new mongoose.Schema<TunedModel>(
       required: true,
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: User,
     },
     collection_id: {
       type: ObjectId,
@@ -55,6 +58,10 @@ const TunedModelSchema = new mongoose.Schema<TunedModel>(
     token: {
       type: String,
       required: true,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
     slug: {
       type: String,

@@ -13,15 +13,16 @@ import { listenNowAlbums, madeForYouAlbums } from "../../data/albums";
 import { playlists } from "../../data/playlists";
 import { CommunityCard } from "@/components/community-card";
 import Link from "next/link";
+import { Menu } from "../../components/menu";
+import dbConnect from "@/lib/dbConnect";
+import Community from "@/models/Community";
 
 async function getData() {
-  const communities = await fetch("http://localhost:3000/api/communities");
-
-  if (!communities.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-  return communities.json();
+  await dbConnect();
+  const communities = await Community.find()
+    .populate(["members", "models"])
+    .exec();
+  return communities;
 }
 
 export default async function CommunitiesPage() {
@@ -29,8 +30,8 @@ export default async function CommunitiesPage() {
   return (
     <>
       <div className="">
-        {/* <Menu /> */}
-        <div className="mt-10 border-t">
+        <Menu />
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
@@ -49,7 +50,7 @@ export default async function CommunitiesPage() {
                           value="communities-general"
                           className="relative"
                         >
-                          Artrribute Communities
+                          About Communities
                         </TabsTrigger>
                       </TabsList>
 
@@ -70,7 +71,7 @@ export default async function CommunitiesPage() {
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <h2 className="text-2xl font-semibold tracking-tight">
-                            Eplore Different Communities
+                            Explore Different Communities
                           </h2>
                           <p className="text-sm text-muted-foreground">
                             Top picks for you. Updated daily.
@@ -90,7 +91,7 @@ export default async function CommunitiesPage() {
                             ))}
                         </div>
                       </div>
-                      <div className="mt-6 space-y-1">
+                      {/*<div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
                           Community Creations
                         </h2>
@@ -101,21 +102,10 @@ export default async function CommunitiesPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
-                              />
-                            ))}
-                          </div>
+                          <div className="flex space-x-4 pb-4"></div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
-                      </div>
+                      </div>*/}
                     </TabsContent>
 
                     <TabsContent
@@ -124,10 +114,10 @@ export default async function CommunitiesPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <h2 className="text-3xl font-semibold tracking-tight">
+                          <h2 className="text-3xl font-semibold tracking-tight m-2">
                             What are Arttribute Communities
                           </h2>
-                          <p className="text-lg text-muted-foreground">
+                          <p className="text-md text-muted-foreground m-2">
                             Welcome to the vibrant world of Arttribute
                             Communities, where artistry meets innovation! 🎨✨
                             In the heart of Arttribute Studio, Communities are

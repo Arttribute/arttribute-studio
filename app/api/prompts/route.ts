@@ -1,6 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import Replicate from "replicate";
-// Define interfaces if needed for request and response
+import User from "@/models/User";
 
 //example tunne
 import dbConnect from "@/lib/dbConnect";
@@ -12,7 +10,11 @@ const API_KEY = process.env.ASTRIA_API_KEY;
 export async function GET() {
   try {
     await dbConnect();
-    const prompts = await Prompt.find().populate("tunedmodel_id"); //.populate("owner");
+    const prompts = await Prompt.find()
+      .sort({ createdAt: -1 })
+      .populate("tunedmodel_id")
+      .populate("owner");
+
     return new NextResponse(JSON.stringify(prompts), {
       status: 200,
     });
@@ -40,11 +42,19 @@ export async function POST(request: Request) {
       }
     );
     const promptData = await promptRes.json();
+    console.log(promptData);
     const newPrompt = await Prompt.create({
       ...metadata,
       prompt_id: promptData.id.toString(),
     });
-    return new NextResponse(JSON.stringify(newPrompt), {
+
+    const user = await User.findByIdAndUpdate(
+      { _id: metadata.owner },
+      { $inc: { credits: -metadata.cost } },
+      { new: true }
+    );
+
+    return new NextResponse(JSON.stringify({ newPrompt, user }), {
       status: 201,
     });
   } catch (error: any) {

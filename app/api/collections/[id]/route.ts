@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
-    const collection = await Collection.findOne({ slug });
+    const collection = await Collection.findOne({ slug }).populate("owner");
 
     return new NextResponse(JSON.stringify(collection), {
       status: 200,

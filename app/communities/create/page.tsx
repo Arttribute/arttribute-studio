@@ -35,8 +35,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Select from "react-select";
-import { squircle } from "ldrs";
-squircle.register();
 
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
@@ -46,6 +44,7 @@ import slugify from "slugify";
 import axios from "axios";
 import { InfoCard } from "@/components/info-card";
 import { TunedModel } from "@/models/TunedModel";
+import { User } from "@/models/User";
 
 const profileFormSchema = z.object({
   community_name: z
@@ -75,7 +74,7 @@ interface Model {
 }
 
 // async function getData() {
-//   const model_data2 = await fetch("http://localhost:3000/api/tunedmodels");
+//   const model_data2 = await fetch("${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels");
 
 //   if (!model_data2.ok) {
 //     // This will activate the closest `error.js` Error Boundary
@@ -91,9 +90,15 @@ export default function CreateCollectiion() {
   const [model_data, setModelData] = useState<TunedModelOut[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [loadedAccount, setLoadedAccount] = useState(true);
+  const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/tunedmodels")
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
+    setAccount(user);
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels`)
       .then((res) => res.json())
       .then((data) => {
         setModelData(data);
@@ -131,7 +136,7 @@ export default function CreateCollectiion() {
       }`;
       console.log("uploaded:", profileImage?.name, " ", profilePhotoUrl);
 
-      //Uploading Banner img
+      //Uploading Banner Image
       const storedBanner = await storage.put([banner]);
       const bannerUrl = `https://${storedBanner.toString()}.ipfs.w3s.link/${
         banner?.name
@@ -142,8 +147,8 @@ export default function CreateCollectiion() {
       const community_data = {
         name: data.community_name,
         description: data.description,
-        admins: ["65527151b7d6d887072456c5"], //TODO: Replace with User's ID
-        members: ["65527151b7d6d887072456c5"], //TODO: Replace with User's ID
+        admins: [account?._id], //TODO: Replace with User's ID
+        members: [account?._id], //TODO: Replace with User's ID
         models: selectedModels,
         visibility: data.visibility,
         display_image: profilePhotoUrl,
@@ -153,7 +158,10 @@ export default function CreateCollectiion() {
         approved: false,
       };
       console.log(community_data);
-      const res = await axios.post("/api/communities", community_data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/communities`,
+        community_data
+      );
       setLoading(false);
       setSubmitted(true);
     } catch (err) {

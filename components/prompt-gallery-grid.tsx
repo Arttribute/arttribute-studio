@@ -22,7 +22,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface ArtGalleryGridProps {
   prompts: {
     _id: string;
-    owner: string;
+    owner: {
+      _id: string;
+      name: string;
+      picture: string;
+    };
     prompt_title: string;
     prompt_name: string;
     description: string;
@@ -42,7 +46,7 @@ interface ArtGalleryGridProps {
 
 const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-4 lg:grid-cols-5 gap-2">
       {prompts &&
         prompts.map((prompt, index) => (
           <ContextMenu key={index}>
@@ -50,11 +54,11 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
               <div className="overflow-hidden rounded-md">
                 <Dialog>
                   <DialogTrigger>
-                    <img
+                    <Image
                       src={prompt.images[0]}
                       alt={prompt.text}
-                      width={500}
-                      height={300}
+                      width={490}
+                      height={490}
                       className={cn(
                         "h-auto w-auto object-cover transition-all hover:scale-105",
                         "aspect-[3/4]"
@@ -73,33 +77,37 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                       </DialogHeader>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         <div className=" col-span-3 overflow-hidden rounded-m mt-2">
-                          <img
+                          <Image
                             src={prompt.images[0]}
                             alt={prompt.text}
                             width={490}
                             height={490}
+                            className="aspect-[1]"
                           />
                         </div>
                         <div className="space-y-1 col-span-2 mr-4">
                           <div className="flex text-sm text-muted-foreground">
                             <Avatar className="h-10 w-10 m-2 ml-0">
                               <AvatarImage
-                                src={prompt.tunedmodel_id?.display_image} //TODO: add user image
+                                src={prompt.owner?.picture} //TODO: add user image
                                 alt="@shadcn"
                               />
                               <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                             <p className="text-md text-muted-foreground mt-4">
-                              By {prompt.owner}
+                              By {prompt.owner?.name}
                             </p>
                           </div>
 
                           <Label>Prompt</Label>
 
-                          <Textarea placeholder={prompt.text} />
+                          <Textarea placeholder={prompt.text} readOnly />
 
                           <Label>Negative Prompt</Label>
-                          <Textarea placeholder={prompt.negative_prompt} />
+                          <Textarea
+                            placeholder={prompt.negative_prompt}
+                            readOnly
+                          />
                           <Label>Model</Label>
                           <div className="flex  shrink-0  rounded-md border border p-1">
                             <Link
@@ -108,21 +116,21 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                               <div className="grid grid-cols-3 items-start gap-4 space-y-0 ">
                                 <div className="hidden lg:flex items-center space-x-1 rounded-md ">
                                   <div className="overflow-hidden rounded-md">
-                                    <img
-                                      src={prompt.tunedmodel_id?.display_image}
-                                      alt={prompt.tunedmodel_id?.model_name}
-                                      width={120}
-                                      height={120}
+                                    <Image
+                                      src={prompt?.tunedmodel_id?.display_image}
+                                      alt={prompt?.tunedmodel_id?.model_name}
+                                      width={490}
+                                      height={490}
                                       className="aspect-[1]"
                                     />
                                   </div>
                                 </div>
                                 <div className="space-y-1 col-span-3 lg:col-span-2 pt-2">
                                   <h1 className="text-1xl font-semibold tracking-tight">
-                                    {prompt.tunedmodel_id?.model_name}
+                                    {prompt?.tunedmodel_id?.model_name}
                                   </h1>
                                   <p className="text-xs text-muted-foreground mt-2, mb-2">
-                                    {prompt.tunedmodel_id?.description}
+                                    {prompt?.tunedmodel_id?.description}
                                   </p>
                                 </div>
                               </div>
@@ -139,7 +147,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-1 rounded-md mt-2">
                           {prompt.images.slice(1).map((image, index) => (
                             <div className="overflow-hidden" key={index}>
-                              <img
+                              <Image
                                 src={image}
                                 alt={prompt.text}
                                 width={2}

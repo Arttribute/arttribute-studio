@@ -18,8 +18,11 @@ export default function CollectionPage({
   const [collection, setCollction] = useState<any>(null);
 
   useEffect(() => {
-    getCollection();
+    if (collection == null) {
+      getCollection();
+    }
   }, [collection]);
+
   async function getCollection() {
     try {
       const { slug } = params;
@@ -36,7 +39,7 @@ export default function CollectionPage({
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
@@ -48,7 +51,7 @@ export default function CollectionPage({
                     </h2>
                     <div className="flex mb-4">
                       <p className="text-sm text-muted-foreground">
-                        By {collection?.owner}
+                        By {collection?.owner?.name}
                       </p>
                       <p className="text-sm text-muted-foreground ml-3">
                         license: {collection?.license}

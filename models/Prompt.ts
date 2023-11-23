@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import User from "./User";
+import TunedModel from "./TunedModel";
 const { ObjectId } = mongoose.Schema.Types;
 
 export interface Prompt {
@@ -8,6 +10,7 @@ export interface Prompt {
   negative_prompt: string;
   images: string[];
   owner: object;
+  featured: boolean;
   tunedmodel_id: object;
   status: string;
 }
@@ -35,12 +38,16 @@ const PromptSchema = new mongoose.Schema<Prompt>(
       default: [],
     },
     owner: {
-      type: String, //type: ObjectId,
-      required: true, //ref: "User",
+      type: ObjectId,
+      ref: User,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
     tunedmodel_id: {
       type: ObjectId,
-      ref: "TunedModel",
+      ref: TunedModel,
     },
     status: {
       type: String,

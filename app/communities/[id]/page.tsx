@@ -37,35 +37,47 @@ import styles from "../communities.module.css";
 
 //   return community.json();
 // }
+
+import { User } from "@/models/User";
+
 export default function CommunityPage({ params }: { params: { id: string } }) {
   const [community, setCommunity] = useState<Community>();
+  const [loadedAccount, setLoadedAccount] = useState(true);
+  const [account, setAccount] = useState<User | null>(null);
+
   useEffect(() => {
-    fetch("http://localhost:3000/api/communities/" + params.id)
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
+    setAccount(user);
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/communities/` + params.id)
       .then((res) => res.json())
       .then((data) => {
         setCommunity(data);
       });
-  }, []);
+  }, [params.id]);
   // const community: Community = await getData(params.id);
   return (
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
 
               <div className="col-span-3 lg:col-span-4 lg:border-l min-h-[100vh]">
                 <div className="h-full px-4 py-6 lg:px-8">
-                  <div className={styles.box}>
-                    <div className={styles.grid_container}>
-                      <img
-                        src={String(community?.banner_image)}
+                  <div className="w-full rounded-xl bg-red-50 h-[200px] ">
+                    {community && (
+                      <Image
+                        src={String(community.banner_image)}
                         className="w-full h-full cover rounded-xl"
                         alt=""
+                        width={500}
+                        height={500}
                       />
-                    </div>
+                    )}
                   </div>
                   <div className="flex mt-5">
                     <Avatar className="h-14 w-14 mb-2 mr-2">
@@ -108,15 +120,11 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                         <div>
                           {/* TODO: Turn this into component */}
                           {community?.visibility == "private" ? (
-                            community?.members.includes(
-                              "655cc4ac7bf17c7b35b7ac35" //TODO: Change with logged in user's ID
-                            ) ? (
+                            community?.members?.includes(account?._id) ? (
                               <Button size="sm" className="relative bg-red-500">
                                 Leave
                               </Button>
-                            ) : community?.requested.includes(
-                                "655cc4ac7bf17c7b35b7ac35"
-                              ) ? (
+                            ) : community?.requested?.includes(account?._id) ? (
                               <Button
                                 size="sm"
                                 className="relative bg-grey-500"
@@ -128,9 +136,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                                 Request to join
                               </Button>
                             )
-                          ) : community?.members.includes(
-                              "655cc4ac7bf17c7b35b7ac35"
-                            ) ? (
+                          ) : community?.members?.includes(account?._id) ? (
                             <Button size="sm" className="relative bg-red-500">
                               Leave
                             </Button>
@@ -144,8 +150,8 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                       <div className="bg-green-100 bg-rounded-xl w-full flex items-start rounded-xl py-3 px-5 mt-5 justify-start">
                         <ScrollArea>
                           <div className="flex space-x-5">
-                            {community?.members.map((user) => (
-                              <CommunityAvatar user_id={user} />
+                            {community?.members.map((user, index) => (
+                              <CommunityAvatar user_id={user} key={index} />
                             ))}
                           </div>
                           <ScrollBar orientation="horizontal" />

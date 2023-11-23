@@ -14,6 +14,9 @@ import { playlists } from "../../../data/playlists";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
+//import { squircle } from "ldrs";
+import { redirect } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -33,53 +36,69 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { User } from "@/models/User";
+import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { useRouter } from "next/navigation";
 
-const profileFormSchema = z.object({
-  modelname: z
-    .string()
-    .min(2, {
-      message: "modelname must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "modelname must not be longer than 30 characters.",
-    }),
-  collection: z.string({
-    required_error: "Select a collection of artwork to train your model on",
-  }),
-  description: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  description: "A tuned model trained on my art collection.",
-};
-
-export default function CreateModel() {
+const CreateModel = () => {
   const [collections, setCollections] = useState<Array<any>>([]);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadedAccount, setLoadedAccount] = useState(true);
+  const [account, setAccount] = useState<User | null>(null);
+  const [trainingCost, setTrainingCost] = useState(55);
+  const { push } = useRouter();
   useEffect(() => {
-    if (!loaded) {
-      getCollections();
+    //squircle.register();
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
+    setAccount(user);
+    if (!loaded && user) {
+      getCollections(user._id);
     }
   }, [loaded]);
 
-  async function getCollections() {
-    const res = await fetch("/api/collections");
-    const data = await res.json();
+  async function getCollections(userId: string) {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections/users`,
+      {
+        params: { userId: userId },
+      }
+    );
+    const data = res.data;
     console.log(data);
     setCollections(data);
     setLoaded(true);
   }
+  const profileFormSchema = z.object({
+    modelname: z
+      .string()
+      .min(2, {
+        message: "modelname must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "modelname must not be longer than 30 characters.",
+      }),
+    collection: z.string({
+      required_error: "Select a collection of artwork to train your model on",
+    }),
+    description: z.string().max(160).min(4),
+    urls: z
+      .array(
+        z.object({
+          value: z.string().url({ message: "Please enter a valid URL." }),
+        })
+      )
+      .optional(),
+  });
 
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+  // This can come from your database or API.
+  const defaultValues: Partial<ProfileFormValues> = {
+    description: "A tuned model trained on my art collection.",
+  };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -87,6 +106,7 @@ export default function CreateModel() {
   });
 
   async function onSubmit(data: ProfileFormValues) {
+    setLoading(true);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -109,8 +129,9 @@ export default function CreateModel() {
         image_urls: collection.images,
       },
       metadata: {
-        owner: "6550dac1e8faf5719ccff30c", //TODO: get user id from auth
+        owner: account?._id, //TODO: account should never be null
         model_name: data.modelname,
+        cost: trainingCost,
         description: data.description,
         display_image: collection.images[0],
         license: collection.license,
@@ -121,9 +142,16 @@ export default function CreateModel() {
       },
     };
     try {
-      const result = await axios.post("/api/tunedmodels", modelDetails);
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels`,
+        modelDetails
+      );
       const fineTuneResponse = result.data;
       console.log(fineTuneResponse);
+      setLoading(false);
+      localStorage.setItem("user", JSON.stringify(fineTuneResponse.user));
+      //redirect to tuned model page
+      push("/tunedmodels");
     } catch (error) {
       console.error("Error training model:", error);
     }
@@ -133,127 +161,175 @@ export default function CreateModel() {
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-10 border-t">
+        <div className="mt-14 border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
-                <div className="h-full px-4 py-6 lg:px-8">
-                  <div className="flex items-center ">
-                    <Link href="/tunedmodels" passHref className="ml-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-black cursor-pointer"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="{3}"
-                          d="M10 19l-7-7m0 0l7-7m-7 "
-                        />
-                      </svg>
-                    </Link>
-                    <h2 className="text-2xl font-semibold tracking-tight ml-1">
-                      New Tuned Model
-                    </h2>
-                  </div>
+                {account != null ? (
+                  <div className="h-full px-4 py-6 lg:px-8">
+                    <div className="flex items-center ">
+                      <Link href="/tunedmodels" passHref className="ml-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-black cursor-pointer"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="{3}"
+                            d="M10 19l-7-7m0 0l7-7m-7 "
+                          />
+                        </svg>
+                      </Link>
+                      <h2 className="text-2xl font-semibold tracking-tight ml-1">
+                        New Tuned Model
+                      </h2>
+                    </div>
 
-                  <div className="rounded-md border border-dashed p-10 m-4">
-                    <Form {...form}>
-                      <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-6"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="modelname"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tuned Model Name</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="My tuned model"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                This is your tuned model's display name.
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="collection"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Art Collection</FormLabel>
-                              <Select
-                                onValueChange={(value) => field.onChange(value)}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select a collection of artwork to train your tuned model on" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {collections.length > 0 && loaded ? (
-                                    collections.map((collection) => (
-                                      <SelectItem
-                                        key={collection._id}
-                                        value={collection._id}
-                                        className="flex items-center space-x-2"
-                                      >
-                                        {collection.collection_name}
-                                      </SelectItem>
-                                    ))
-                                  ) : (
-                                    <p>Create a new Collection</p>
-                                  )}
-                                </SelectContent>
-                              </Select>
-                              <FormDescription>
-                                Manage your art collections in the{" "}
-                                <Link
-                                  href="/collections"
-                                  className=" underline"
-                                >
-                                  collections tab
-                                </Link>
-                                .
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Description</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Describe your tuned model."
-                                  className="resize-none"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <Button type="submit"> Create Tuned Model</Button>
-                      </form>
-                    </Form>
+                    {account && account.credits >= trainingCost ? (
+                      <div className="rounded-md border border-dashed p-10 m-4">
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-6"
+                          >
+                            <FormField
+                              control={form.control}
+                              name="modelname"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Tuned Model Name</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="My tuned model"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormDescription>
+                                    {"This is your tuned model's display name."}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="collection"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Art Collection</FormLabel>
+                                  <Select
+                                    onValueChange={(value) =>
+                                      field.onChange(value)
+                                    }
+                                    defaultValue={field.value}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select a collection of artwork to train your tuned model on" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {collections.length > 0 && loaded ? (
+                                        collections.map((collection) => (
+                                          <SelectItem
+                                            key={collection._id}
+                                            value={collection._id}
+                                            className="flex items-center space-x-2"
+                                          >
+                                            {collection.collection_name}
+                                          </SelectItem>
+                                        ))
+                                      ) : (
+                                        <Link
+                                          href="/collections/create"
+                                          className="p-2"
+                                        >
+                                          Create a new Collection
+                                        </Link>
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormDescription>
+                                    Manage your art collections in the{" "}
+                                    <Link
+                                      href="/collections"
+                                      className=" underline"
+                                    >
+                                      collections tab
+                                    </Link>
+                                    .
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="description"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Description</FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      placeholder="Describe your tuned model."
+                                      className="resize-none"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {loading ? (
+                              <Button disabled>
+                                Creating Tuned Model
+                                <div className="ml-2 mt-1">
+                                  <l-squircle
+                                    size="22"
+                                    stroke="2"
+                                    stroke-length="0.15"
+                                    bg-opacity="0.1"
+                                    speed="0.9"
+                                    color="white"
+                                  ></l-squircle>
+                                </div>
+                              </Button>
+                            ) : (
+                              <Button type="submit">Create Tuned Model</Button>
+                            )}
+                          </form>
+                        </Form>
+                      </div>
+                    ) : (
+                      <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed m-4">
+                        <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+                          <h3 className="mt-4 text-lg font-semibold">
+                            Not Enough Credits
+                          </h3>
+                          <p className="mb-4 mt-2 text-sm text-muted-foreground">
+                            You do not have enough credits to create a new tuned
+                            model. Please purchase more credits.
+                          </p>
+                          <Link href="/buy" passHref>
+                            <Button size="sm" className="relative">
+                              Buy Credits
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                ) : null}
+                {loadedAccount && !account ? (
+                  <div className="m-12">
+                    <RequireAuthPlaceholder />{" "}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -261,7 +337,9 @@ export default function CreateModel() {
       </div>
     </>
   );
-}
+};
+
+export default CreateModel;
 const modelIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

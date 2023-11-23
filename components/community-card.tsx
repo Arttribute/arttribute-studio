@@ -1,4 +1,3 @@
-"use client";
 import TunedModel, { TunedModel as TM } from "@/models/TunedModel";
 import { InfoCard } from "./info-card";
 import {
@@ -7,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import community from "@/models/Community";
 
 interface CommunityCard {
   data: {
@@ -24,17 +22,21 @@ interface CommunityCard {
   };
 }
 
+import Image from "next/image";
+
 export function CommunityCard({ data }: CommunityCard) {
-  console.log(data.members);
+  console.log(data);
   return (
     <a
       href={"/communities/" + data.slug}
       className="relative flex h-64 flex-col items-center md:basis-96 min-w-[400px] md:max-w-[70%] grow bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
     >
-      <img
+      <Image
         className="object-cover w-full rounded-t-lg h-96 h-full md:w-48 md:rounded-none md:rounded-s-lg"
         src={data.display_image}
         alt=""
+        width={400}
+        height={400}
       />
       <div className="bg-white hover:bg-opacity-[50%] bg-opacity-[20%] hover:backdrop-blur-sm ease-in duration-100 backdrop-blur-xs absolute bottom-0 w-full h-auto md:w-48 text-center py-1">
         <p className="flex gap-x-1 text-sm duration-200 items-center justify-center">
@@ -57,7 +59,7 @@ export function CommunityCard({ data }: CommunityCard) {
           {data.members.length == 1 ? " member" : " members"}
         </p>
       </div>
-      <div className="flex flex-col justify-between mt-3 p-3 leading-normal">
+      <div className="flex flex-col justify-between p-3 leading-normal">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {data.name}
         </h5>
@@ -82,15 +84,17 @@ export function CommunityCard({ data }: CommunityCard) {
               Models: ({data.models.length})
             </span>{" "}
             <div className="mt-2 bg-green-50 py-1 px-2 gap-3 flex border-solid border-green-900 rounded-full">
-              {data.models.map((model) => (
-                <TooltipProvider>
+              {data.models.map((model, index) => (
+                <TooltipProvider key={index}>
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                        <img
+                        <Image
                           className="rounded-full w-9 h-9 contain"
                           src={model.display_image}
                           alt={model.model_name}
+                          width={120}
+                          height={120}
                         />
                       </div>
                     </TooltipTrigger>
@@ -98,10 +102,12 @@ export function CommunityCard({ data }: CommunityCard) {
                       <div>
                         <div className="flex items-end">
                           <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                            <img
+                            <Image
                               className="rounded-full w-9 h-9 contain"
                               src={model.display_image}
                               alt={model.model_name}
+                              width={120}
+                              height={120}
                             />
                           </div>
                           <div className="flex flex-col">
