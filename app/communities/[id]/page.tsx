@@ -150,8 +150,8 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                       <div className="bg-green-100 bg-rounded-xl w-full flex items-start rounded-xl py-3 px-5 mt-5 justify-start">
                         <ScrollArea>
                           <div className="flex space-x-5">
-                            {community?.members.map((user) => (
-                              <CommunityAvatar user_id={user} />
+                            {community?.members.map((user, index) => (
+                              <CommunityAvatar user_id={user} key={index} />
                             ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
