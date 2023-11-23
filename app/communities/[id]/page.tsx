@@ -24,6 +24,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CommunityAvatar } from "@/components/community-avatar";
+import styles from "../communities.module.css";
 
 // async function getData(id: String) {
 //   const community = await fetch("api/communities/" + id);
@@ -35,9 +37,19 @@ import {
 
 //   return community.json();
 // }
+
+import { User } from "@/models/User";
+
 export default function CommunityPage({ params }: { params: { id: string } }) {
   const [community, setCommunity] = useState<Community>();
+  const [loadedAccount, setLoadedAccount] = useState(true);
+  const [account, setAccount] = useState<User | null>(null);
+
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
+    setAccount(user);
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/communities/` + params.id)
       .then((res) => res.json())
       .then((data) => {
@@ -57,11 +69,15 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
               <div className="col-span-3 lg:col-span-4 lg:border-l min-h-[100vh]">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="w-full rounded-xl bg-red-50 h-[200px] ">
-                    <Image
-                      src={String(community?.banner_image)}
-                      className="w-full h-full cover rounded-xl"
-                      alt=""
-                    />
+                    {community && (
+                      <Image
+                        src={String(community.banner_image)}
+                        className="w-full h-full cover rounded-xl"
+                        alt=""
+                        width={500}
+                        height={500}
+                      />
+                    )}
                   </div>
                   <div className="flex mt-5">
                     <Avatar className="h-14 w-14 mb-2 mr-2">
@@ -72,82 +88,70 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start w-full">
-                      <h2 className="text-3xl font-semibold tracking-tight">
-                        {community?.name}
-                      </h2>
-                      <div className="">
-                        <p className="flex gap-x-1 text-sm duration-200 items-center justify-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="w-5"
-                          >
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                            <circle cx="8" cy="8" r="3.8" />
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                            <circle cx="17" cy="9" r="3.4" />
-                          </svg>
-                          {community?.members.length}{" "}
-                          {community?.members.length == 1
-                            ? " member"
-                            : " members"}
-                        </p>
+                      <div className="flex w-full justify-between items-center">
+                        <div className="flex flex-col items-start">
+                          <h2 className="text-3xl font-semibold tracking-tight">
+                            {community?.name}
+                          </h2>
+                          <div className="">
+                            <p className="flex gap-x-1 text-sm duration-200 items-center justify-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="w-5"
+                              >
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                <circle cx="8" cy="8" r="3.8" />
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                <circle cx="17" cy="9" r="3.4" />
+                              </svg>
+                              {community?.members.length}{" "}
+                              {community?.members.length == 1
+                                ? " member"
+                                : " members"}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          {/* TODO: Turn this into component */}
+                          {community?.visibility == "private" ? (
+                            community?.members?.includes(account?._id) ? (
+                              <Button size="sm" className="relative bg-red-500">
+                                Leave
+                              </Button>
+                            ) : community?.requested?.includes(account?._id) ? (
+                              <Button
+                                size="sm"
+                                className="relative bg-grey-500"
+                              >
+                                Cancel Request
+                              </Button>
+                            ) : (
+                              <Button size="sm" className="relative">
+                                Request to join
+                              </Button>
+                            )
+                          ) : community?.members?.includes(account?._id) ? (
+                            <Button size="sm" className="relative bg-red-500">
+                              Leave
+                            </Button>
+                          ) : (
+                            <Button size="sm" className="relative">
+                              Join
+                            </Button>
+                          )}
+                        </div>
                       </div>
                       <div className="bg-green-100 bg-rounded-xl w-full flex items-start rounded-xl py-3 px-5 mt-5 justify-start">
                         <ScrollArea>
                           <div className="flex space-x-5">
                             {community?.members.map((user, index) => (
-                              <TooltipProvider key={index}>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    <div className="flex items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                      <Image
-                                        className="rounded-full w-9 h-9 contain"
-                                        src={user.picture}
-                                        alt={user.name}
-                                      />
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <div>
-                                      <div className="flex items-end">
-                                        <div className="flex mr-3 items-center justify-center rounded-full bg-red-50 w-10 h-10 border border-green-600 border-2">
-                                          <Image
-                                            className="rounded-full w-9 h-9 contain"
-                                            src={user.picture}
-                                            alt={user.name}
-                                            width={120}
-                                            height={120}
-                                          />
-                                        </div>
-                                        <div className="flex flex-col">
-                                          <h3 className="font-semibold text-base">
-                                            {user.name}
-                                          </h3>
-                                          <p className="text-sm">
-                                            <span className="font-semibold">
-                                              Promts:{" "}
-                                            </span>
-                                            --
-                                          </p>
-                                        </div>
-                                      </div>
-
-                                      <hr className="my-3" />
-                                      <div className="pb-4 px-1">
-                                        <a href="#" className="underline">
-                                          See creations
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              <CommunityAvatar user_id={user} key={index} />
                             ))}
                           </div>
                           <ScrollBar orientation="horizontal" />

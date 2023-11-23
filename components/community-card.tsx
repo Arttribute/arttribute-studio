@@ -11,10 +11,13 @@ interface CommunityCard {
   data: {
     name: string;
     description: string;
+    admins: any[];
     members: any[];
     models: TM[];
+    visibility: string;
     display_image: string;
     slug: string;
+    approved: boolean;
     createdAt: string;
   };
 }
@@ -103,6 +106,8 @@ export function CommunityCard({ data }: CommunityCard) {
                               className="rounded-full w-9 h-9 contain"
                               src={model.display_image}
                               alt={model.model_name}
+                              width={120}
+                              height={120}
                             />
                           </div>
                           <div className="flex flex-col">
@@ -127,6 +132,17 @@ export function CommunityCard({ data }: CommunityCard) {
           </div>
         </div>
       </div>
+      <span className="absolute right-0 top-0 text-xs mr-2 mt-2">
+        {data.visibility == "private" ? (
+          <span className="bg-red-50 text-red-900 px-2 border border-red-900 rounded-full">
+            private
+          </span>
+        ) : (
+          <span className="bg-green-50 text-green-900 px-2 border border-green-900 rounded-full">
+            public
+          </span>
+        )}
+      </span>
     </a>
   );
 }

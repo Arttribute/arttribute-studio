@@ -5,20 +5,18 @@ import { NextResponse, NextRequest } from "next/server";
 import { NextApiRequest } from "next";
 
 type Params = {
-  slug: string;
+  id: string;
 };
 
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     await dbConnect();
 
-    const slug = params.slug;
+    const id = params.id;
 
-    const community = await Community.findOne({ slug: slug })
-      .populate(["models"])
-      .exec();
+    const user = await User.findById(id);
 
-    return new NextResponse(JSON.stringify(community), { status: 200 });
+    return new NextResponse(JSON.stringify(user), { status: 200 });
   } catch (error: any) {
     return new NextResponse(error.message, {
       status: 500,
