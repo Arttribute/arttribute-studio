@@ -69,11 +69,15 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
               <div className="col-span-3 lg:col-span-4 lg:border-l min-h-[100vh]">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="w-full rounded-xl bg-red-50 h-[200px] ">
-                    <img
-                      src={String(community?.banner_image)}
-                      className="w-full h-full cover rounded-xl"
-                      alt=""
-                    />
+                    {community && (
+                      <Image
+                        src={String(community.banner_image)}
+                        className="w-full h-full cover rounded-xl"
+                        alt=""
+                        width={500}
+                        height={500}
+                      />
+                    )}
                   </div>
                   <div className="flex mt-5">
                     <Avatar className="h-14 w-14 mb-2 mr-2">
