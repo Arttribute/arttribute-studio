@@ -38,22 +38,19 @@ export default async function CommunitiesPage() {
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <Tabs
-                    defaultValue="communities-general"
+                    defaultValue="browse-communities"
                     className="h-full space-y-6"
                   >
                     <div className="space-between flex items-center">
                       <TabsList>
+                        <TabsTrigger value="browse-communities">
+                          Browse Comunities
+                        </TabsTrigger>
                         <TabsTrigger
                           value="communities-general"
                           className="relative"
                         >
-                          Artrribute Communities
-                        </TabsTrigger>
-                        <TabsTrigger value="browse-communities">
-                          Browse Comunities
-                        </TabsTrigger>
-                        <TabsTrigger value="live" disabled>
-                          Create Community
+                          About Communities
                         </TabsTrigger>
                       </TabsList>
 
@@ -65,6 +62,52 @@ export default async function CommunitiesPage() {
                         </Link>
                       </div>
                     </div>
+
+                    {/* ================================================================================ */}
+                    <TabsContent
+                      value="browse-communities"
+                      className="h-full flex-col border-none p-0 data-[state=active]:flex"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <h2 className="text-2xl font-semibold tracking-tight">
+                            Explore Different Communities
+                          </h2>
+                          <p className="text-sm text-muted-foreground">
+                            Top picks for you. Updated daily.
+                          </p>
+                        </div>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="w-full">
+                        <div className="flex justify-center items-center gap-x-4 flex-wrap gap-y-5 pb-4">
+                          {communities
+                            .filter((comm: any) => comm?.approved)
+                            .map((community: any) => (
+                              <CommunityCard
+                                key={community._id}
+                                data={community}
+                              />
+                            ))}
+                        </div>
+                      </div>
+                      {/*<div className="mt-6 space-y-1">
+                        <h2 className="text-2xl font-semibold tracking-tight">
+                          Community Creations
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          See what different communities have created
+                        </p>
+                      </div>
+                      <Separator className="my-4" />
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4"></div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </div>*/}
+                    </TabsContent>
+
                     <TabsContent
                       value="communities-general"
                       className="border-none p-0 outline-none"
@@ -139,60 +182,6 @@ export default async function CommunitiesPage() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                    </TabsContent>
-
-                    {/* ================================================================================ */}
-                    <TabsContent
-                      value="browse-communities"
-                      className="h-full flex-col border-none p-0 data-[state=active]:flex"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-semibold tracking-tight">
-                            Eplore Different Communities
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            Top picks for you. Updated daily.
-                          </p>
-                        </div>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="w-full">
-                        <div className="flex justify-center items-center gap-2 flex-wrap space-x-4 gap-y-5 pb-4">
-                          {communities.map((community: any) => (
-                            <CommunityCard
-                              key={community._id}
-                              data={community}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="mt-6 space-y-1">
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                          Community Creations
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                          See what different communities have created
-                        </p>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <CollectionArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[150px]"
-                                aspectRatio="square"
-                                width={150}
-                                height={150}
-                              />
-                            ))}
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                      </div>
                     </TabsContent>
                   </Tabs>
                 </div>
