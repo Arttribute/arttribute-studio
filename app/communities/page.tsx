@@ -18,11 +18,14 @@ import dbConnect from "@/lib/dbConnect";
 import Community from "@/models/Community";
 
 async function getData() {
-  await dbConnect();
-  const communities = await Community.find()
-    .populate(["members", "models"])
-    .exec();
-  return communities;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/communities`,
+    {
+      next: { revalidate: 10 },
+    }
+  );
+  const data = await res.json();
+  return data;
 }
 
 export default async function CommunitiesPage() {
