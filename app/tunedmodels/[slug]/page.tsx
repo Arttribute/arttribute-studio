@@ -96,9 +96,12 @@ export default function TunedModelPage({
   async function getFineTunedModel() {
     try {
       const { slug } = params;
-      const result = await axios.get(`/api/tunedmodels/${slug}`, {
-        params: { slug: slug },
-      });
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels/${slug}`,
+        {
+          params: { slug: slug },
+        }
+      );
       const tunedModel = result.data;
       setTunedModel(tunedModel);
     } catch (error) {
@@ -108,9 +111,12 @@ export default function TunedModelPage({
 
   async function fetchPromptData(promptId: string, modelId: string) {
     try {
-      const result = await axios.get(`/api/prompts/${promptId}`, {
-        params: { model_id: modelId, prompt_id: promptId },
-      });
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts/${promptId}`,
+        {
+          params: { model_id: modelId, prompt_id: promptId },
+        }
+      );
       const promptImages = result.data.data.images;
       setGeneratedImages(promptImages);
     } catch (error) {
@@ -125,9 +131,13 @@ export default function TunedModelPage({
       status: "completed",
     };
     try {
-      const result = await axios.put(`/api/prompts/${promptId}`, prompt_data, {
-        params: { id: promptId },
-      });
+      const result = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts/${promptId}`,
+        prompt_data,
+        {
+          params: { id: promptId },
+        }
+      );
       const PromptResponse = result.data;
       setUpdated(true);
       setLoading(false);
@@ -174,14 +184,17 @@ export default function TunedModelPage({
       },
     };
     try {
-      const result = await axios.post(`/api/prompts/`, prompt_data);
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts/`,
+        prompt_data
+      );
       const PromptResponse = result.data.newPrompt;
       setPromptData(PromptResponse);
       setPromptId(PromptResponse.prompt_id);
       localStorage.setItem("user", JSON.stringify(result.data.user));
       if (PromptResponse.prompt_id) {
         await axios.put(
-          `/api/tunedmodels/${tunedModel.modeldata._id}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/tunedmodels/${tunedModel.modeldata._id}`,
           { prompt_count: tunedModel.modeldata.prompt_count + 1 },
           {
             params: { id: tunedModel.modeldata._id },
