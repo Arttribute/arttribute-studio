@@ -41,6 +41,8 @@ const CreateCollectiion = () => {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
+  const [fileError, setFileError] = useState(false);
+
   const { push } = useRouter();
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -89,6 +91,11 @@ const CreateCollectiion = () => {
     });
     try {
       let storedFiles: any = [];
+      if (files.length < 1 || files.length > 25) {
+        setFileError(true);
+        setLoading(false);
+        return;
+      }
       for (let i = 0; i < files.length; i++) {
         const imageFileName = slugify(files[i].name).toLowerCase();
         const imageFile = new File([files[i]], imageFileName);
@@ -257,6 +264,12 @@ const CreateCollectiion = () => {
                               />
                             </div>
                           </FormItem>
+                          {fileError ? (
+                            <p className="text-red-500">
+                              Please make sure you upload between 1 and 25
+                              files.
+                            </p>
+                          ) : null}
                           {loading ? (
                             <Button disabled>
                               Creating Collection
