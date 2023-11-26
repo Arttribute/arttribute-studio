@@ -143,8 +143,8 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
                           <Image
                             src={image}
                             alt={prompt.text}
-                            width={2}
-                            height={2}
+                            width={200}
+                            height={200}
                             className={cn(
                               "h-auto w-auto object-cover transition-all hover:scale-80",
                               "aspect-[3/4]"
