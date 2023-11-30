@@ -5,6 +5,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -18,7 +27,7 @@ export function CommunityAvatar(user_id: any) {
   const [user, setUser] = useState<User>();
   useEffect(() => {
     fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/user/` + user_id.user_id
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/user/${user_id.user_id}`
     )
       .then((res) => res.json())
       .then((data) => {

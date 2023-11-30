@@ -36,6 +36,9 @@ import { squircle } from "ldrs";
 
 import { lineWobble } from "ldrs";
 import Link from "next/link";
+import ky from "ky";
+
+const cors = require("cors");
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -118,13 +121,73 @@ export default function TunedModelPage({
     }
   }
 
+  const toDataURL = async (url: string) =>
+    (
+      await fetch(
+        `http://localhost:3000/api/proxy?url=${encodeURIComponent(url)}` //TODO: Change to prod link
+      )
+    ).text();
+
   //update prompt db on fetch complete
   async function updatePromptData(promptId: string) {
-    const prompt_data = {
-      images: generatedImages,
-      status: "completed",
-    };
+    // console.log(
+    //   "Prompt generated, now sending req to arttritbute API. Images below:"
+    // );
+    // console.log(generatedImages);
+    let image_urls: any = [];
+    for (const img in generatedImages) {
+      const dataUrl = await toDataURL(generatedImages[img]);
+      try {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("x-api-key", "** INSERT KEY **");
+        myHeaders.append("Authorization", "Bearer ** INSERT TOKEN **");
+
+        var raw = JSON.stringify({
+          title: promptData.prompt_title,
+          description: promptData.text,
+          tags: [""],
+          author: "John Doe",
+          source: "Arttribute Studio",
+          price: {
+            amount: 0,
+            currency: "cUSD",
+          },
+          license: ["ATR"],
+          needsRequest: false,
+          file: {
+            data: dataUrl,
+            mimetype: "",
+          },
+        });
+
+        var requestOptions: Object = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+        };
+        // console.log(raw);
+        await fetch("https://dev.api.arttribute.io/v1/items", requestOptions)
+          // await fetch("http://localhost:5000/v1/items", requestOptions)
+          .then((response) => response.text())
+          .then((result) => {
+            // console.log("Arttribute req successful");
+
+            const item = JSON.parse(result);
+            console.log(result);
+            image_urls.push(item.data.url);
+          })
+          .catch((error) => console.log("error->", error));
+      } catch (err) {
+        console.error("Error in API call:", err);
+      }
+    }
     try {
+      const prompt_data = {
+        images: image_urls,
+        status: "completed",
+      };
+
       const result = await axios.put(`/api/prompts/${promptId}`, prompt_data, {
         params: { id: promptId },
       });
@@ -324,7 +387,7 @@ export default function TunedModelPage({
                         </p>
                       )}
                       {account &&
-                      account.credits >= numberOfImages * promptCost ? (
+                      account.credits <= numberOfImages * promptCost ? (
                         loading ? (
                           <Button disabled>
                             Generating{" "}

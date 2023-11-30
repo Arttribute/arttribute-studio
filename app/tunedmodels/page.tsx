@@ -80,6 +80,7 @@ export default function TunedModels() {
                           <TunedModelCard
                             key={tunedmodel._id}
                             data={tunedmodel}
+                            community_id={null}
                           />
                         ))}
                     </div>

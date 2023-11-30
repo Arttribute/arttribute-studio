@@ -44,6 +44,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
   const [community, setCommunity] = useState<Community>();
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
+  const [communityAction, setCommunityAction] = useState<boolean>(false);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -57,6 +58,31 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
       });
   }, [params.id]);
   // const community: Community = await getData(params.id);
+
+  const handleCommunityAction = (action: string) => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/communities/${community?.slug}/user/${account?._id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ action: action }), // Convert the data object to a JSON string
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the response data
+        console.log("PATCH request successful:", data);
+        setCommunityAction(!communityAction);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error:", error);
+      });
+  };
   return (
     <>
       <div className="md:block">
@@ -121,27 +147,44 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                           {/* TODO: Turn this into component */}
                           {community?.visibility == "private" ? (
                             community?.members?.includes(account?._id) ? (
-                              <Button size="sm" className="relative bg-red-500">
+                              <Button
+                                onClick={() => handleCommunityAction("leave")}
+                                size="sm"
+                                className="relative bg-red-500"
+                              >
                                 Leave
                               </Button>
                             ) : community?.requested?.includes(account?._id) ? (
                               <Button
+                                onClick={() => handleCommunityAction("leave")}
                                 size="sm"
                                 className="relative bg-grey-500"
                               >
                                 Cancel Request
                               </Button>
                             ) : (
-                              <Button size="sm" className="relative">
+                              <Button
+                                onClick={() => handleCommunityAction("join")}
+                                size="sm"
+                                className="relative"
+                              >
                                 Request to join
                               </Button>
                             )
                           ) : community?.members?.includes(account?._id) ? (
-                            <Button size="sm" className="relative bg-red-500">
+                            <Button
+                              onClick={() => handleCommunityAction("leave")}
+                              size="sm"
+                              className="relative bg-red-500"
+                            >
                               Leave
                             </Button>
                           ) : (
-                            <Button size="sm" className="relative">
+                            <Button
+                              onClick={() => handleCommunityAction("join")}
+                              size="sm"
+                              className="relative"
+                            >
                               Join
                             </Button>
                           )}
@@ -170,6 +213,7 @@ export default function CommunityPage({ params }: { params: { id: string } }) {
                         <TunedModelCard
                           key={tunedmodel._id}
                           data={tunedmodel}
+                          community_id={community._id}
                         />
                       ))}
                     </div>

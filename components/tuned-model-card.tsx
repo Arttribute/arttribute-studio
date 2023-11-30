@@ -29,12 +29,19 @@ interface TunedModelCardProps {
     prompt_count: number;
     slug: string;
   };
+  community_id: string | null;
 }
 import { EditTunedModel } from "./edit-tuned-model";
-export function TunedModelCard({ data }: TunedModelCardProps) {
+export function TunedModelCard({
+  data,
+  community_id = null,
+}: TunedModelCardProps) {
+  const model_url = community_id
+    ? `/tunedmodels/${data.slug}?community=${community_id}`
+    : `/tunedmodels/${data.slug}`;
   return (
     <div>
-      <Link href={`/tunedmodels/${data.slug}`}>
+      <Link href={model_url}>
         <CardHeader className="grid grid-cols-3 items-start gap-4 space-y-0 -m-2">
           <div className="hidden lg:flex items-center space-x-1 rounded-md ">
             <div className="overflow-hidden rounded-md">
