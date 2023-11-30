@@ -1,6 +1,6 @@
 "use client";
 import { Metadata } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC, PropsWithChildren } from "react";
 import axios from "axios";
 
 import { Menu } from "@/components/menu";
@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+import { usePaystackPayment } from "react-paystack";
+
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
@@ -32,6 +34,46 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+const exchangeRates = {
+  KES: 150,
+};
+
+// you can call this function anything
+const onSuccess = (reference) => {
+  // Implementation for whatever you want to do with reference and after success call.
+  console.log(reference);
+};
+
+// you can call this function anything
+const onClose = () => {
+  // implementation for  whatever you want to do when the Paystack dialog closed.
+  console.log("closed");
+};
+
+const PaystackButton: FC<PropsWithChildren<{}>> = ({ children }) => {
+  const initializePayment = usePaystackPayment({
+    reference: new Date().getTime().toString(),
+    email: "test@example.com",
+    // Is in cents
+    amount: exchangeRates["KES"] * 5 * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    currency: "KES",
+    publicKey: "pk_test_bbec726b2fd9ba983acb5d4322dfd72c7abc1060",
+  });
+  return (
+    <div>
+      <Button
+        type="button"
+        className="mt-4 px-32"
+        onClick={() => {
+          initializePayment(onSuccess, onClose);
+        }}
+      >
+        {children}
+      </Button>
+    </div>
+  );
+};
 
 export default function TunedModelPage() {
   const [loading, setLoading] = useState(false);
@@ -72,7 +114,8 @@ export default function TunedModelPage() {
                         </div>
                       </div>
                       <div className="flex items-center justify-center">
-                        <Button className="mt-4 px-32">Buy Now</Button>
+                        <PaystackButton>Buy Now</PaystackButton>
+                        {/* <Button className="mt-4 px-32">Buy Now</Button> */}
                       </div>
                     </CardDescription>
                   </Card>
