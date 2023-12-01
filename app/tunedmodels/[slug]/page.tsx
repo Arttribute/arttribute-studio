@@ -140,8 +140,11 @@ export default function TunedModelPage({
       try {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("x-api-key", "** INSERT KEY **");
-        myHeaders.append("Authorization", "Bearer ** INSERT TOKEN **");
+        myHeaders.append("x-api-key", "4PDybamGTp2gTzkrXXn2eg==");
+        myHeaders.append(
+          "Authorization",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIweDA0NjgzM2IzNWFkOThmZjdmOWYyZTFhZWFiYTNhZmNmNWEzMzI2MTgxOGQyNWQ3NDFmNGEzMWQwZGJiM2U3ZTY4ZDdhM2RlMzM3ZDdmNjgxMzNhYzNkNmY0MWY1MDExNWM3NDJlNjI0YTUzZmE1NzVlZGYyOTA1YTJiYTUyM2JmOTEiLCJ3YWxsZXRfYWRkcmVzcyI6IjB4ODQwZkQxRDA1MDYwMTI1QmEzNmZlODgzMDU4ZTczZTg3YmVhMkQ5MSIsImlhdCI6MTcwMTM2NzQzMSwiZXhwIjoxNzAxNDUzODMxfQ.aoU-K-55XXLl-JPVuuqtF1AwuApaN8MVtdTImu8lTTQ"
+        );
 
         var raw = JSON.stringify({
           title: promptData.prompt_title,
@@ -387,7 +390,7 @@ export default function TunedModelPage({
                         </p>
                       )}
                       {account &&
-                      account.credits <= numberOfImages * promptCost ? (
+                      account.credits >= numberOfImages * promptCost ? (
                         loading ? (
                           <Button disabled>
                             Generating{" "}
