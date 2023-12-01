@@ -3,6 +3,7 @@ export enum Network {
   POLYGON = "polygon",
   ETHEREUM_GOERLI = "ethereum-goerli",
   ETHEREUM = "ethereum",
+  CELO_ALFAJORES = "celo-alfajores",
 }
 
 export const getNetworkUrl = () => {
@@ -15,6 +16,8 @@ export const getNetworkUrl = () => {
       return "https://eth-goerli.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
     case Network.ETHEREUM:
       return "https://eth-mainnet.g.alchemy.com/v2/3jKhhva6zBqwp_dnwPlF4d0rFZhu2pjD";
+    case Network.CELO_ALFAJORES:
+      return "https://alfajores-forno.celo-testnet.org";
     default:
       throw new Error("Network not supported");
   }
@@ -28,6 +31,8 @@ export const getChainId = () => {
       return 80001;
     case Network.ETHEREUM_GOERLI:
       return 5;
+    case Network.CELO_ALFAJORES:
+      return 44787;
     case Network.ETHEREUM:
       return 1;
   }
@@ -38,6 +43,8 @@ export const getNetworkToken = () => {
     case Network.POLYGON_MUMBAI:
     case Network.POLYGON:
       return "MATIC";
+    case Network.CELO_ALFAJORES:
+      return "CELO";
     case Network.ETHEREUM:
     case Network.ETHEREUM_GOERLI:
       return "ETH";
@@ -50,6 +57,8 @@ export const getFaucetUrl = () => {
       return "https://faucet.polygon.technology/";
     case Network.ETHEREUM_GOERLI:
       return "https://goerlifaucet.com/";
+    case Network.CELO_ALFAJORES:
+      return "https://celo.org/developers/faucet";
   }
 };
 
@@ -63,6 +72,8 @@ export const getNetworkName = () => {
       return "Ethereum (Goerli)";
     case Network.ETHEREUM:
       return "Ethereum (Mainnet)";
+    case Network.CELO_ALFAJORES:
+      return "Celo (Alfajores)";
   }
 };
 
@@ -76,5 +87,7 @@ export const getBlockExplorer = (address: string) => {
       return `https://etherscan.io/address/${address}`;
     case Network.ETHEREUM_GOERLI:
       return `https://goerli.etherscan.io/address/${address}`;
+    case Network.CELO_ALFAJORES:
+      return `https://alfajores-blockscout.celo-testnet.org/address/${address}`;
   }
 };
