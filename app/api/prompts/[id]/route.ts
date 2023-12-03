@@ -30,7 +30,7 @@ export async function PUT(request: Request) {
     const prompt = await Prompt.findByIdAndUpdate(id, body, {
       new: true,
     });
-    return new NextResponse(JSON.stringify(prompt), {
+    return new NextResponse(prompt, {
       status: 200,
     });
   } catch (error: any) {
