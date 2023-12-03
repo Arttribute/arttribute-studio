@@ -87,8 +87,9 @@ export default function TunedModelPage({
       }, 30000);
     }
 
-    if (!updated && promptId && generatedImages.length > 0) {
+    if (!updated && promptId && generatedImages.length != 0) {
       updatePromptData(promptData._id);
+      console.log("prompt update called");
     }
   }, [tunedModel, generatedImages, promptId, updated]);
 
@@ -119,6 +120,7 @@ export default function TunedModelPage({
       );
       const promptImages = result.data.data.images;
       setGeneratedImages(promptImages);
+      console.log("prompt images", promptImages);
     } catch (error) {
       console.error("Error in API call:", error);
     }
@@ -141,6 +143,7 @@ export default function TunedModelPage({
       const PromptResponse = result.data;
       setUpdated(true);
       setLoading(false);
+      console.log("prompt updated", PromptResponse);
     } catch (error) {
       console.error("Error in API call:", error);
     }
