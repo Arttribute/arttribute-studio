@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import Prompt from "@/models/Prompt";
 const API_KEY = process.env.ASTRIA_API_KEY;
 
+type Params = {
+  id: string;
+};
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const prompt_id = searchParams.get("prompt_id");
@@ -21,14 +25,14 @@ export async function GET(request: Request) {
   return Response.json({ data });
 }
 
-export async function PATCH(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function PATCH(request: Request, { params }: { params: Params }) {
+  // const { searchParams } = new URL(request.url);
+  // const id = searchParams.get("id");
   try {
     await dbConnect();
     const { images, status } = await request.json();
     const prompt = await Prompt.findByIdAndUpdate(
-      id,
+      params.id,
       { images, status },
       {
         new: true,
