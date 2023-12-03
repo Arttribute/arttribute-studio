@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   return Response.json({ data });
 }
 
-export async function PUT(request: Request) {
+export async function PATCH(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   try {
