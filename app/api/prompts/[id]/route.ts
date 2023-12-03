@@ -21,7 +21,9 @@ export async function GET(request: Request) {
   return Response.json({ data });
 }
 
-export async function PATCH(request: Request) {
+export const dynamic = "force-dynamic";
+
+export async function PUT(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   try {
