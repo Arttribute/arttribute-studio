@@ -21,17 +21,19 @@ export async function GET(request: Request) {
   return Response.json({ data });
 }
 
-export const dynamic = "force-dynamic";
-
-export async function PUT(request: Request) {
+export async function PATCH(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   try {
     await dbConnect();
-    const body = await request.json();
-    const prompt = await Prompt.findByIdAndUpdate(id, body, {
-      new: true,
-    });
+    const { images, status } = await request.json();
+    const prompt = await Prompt.findByIdAndUpdate(
+      id,
+      { images, status },
+      {
+        new: true,
+      }
+    );
     return new NextResponse(prompt, {
       status: 200,
     });

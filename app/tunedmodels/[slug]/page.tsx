@@ -133,7 +133,7 @@ export default function TunedModelPage({
       status: "completed",
     };
     try {
-      const result = await axios.put(
+      const result = await axios.patch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts/${promptId}`,
         prompt_data,
         {
