@@ -25,11 +25,11 @@ export function CreateNewDialog() {
         <DialogHeader>
           <DialogTitle>Create New</DialogTitle>
         </DialogHeader>
-        <Link href="/imaginarium" passHref>
+        {/* <Link href="/imaginarium" passHref>
           <div className="flex  shrink-0  rounded-md border border p-3">
             <Label> Image generation</Label>
           </div>
-        </Link>
+        </Link> */}
         <Link href="/collections/create" passHref>
           <div className="flex  shrink-0  rounded-md border border p-3">
             <Label> Art collectiion</Label>
