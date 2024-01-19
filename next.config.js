@@ -16,6 +16,7 @@ const nextConfig = {
       "github.com",
       "cdn1.iconfinder.com",
       "api.astria.ai",
+      "res.cloudinary.com",
     ],
   },
 
