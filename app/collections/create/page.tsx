@@ -98,9 +98,9 @@ const CreateCollectiion = () => {
       for (let i = 0; i < files.length; i++) {
         const data = new FormData();
         data.append("file", files[i]);
-        data.append("upload_preset", "uploads");
+        data.append("upload_preset", "studio-upload");
         const res = await axios.post(
-          "https://api.cloudinary.com/v1_1/jamiibuilder/image/upload",
+          "https://api.cloudinary.com/v1_1/arttribute/upload",
           data
         );
         console.log("Image data", res.data);
