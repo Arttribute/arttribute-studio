@@ -29,12 +29,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { Web3Storage } from "web3.storage";
 import { v4 as uuid } from "uuid";
 import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+
+import { create } from "@web3-storage/w3up-client";
 
 const CreateCollectiion = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -77,8 +78,6 @@ const CreateCollectiion = () => {
     mode: "onChange",
   });
 
-  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
-  const storage = new Web3Storage({ token: storageToken });
   async function onSubmit(data: ProfileFormValues) {
     setLoading(true);
     toast({
@@ -97,12 +96,15 @@ const CreateCollectiion = () => {
         return;
       }
       for (let i = 0; i < files.length; i++) {
-        const imageFileName = slugify(files[i].name).toLowerCase();
-        const imageFile = new File([files[i]], imageFileName);
-        const storedFile = await storage.put([imageFile]);
-        const fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${imageFileName}`;
-        storedFiles.push(fileUrl);
-        console.log("uploaded:", i, " ", fileUrl);
+        const data = new FormData();
+        data.append("file", files[i]);
+        data.append("upload_preset", "uploads");
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/jamiibuilder/image/upload",
+          data
+        );
+        console.log("Image data", res.data);
+        storedFiles.push(res.data.secure_url);
       }
       console.log(storedFiles);
 
