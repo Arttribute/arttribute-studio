@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -32,7 +31,7 @@ export function CreateNewDialog() {
         </Link> */}
         <Link href="/collections/create" passHref>
           <div className="flex  shrink-0  rounded-md border border p-3">
-            <Label> Art collectiion</Label>
+            <Label> Art collection</Label>
           </div>
         </Link>
         <Link href="/tunedmodels/create" passHref>
