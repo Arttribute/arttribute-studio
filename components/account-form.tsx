@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -81,8 +82,14 @@ const InputForm = ({
       let fileUrl =
         "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
       if (file) {
-        const storedFile = await storage.put([file]);
-        fileUrl = `https://${storedFile.toString()}.ipfs.w3s.link/${file.name}`;
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "studio-upload");
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/arttribute/upload",
+          data
+        );
+        fileUrl = res.data.secure_url;
       }
 
       const res = await fetch(`/api/users/${web3Address}`, {
