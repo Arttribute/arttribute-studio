@@ -38,10 +38,12 @@ const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
     try {
       setDisabled(true);
       const accounts = await magic.wallet.connectWithUI();
-      const { email } = await magic.user.requestInfoWithUI({
-        scope: { email: "required" },
-      });
-      setDisabled(false);
+
+      const userInfo = await magic.user.getInfo();
+      console.log("User Info", userInfo);
+      const email = userInfo.email || "";
+      console.log("Email", email);
+      console.log("Accounts", accounts[0]);
 
       const data = await postConnect(accounts[0], email);
       console.log(data);
