@@ -1,5 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
+import Prompt from "@/models/Prompt";
+import TunedModel from "@/models/TunedModel";
+import Collection from "@/models/Collection";
 import { NextResponse } from "next/server";
 
 type Params = {
@@ -23,7 +26,22 @@ export async function GET(request: Request, { params }: { params: Params }) {
         status: 404,
       });
     }
-    return new NextResponse(JSON.stringify(user), {
+    const prompts = await Prompt.find({ owner: user._id }).sort({
+      createdAt: -1,
+    });
+    const tunedModels = await TunedModel.find({ owner: user._id }).sort({
+      createdAt: -1,
+    });
+    const collections = await Collection.find({ owner: user._id }).sort({
+      createdAt: -1,
+    });
+    const userData = {
+      user,
+      prompts,
+      tunedModels,
+      collections,
+    };
+    return new NextResponse(JSON.stringify(userData), {
       status: 200,
     });
   } catch (error: any) {
