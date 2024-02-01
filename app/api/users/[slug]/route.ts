@@ -26,9 +26,12 @@ export async function GET(request: Request, { params }: { params: Params }) {
         status: 404,
       });
     }
-    const prompts = await Prompt.find({ owner: user._id }).sort({
-      createdAt: -1,
-    });
+    const prompts = await Prompt.find({ owner: user._id })
+      .sort({
+        createdAt: -1,
+      })
+      .populate("tunedmodel_id")
+      .populate("owner");
     const tunedModels = await TunedModel.find({ owner: user._id }).sort({
       createdAt: -1,
     });
