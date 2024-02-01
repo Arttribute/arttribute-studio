@@ -12,6 +12,9 @@ export async function GET(request: Request) {
     const prompts = await Prompt.find({
       tunedmodel_id: modeldata._id,
     })
+      .sort({
+        createdAt: -1,
+      })
       .populate("tunedmodel_id")
       .populate("owner");
 
