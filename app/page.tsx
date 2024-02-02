@@ -139,7 +139,7 @@ export default async function CreationsPage() {
                           Recent Models
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Explore creations by the community.
+                          Explore models created by the community.
                         </p>
                       </div>
                       <Separator className="my-4" />
@@ -192,7 +192,7 @@ export default async function CreationsPage() {
                           Recent Collections
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Explore creations by the community.
+                          Explore all collections.
                         </p>
                       </div>
                       <Separator className="my-4" />
