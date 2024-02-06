@@ -39,7 +39,7 @@ export default function ModelMenubar() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href="/" passHref>
-                    <Button variant="ghost">
+                    <Button variant="ghost" className="w-12 p-1">
                       <LogoSVG />
                     </Button>
                   </Link>
