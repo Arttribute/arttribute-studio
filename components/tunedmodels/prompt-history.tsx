@@ -1,28 +1,24 @@
 import Image from "next/image";
-import { mock } from "node:test";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const promptMedia = [
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-  "123",
-];
-export default function PromptHistory() {
+export default function PromptHistory({
+  prompts,
+  userId,
+}: {
+  prompts: {
+    images: string[];
+    owner: {
+      _id: string;
+    };
+  }[];
+  userId: string;
+}) {
+  // Filter prompts by the current user and return array of images
+  const currentUserPrompts =
+    prompts && prompts.filter((prompt) => prompt.owner._id === userId);
+  console.log("Current User Prompts", currentUserPrompts);
+  console.log("User Id", userId);
+
   return (
     <>
       <div className=" m-2 p-3 rounded">
@@ -31,19 +27,20 @@ export default function PromptHistory() {
         </div>
         <ScrollArea className="h-72 p-1 rounded-md border">
           <div className="grid grid-cols-3">
-            {promptMedia.map((image, index) => {
-              return (
-                <div key={index} className="m-1">
-                  <Image
-                    src="https://github.com/shadcn.png"
-                    alt="prompt"
-                    width={100}
-                    height={100}
-                    className="rounded"
-                  />
-                </div>
-              );
-            })}
+            {currentUserPrompts &&
+              currentUserPrompts.map((prompt, index) => {
+                return (
+                  <div key={index} className="m-1">
+                    <Image
+                      src={prompt.images[0]}
+                      alt="prompt"
+                      width={100}
+                      height={100}
+                      className="rounded"
+                    />
+                  </div>
+                );
+              })}
           </div>
         </ScrollArea>
       </div>
@@ -51,19 +48,20 @@ export default function PromptHistory() {
       <div className="bg-slate-50 m-2 p-3 rounded">
         <ScrollArea className="h-44 p-1 rounded-md border">
           <div className="grid grid-cols-4">
-            {promptMedia.map((image, index) => {
-              return (
-                <div key={index} className="m-0.5">
-                  <Image
-                    src="https://github.com/shadcn.png"
-                    alt="prompt"
-                    width={100}
-                    height={100}
-                    className="rounded"
-                  />
-                </div>
-              );
-            })}
+            {prompts &&
+              prompts.map((prompt, index) => {
+                return (
+                  <div key={index} className="m-0.5">
+                    <Image
+                      src={prompt.images[0]}
+                      alt="prompt"
+                      width={100}
+                      height={100}
+                      className="rounded"
+                    />
+                  </div>
+                );
+              })}
           </div>
         </ScrollArea>
       </div>

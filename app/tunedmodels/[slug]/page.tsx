@@ -25,7 +25,7 @@ export default function TunedModelPage({
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<Array<string>>([]);
   const [tunedModel, setTunedModel] = useState<any>(null);
-  const [loadingModel, setLoadingModel] = useState(true);
+  const [loadingModel, setLoadingModel] = useState(false);
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [account, setAccount] = useState<User | null>(null);
   const [numberOfImages, setNumberOfImages] = useState(1);
@@ -52,6 +52,7 @@ export default function TunedModelPage({
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
+
     setLoadedAccount(true);
     setAccount(user);
     if (!tunedModel) {
@@ -70,6 +71,7 @@ export default function TunedModelPage({
   }, [tunedModel, generatedImages, promptId, updated]);
 
   async function getFineTunedModel() {
+    setLoadingModel(true);
     try {
       const { slug } = params;
       const result = await axios.get(
@@ -80,6 +82,7 @@ export default function TunedModelPage({
       );
       const tunedModel = result.data;
       setTunedModel(tunedModel);
+      setLoadingModel(false);
     } catch (error) {
       console.error(error);
     }
@@ -214,7 +217,10 @@ export default function TunedModelPage({
                 </div>
               </div>
               <div className="col-span-2">
-                <PromptHistory />
+                <PromptHistory
+                  prompts={tunedModel?.prompts}
+                  userId={account?._id}
+                />
               </div>
             </div>
           </div>
