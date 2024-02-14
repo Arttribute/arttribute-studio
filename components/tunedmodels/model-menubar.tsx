@@ -29,7 +29,7 @@ import {
 import { LogoSVG } from "@/components/logo";
 import { tokensIcon } from "@/components/custom-icons";
 
-export default function ModelMenubar() {
+export default function ModelMenubar({ modelData }: { modelData: any }) {
   return (
     <>
       <div className=" fixed top-0 left-0 right-0 z-10 p-2 bg-white border-b">
@@ -52,8 +52,8 @@ export default function ModelMenubar() {
             <MenubarTrigger className="p-1 border rounded">
               <div className="overflow-hidden rounded">
                 <Image
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
+                  src={modelData?.display_image}
+                  alt={modelData?.model_name}
                   width={34}
                   height={34}
                   className="aspect-[1]"
@@ -65,7 +65,7 @@ export default function ModelMenubar() {
                   Fine-tuned model
                 </div>
                 <div className="flex text-sm font-semibold">
-                  Lines that created
+                  {modelData?.model_name}
                 </div>
               </div>
             </MenubarTrigger>
@@ -78,7 +78,7 @@ export default function ModelMenubar() {
                   passHref
                   className="text-xs text-neutral-600"
                 >
-                  <b>Creator: </b> Ethereal Harmony
+                  <b>Creator: </b> {modelData?.owner?.name}
                 </Link>
               </MenubarItem>
               <MenubarItem>
@@ -96,7 +96,7 @@ export default function ModelMenubar() {
                   passHref
                   className="text-xs text-neutral-600"
                 >
-                  <b>License: </b> Ethereal Harmony
+                  <b>License: </b> {modelData?.license}
                 </Link>
               </MenubarItem>
               <MenubarSeparator />

@@ -12,6 +12,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+//import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function AdvancedOptions() {
   const [numSteps, setNumSteps] = useState(33);
@@ -78,7 +79,7 @@ export default function AdvancedOptions() {
             Aspect Ratio
           </div>
           <SelectTrigger className="m-2">
-            <SelectValue placeholder="16:9" />
+            <SelectValue placeholder="1:1" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
