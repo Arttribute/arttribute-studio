@@ -181,8 +181,8 @@ export default function TunedModelPage({
   }
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 md:block ">
-        <ModelMenubar modelData={tunedModel?.modeldata} />
+      <div className="md:block ">
+        <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
         <div className="mt-14">
           <div className="bg-background">
             <div className="lg:grid lg:grid-cols-12">

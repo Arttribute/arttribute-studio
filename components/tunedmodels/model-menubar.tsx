@@ -29,7 +29,13 @@ import {
 import { LogoSVG } from "@/components/logo";
 import { tokensIcon } from "@/components/custom-icons";
 
-export default function ModelMenubar({ modelData }: { modelData: any }) {
+export default function ModelMenubar({
+  modelData,
+  userData,
+}: {
+  modelData: any;
+  userData: any;
+}) {
   return (
     <>
       <div className=" fixed top-0 left-0 right-0 z-10 p-2 bg-white border-b">
@@ -113,8 +119,8 @@ export default function ModelMenubar({ modelData }: { modelData: any }) {
             <MenubarTrigger className="flex p-1 border rounded-full">
               <div className="overflow-hidden rounded-full">
                 <Image
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
+                  src={userData?.picture}
+                  alt={userData?.name}
                   width={28}
                   height={28}
                   className="aspect-[1]"
@@ -123,12 +129,14 @@ export default function ModelMenubar({ modelData }: { modelData: any }) {
               <div className="block ml-2 mr-4">
                 <div className="flex">
                   <div className="mt-0.5 mr-2"> {tokensIcon}</div>
-                  <div className="flex text-sm font-semibold">100000</div>
+                  <div className="flex text-sm font-semibold">
+                    {userData?.credits}
+                  </div>
                 </div>
               </div>
             </MenubarTrigger>
             <MenubarContent>
-              <MenubarLabel>Ethereal Harmony</MenubarLabel>
+              <MenubarLabel>{userData?.name}</MenubarLabel>
               <MenubarSeparator />
               <MenubarItem>
                 <Link href="/tunedmodels/shadcn" passHref>
