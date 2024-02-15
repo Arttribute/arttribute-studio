@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { ChevronLeft } from "lucide-react";
 import { LogoSVG } from "@/components/logo";
 import { tokensIcon } from "@/components/custom-icons";
 
@@ -45,13 +46,13 @@ export default function ModelMenubar({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href="/" passHref>
-                    <Button variant="ghost" className="w-12 p-1">
-                      <LogoSVG />
+                    <Button variant="ghost" className="w-18 p-1">
+                      <ChevronLeft />
                     </Button>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Studio Home </p>
+                  <p>Back to Studio Home </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
