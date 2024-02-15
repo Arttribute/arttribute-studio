@@ -30,7 +30,7 @@ export default function CreationDisplay({
 }) {
   return (
     <>
-      <div className="px-36">
+      <div className={generatedImages.length === 2 ? "px-2" : "px-36"}>
         {loadedImages ? (
           <div className="rounded-md border-2 border-dashed p-2 m-4">
             <div
@@ -51,16 +51,26 @@ export default function CreationDisplay({
                                   src={image}
                                   alt="generated image"
                                   width={
-                                    generatedImages.length === 1 ? 560 : 278
+                                    generatedImages.length === 1
+                                      ? 560
+                                      : generatedImages.length === 2
+                                      ? 410
+                                      : 278
                                   }
                                   height={
-                                    generatedImages.length === 1 ? 360 : 180
+                                    generatedImages.length === 1
+                                      ? 360
+                                      : generatedImages.length === 2
+                                      ? 400
+                                      : 180
                                   }
                                   className={cn(
                                     "object-cover transition-all hover:scale-105 rounded",
                                     `${
                                       generatedImages.length === 1
                                         ? "aspect-[20/14.5] rounded"
+                                        : generatedImages.length === 2
+                                        ? "aspect-[20/19.8] rounded"
                                         : "aspect-[20/14] rounded"
                                     }`
                                   )}

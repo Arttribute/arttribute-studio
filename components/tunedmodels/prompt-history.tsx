@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 export default function PromptHistory({
   prompts,
   userId,
+  setPastPromptData,
 }: {
   prompts: {
     images: string[];
@@ -12,6 +14,7 @@ export default function PromptHistory({
     };
   }[];
   userId: string;
+  setPastPromptData: any;
 }) {
   // Filter prompts by the current user and return array of images
   const currentUserPrompts =
@@ -37,7 +40,11 @@ export default function PromptHistory({
                         alt="prompt"
                         width={100}
                         height={100}
-                        className="rounded"
+                        className={cn(
+                          "object-cover transition-all hover:scale-105 rounded",
+                          "rounded"
+                        )}
+                        onClick={() => setPastPromptData(prompt)}
                       />
                     </div>
                   );
@@ -45,7 +52,7 @@ export default function PromptHistory({
             </div>
           </ScrollArea>
         </div>
-        <div className="m-2 p-2">Explore creations by others</div>
+        <div className="m-2 p-2">Explore more creations</div>
         <div className="bg-slate-50 m-2 p-3 rounded">
           <ScrollArea className="h-44 p-1 rounded-md border">
             <div className="grid grid-cols-4">

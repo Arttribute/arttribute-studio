@@ -128,7 +128,14 @@ export default function TunedModelPage({
     }
   }
 
+  async function setPastPromptData(prompt: any) {
+    setGeneratedImages(prompt.images);
+    setPromptText(prompt.text);
+    setImagesLoaded(true);
+  }
+
   async function onSubmit() {
+    setImagesLoaded(false);
     setGeneratedImages([]);
     setPromptData(null);
     setPromptId("");
@@ -179,6 +186,7 @@ export default function TunedModelPage({
       console.error("Error in API call:", error);
     }
   }
+
   return (
     <>
       <div className="fixed md:block ">
@@ -201,6 +209,7 @@ export default function TunedModelPage({
                     <Textarea
                       placeholder="Type your prompt here."
                       autoFocus
+                      value={promptText}
                       onChange={(e) => setPromptText(e.target.value)}
                       {...(loadingImages && { disabled: true })}
                     />
@@ -220,6 +229,7 @@ export default function TunedModelPage({
                 <PromptHistory
                   prompts={tunedModel?.prompts}
                   userId={account?._id}
+                  setPastPromptData={setPastPromptData}
                 />
               </div>
             </div>
