@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 
 import ModelMenubar from "@/components/tunedmodels/model-menubar";
 import AdvancedOptions from "@/components/tunedmodels/advanced-options";
@@ -27,6 +28,7 @@ export default function TunedModelPage({
   const [tunedModel, setTunedModel] = useState<any>(null);
   const [loadingModel, setLoadingModel] = useState(false);
   const [loadedAccount, setLoadedAccount] = useState(true);
+  const [showResetButton, setShowResetButton] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [numberOfImages, setNumberOfImages] = useState(1);
   const [updated, setUpdated] = useState(false);
@@ -132,6 +134,14 @@ export default function TunedModelPage({
     setGeneratedImages(prompt.images);
     setPromptText(prompt.text);
     setImagesLoaded(true);
+    setShowResetButton(true);
+  }
+
+  async function resetCanvas() {
+    setGeneratedImages([]);
+    setPromptText("");
+    setImagesLoaded(false);
+    setShowResetButton(false);
   }
 
   async function onSubmit() {
@@ -196,6 +206,18 @@ export default function TunedModelPage({
             <div className="lg:grid lg:grid-cols-12">
               <div className="col-span-2">
                 <AdvancedOptions />
+                <div className="m-4 bg-background rounded-md shadow-md">
+                  {showResetButton && (
+                    <Button
+                      variant="ghost"
+                      className="w-full rounded-md"
+                      onClick={resetCanvas}
+                    >
+                      <RotateCcw className="w-4 h-4 m-1 mr-2" />
+                      Reset Canvas
+                    </Button>
+                  )}
+                </div>
               </div>
 
               <div className="col-span-8 ml-4 bg-slate-100 rounded p-4">
