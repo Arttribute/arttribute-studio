@@ -11,6 +11,7 @@ import ModelMenubar from "@/components/tunedmodels/model-menubar";
 import AdvancedOptions from "@/components/tunedmodels/advanced-options";
 import CreationDisplay from "@/components/tunedmodels/creation-display";
 import PromptHistory from "@/components/tunedmodels/prompt-history";
+import LoadingScreen from "@/components/tunedmodels/loading-screen";
 
 import { User } from "@/models/User";
 
@@ -199,65 +200,69 @@ export default function TunedModelPage({
 
   return (
     <>
-      <div className="fixed md:block ">
-        <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
-        <div className="mt-14">
-          <div className="bg-slate-100 h-screen">
-            <div className="lg:grid lg:grid-cols-12">
-              <div className="col-span-2">
-                <AdvancedOptions />
-                <div className="m-4 bg-background rounded-md shadow-md">
-                  {showResetButton && (
-                    <Button
-                      variant="ghost"
-                      className="w-full rounded-md"
-                      onClick={resetCanvas}
-                    >
-                      <RotateCcw className="w-4 h-4 m-1 mr-2" />
-                      Reset Canvas
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-8 ml-4 bg-slate-100 rounded p-4">
-                <CreationDisplay
-                  loadingImages={loadingImages}
-                  loadedImages={imagesLoaded}
-                  generatedImages={generatedImages}
-                />
-                <div className="m-4">
-                  <div className="grid w-full gap-2">
-                    <Textarea
-                      placeholder="Type your prompt here."
-                      autoFocus
-                      value={promptText}
-                      onChange={(e) => setPromptText(e.target.value)}
-                      {...(loadingImages && { disabled: true })}
-                    />
-                    {promptText === "" ? (
-                      <Button>Generate</Button>
-                    ) : loadingImages ? (
-                      <Button disabled>
-                        Generating <Loader className="h-4 w-4 animate-spin" />
+      {loadingModel ? (
+        <LoadingScreen />
+      ) : (
+        <div className="fixed md:block ">
+          <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
+          <div className="mt-14">
+            <div className="bg-slate-100 h-screen">
+              <div className="lg:grid lg:grid-cols-12">
+                <div className="col-span-2">
+                  <AdvancedOptions />
+                  <div className="m-4 bg-background rounded-md shadow-md">
+                    {showResetButton && (
+                      <Button
+                        variant="ghost"
+                        className="w-full rounded-md"
+                        onClick={resetCanvas}
+                      >
+                        <RotateCcw className="w-4 h-4 m-1 mr-2" />
+                        Reset Canvas
                       </Button>
-                    ) : (
-                      <Button onClick={onSubmit}>Generate</Button>
                     )}
                   </div>
                 </div>
-              </div>
-              <div className="col-span-2">
-                <PromptHistory
-                  prompts={tunedModel?.prompts}
-                  userId={account?._id}
-                  setPastPromptData={setPastPromptData}
-                />
+
+                <div className="col-span-8 ml-4 bg-slate-100 rounded p-4">
+                  <CreationDisplay
+                    loadingImages={loadingImages}
+                    loadedImages={imagesLoaded}
+                    generatedImages={generatedImages}
+                  />
+                  <div className="m-4">
+                    <div className="grid w-full gap-2">
+                      <Textarea
+                        placeholder="Type your prompt here."
+                        autoFocus
+                        value={promptText}
+                        onChange={(e) => setPromptText(e.target.value)}
+                        {...(loadingImages && { disabled: true })}
+                      />
+                      {promptText === "" ? (
+                        <Button>Generate</Button>
+                      ) : loadingImages ? (
+                        <Button disabled>
+                          Generating <Loader className="h-4 w-4 animate-spin" />
+                        </Button>
+                      ) : (
+                        <Button onClick={onSubmit}>Generate</Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <PromptHistory
+                    prompts={tunedModel?.prompts}
+                    userId={account?._id}
+                    setPastPromptData={setPastPromptData}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

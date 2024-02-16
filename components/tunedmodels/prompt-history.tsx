@@ -27,7 +27,7 @@ export default function PromptHistory({
       <div className="bg-background rounded p-1 h-screen">
         <div className=" m-1 p-3 rounded">
           <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold">Your recent creations</div>
+            <div className="text-sm font-semibold">Your creations</div>
           </div>
           <ScrollArea className="h-72 p-1 rounded-md border">
             <div className="grid grid-cols-3">
