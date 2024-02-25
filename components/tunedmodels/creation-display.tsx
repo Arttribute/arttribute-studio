@@ -32,7 +32,7 @@ export default function CreationDisplay({
     <>
       <div className={generatedImages.length === 2 ? "px-2" : "px-36"}>
         {loadedImages ? (
-          <div className="rounded-md border-2 border-dashed p-2 m-4">
+          <div className="rounded-md border border-dashed p-2 m-4">
             <div
               className={`grid ${
                 generatedImages.length === 1 ? "grid-cols-1" : "grid-cols-2"
@@ -135,7 +135,7 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : loadingImages ? (
-          <div className="rounded-md border-2 border-dashed p-1 m-4">
+          <div className="rounded-md border border-dashed p-1 m-4">
             <div className="animate-pulse rounded-md border  p-48 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 <Loader className="h-6 w-6 animate-spin" />
@@ -143,8 +143,8 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : (
-          <div className="rounded-md border-2 border-dashed p-1 m-4">
-            <div className="rounded-md border  p-40 bg-slate-50 ">
+          <div className="rounded-lg border border-dashed p-1 m-4">
+            <div className="rounded-lg border  p-40 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 {ArttributeIconWhite}
               </div>

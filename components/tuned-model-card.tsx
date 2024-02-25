@@ -33,7 +33,7 @@ interface TunedModelCardProps {
 import { EditTunedModel } from "./edit-tuned-model";
 export function TunedModelCard({ data }: TunedModelCardProps) {
   return (
-    <div>
+    <div className="bg-slate-50 rounded-md">
       <Link href={`/tunedmodels/${data.slug}`}>
         <CardHeader className="grid grid-cols-3 items-start gap-4 space-y-0 -m-2">
           <div className="hidden lg:flex items-center space-x-1 rounded-md ">

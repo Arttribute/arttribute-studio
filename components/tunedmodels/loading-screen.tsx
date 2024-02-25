@@ -2,7 +2,7 @@ export default function LoadingScreen() {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className=" flex items-center justify-center">
-        <div className="animate-bounce ">
+        <div className="w-24 h-24 animate-bounce ">
           <svg
             width="88"
             height="100"

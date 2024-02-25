@@ -46,7 +46,7 @@ export default function ModelMenubar({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href="/" passHref>
-                    <Button variant="ghost" className="w-18 p-1">
+                    <Button variant="ghost" className="w-18 p-1 rounded-lg">
                       <ChevronLeft />
                     </Button>
                   </Link>
@@ -56,7 +56,7 @@ export default function ModelMenubar({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <MenubarTrigger className="p-1 border rounded">
+            <MenubarTrigger className="p-1 border rounded-lg">
               <div className="overflow-hidden rounded">
                 <Image
                   src={modelData?.display_image}

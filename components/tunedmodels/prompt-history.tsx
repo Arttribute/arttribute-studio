@@ -34,7 +34,7 @@ export default function PromptHistory({
               {currentUserPrompts &&
                 currentUserPrompts.map((prompt, index) => {
                   return (
-                    <div key={index} className="m-1">
+                    <div key={index} className="m-0.5">
                       <Image
                         src={prompt.images[0]}
                         alt="prompt"
@@ -54,18 +54,17 @@ export default function PromptHistory({
         </div>
         <div className="m-2 p-2">Explore more creations</div>
         <div className="bg-slate-50 m-2 p-3 rounded">
-          <ScrollArea className="h-44 p-1 rounded-md border">
+          <ScrollArea className="h-44 p-1 border rounded">
             <div className="grid grid-cols-4">
               {prompts &&
                 prompts.map((prompt, index) => {
                   return (
-                    <div key={index} className="m-0.5">
+                    <div key={index} className="m-0.4">
                       <Image
                         src={prompt.images[0]}
                         alt="prompt"
                         width={100}
                         height={100}
-                        className="rounded"
                       />
                     </div>
                   );

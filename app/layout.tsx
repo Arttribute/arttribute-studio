@@ -4,7 +4,7 @@ import "./globals.css";
 import MagicProvider from "@/components/providers/MagicProvider";
 
 const chakra_petch = Chakra_Petch({
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
   fallback: ["Helvetica", "Arial", "sans-serif"],

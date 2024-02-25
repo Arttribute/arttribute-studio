@@ -11,11 +11,11 @@ import * as z from "zod";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "../../../data/playlists";
+import { Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-//import { squircle } from "ldrs";
 import { redirect } from "next/navigation";
 import {
   Form,
@@ -49,7 +49,6 @@ const CreateModel = () => {
   const [trainingCost, setTrainingCost] = useState(55);
   const { push } = useRouter();
   useEffect(() => {
-    //squircle.register();
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
     setLoadedAccount(true);
@@ -289,14 +288,7 @@ const CreateModel = () => {
                               <Button disabled>
                                 Creating Tuned Model
                                 <div className="ml-2 mt-1">
-                                  <l-squircle
-                                    size="22"
-                                    stroke="2"
-                                    stroke-length="0.15"
-                                    bg-opacity="0.1"
-                                    speed="0.9"
-                                    color="white"
-                                  ></l-squircle>
+                                  <Loader className="h-4 w-4 animate-spin" />
                                 </div>
                               </Button>
                             ) : (

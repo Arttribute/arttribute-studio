@@ -34,6 +34,7 @@ import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { Loader } from "lucide-react";
 
 import { create } from "@web3-storage/w3up-client";
 
@@ -276,14 +277,7 @@ const CreateCollectiion = () => {
                             <Button disabled>
                               Creating Collection
                               <div className="ml-2 mt-1">
-                                <l-squircle
-                                  size="22"
-                                  stroke="2"
-                                  stroke-length="0.15"
-                                  bg-opacity="0.1"
-                                  speed="0.9"
-                                  color="white"
-                                ></l-squircle>
+                                <Loader className="h-4 w-4 animate-spin" />
                               </div>
                             </Button>
                           ) : (

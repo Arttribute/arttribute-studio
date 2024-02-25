@@ -16,7 +16,6 @@ import LoadingScreen from "@/components/tunedmodels/loading-screen";
 import { User } from "@/models/User";
 
 import axios from "axios";
-import { set } from "mongoose";
 
 export default function TunedModelPage({
   params,
@@ -224,7 +223,7 @@ export default function TunedModelPage({
                   </div>
                 </div>
 
-                <div className="col-span-8 ml-4 bg-slate-100 rounded p-4">
+                <div className="col-span-8 ml-4  rounded p-4">
                   <CreationDisplay
                     loadingImages={loadingImages}
                     loadedImages={imagesLoaded}
@@ -238,15 +237,18 @@ export default function TunedModelPage({
                         value={promptText}
                         onChange={(e) => setPromptText(e.target.value)}
                         {...(loadingImages && { disabled: true })}
+                        className="rounded-lg"
                       />
                       {promptText === "" ? (
-                        <Button>Generate</Button>
+                        <Button className="rounded-lg">Generate </Button>
                       ) : loadingImages ? (
-                        <Button disabled>
+                        <Button disabled className="rounded-lg">
                           Generating <Loader className="h-4 w-4 animate-spin" />
                         </Button>
                       ) : (
-                        <Button onClick={onSubmit}>Generate</Button>
+                        <Button onClick={onSubmit} className="rounded-lg">
+                          Generate
+                        </Button>
                       )}
                     </div>
                   </div>
