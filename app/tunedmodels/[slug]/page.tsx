@@ -205,7 +205,7 @@ export default function TunedModelPage({
         <div className="fixed md:block ">
           <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
           <div className="mt-14">
-            <div className="bg-slate-100 h-screen">
+            <div className="bg-gray-50 h-screen">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="col-span-2">
                   <AdvancedOptions />

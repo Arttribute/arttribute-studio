@@ -24,12 +24,12 @@ export default function PromptHistory({
 
   return (
     <>
-      <div className="bg-background rounded p-1 h-screen">
+      <div className="bg-background rounded-lg p-1 m-4">
         <div className=" m-1 p-3 rounded">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold">Your creations</div>
           </div>
-          <ScrollArea className="h-72 p-1 rounded-md border">
+          <ScrollArea className="h-64">
             <div className="grid grid-cols-3">
               {currentUserPrompts &&
                 currentUserPrompts.map((prompt, index) => {
@@ -52,9 +52,12 @@ export default function PromptHistory({
             </div>
           </ScrollArea>
         </div>
-        <div className="m-2 p-2">Explore more creations</div>
-        <div className="bg-slate-50 m-2 p-3 rounded">
-          <ScrollArea className="h-44 p-1 border rounded">
+
+        <div className="m-2 p-3 rounded">
+          <div className=" text-sm font-semibold mb-2">
+            Explore more creations
+          </div>
+          <ScrollArea className="h-44  rounded">
             <div className="grid grid-cols-4">
               {prompts &&
                 prompts.map((prompt, index) => {
