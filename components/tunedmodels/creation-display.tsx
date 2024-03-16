@@ -8,15 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "../ui/input";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 import { VideoIcon } from "lucide-react";
 import { BoxIcon } from "lucide-react";
 import { IterationCcwIcon } from "lucide-react";
 import { MoreHorizontalIcon } from "lucide-react";
-import { Loader } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { ArttributeIconWhite } from "../custom-icons";
 
 export default function CreationDisplay({
@@ -30,9 +30,15 @@ export default function CreationDisplay({
 }) {
   return (
     <>
-      <div className={generatedImages.length === 2 ? "px-2" : "px-36"}>
+      <div
+        className={
+          generatedImages.length === 2
+            ? "px-2  flex items-center justify-center h-full"
+            : "px-36 flex items-center justify-center h-full"
+        }
+      >
         {loadedImages ? (
-          <div className="rounded-md border border-dashed p-2 m-4">
+          <div className="p-0.5 border border rounded-lg m-4">
             <div
               className={`grid ${
                 generatedImages.length === 1 ? "grid-cols-1" : "grid-cols-2"
@@ -42,7 +48,10 @@ export default function CreationDisplay({
                 return (
                   <ContextMenu key={index}>
                     <ContextMenuTrigger>
-                      <div className="overflow-hidden rounded">
+                      <div
+                        className="overflow-hidden rounded-lg"
+                        style={{ marginBottom: -6 }}
+                      >
                         <Dialog>
                           <DialogTrigger>
                             <div className="overflow-hidden rounded">
@@ -52,26 +61,26 @@ export default function CreationDisplay({
                                   alt="generated image"
                                   width={
                                     generatedImages.length === 1
-                                      ? 560
+                                      ? 600
                                       : generatedImages.length === 2
-                                      ? 410
+                                      ? 426
                                       : 278
                                   }
                                   height={
                                     generatedImages.length === 1
-                                      ? 360
-                                      : generatedImages.length === 2
                                       ? 400
+                                      : generatedImages.length === 2
+                                      ? 370
                                       : 180
                                   }
                                   className={cn(
-                                    "object-cover transition-all hover:scale-105 rounded",
+                                    "object-cover transition-all hover:scale-105 rounded-lg ",
                                     `${
                                       generatedImages.length === 1
-                                        ? "aspect-[20/14.5] rounded"
+                                        ? "aspect-[20/14] rounded-lg"
                                         : generatedImages.length === 2
-                                        ? "aspect-[20/19.8] rounded"
-                                        : "aspect-[20/14] rounded"
+                                        ? "aspect-[20/19.5] rounded-lg m-0.5"
+                                        : "aspect-[20/14] rounded-lg"
                                     }`
                                   )}
                                 />
@@ -93,28 +102,28 @@ export default function CreationDisplay({
                                 <div className="absolute top-0 right-0 p-5 flex flex-col space-y-2">
                                   <Button
                                     variant="ghost"
-                                    className="text-white border rounded-md"
+                                    className="text-white border rounded-lg"
                                   >
                                     <BoxIcon className="mr-1" />
                                     3Dfy{" "}
                                   </Button>
                                   <Button
                                     variant="ghost"
-                                    className="text-white border rounded-md"
+                                    className="text-white border rounded-lg"
                                   >
                                     <VideoIcon className="mr-1" />
                                     Vidfy{" "}
                                   </Button>
                                   <Button
                                     variant="ghost"
-                                    className="text-white border rounded-md"
+                                    className="text-white border rounded-lg"
                                   >
                                     <IterationCcwIcon className="mr-1" />
                                     Iter
                                   </Button>
                                   <Button
                                     variant="ghost"
-                                    className="text-white border rounded-md"
+                                    className="text-white border rounded-lg"
                                   >
                                     <MoreHorizontalIcon className="mr-1" />
                                     More
@@ -123,7 +132,33 @@ export default function CreationDisplay({
                               </div>
                             </div>
                             <div className="grid w-full gap-2 ">
-                              <Button>Mint and Print</Button>
+                              <Dialog>
+                                <DialogTrigger>
+                                  <Button className="w-full gap-2 ">
+                                    Submit Creation
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      Submit your creation
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      Submit your creation to a challenge or a
+                                      collection
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="m-1">
+                                    <Input
+                                      placeholder="Title your creation"
+                                      autoFocus
+                                      className="mb-2"
+                                    />
+
+                                    <Button className="w-full ">Submit</Button>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
                             </div>
                           </DialogContent>
                         </Dialog>
@@ -135,16 +170,16 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : loadingImages ? (
-          <div className="rounded-md border border-dashed p-1 m-4">
-            <div className="animate-pulse rounded-md border  p-48 bg-slate-50 ">
+          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 w-[600px]">
+            <div className="animate-pulse rounded-lg  p-48 bg-slate-50 ">
               <div className="flex items-center justify-center">
-                <Loader className="h-6 w-6 animate-spin" />
+                <Loader2 className="h-6 w-6 animate-spin" />
               </div>
             </div>
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed p-1 m-4">
-            <div className="rounded-lg border  p-40 bg-slate-50 ">
+          <div className="p-0.5 border border-neutral-300 to-pink-500 rounded-lg m-4 w-[600px]">
+            <div className="rounded-lg p-40 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 {ArttributeIconWhite}
               </div>

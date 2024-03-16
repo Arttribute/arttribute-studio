@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader } from "lucide-react";
 import { RotateCcw } from "lucide-react";
+import { Loader, Sparkles } from "lucide-react";
 
 import ModelMenubar from "@/components/tunedmodels/model-menubar";
 import AdvancedOptions from "@/components/tunedmodels/advanced-options";
@@ -205,7 +205,7 @@ export default function TunedModelPage({
         <div className="fixed md:block ">
           <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
           <div className="mt-14">
-            <div className="bg-gray-50 h-screen">
+            <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="col-span-2">
                   <AdvancedOptions />
@@ -213,7 +213,7 @@ export default function TunedModelPage({
                     {showResetButton && (
                       <Button
                         variant="ghost"
-                        className="w-full rounded-md"
+                        className="w-full rounded-lg border border-neutral-300"
                         onClick={resetCanvas}
                       >
                         <RotateCcw className="w-4 h-4 m-1 mr-2" />
@@ -222,34 +222,57 @@ export default function TunedModelPage({
                     )}
                   </div>
                 </div>
-
-                <div className="col-span-8 ml-4  rounded p-4">
-                  <CreationDisplay
-                    loadingImages={loadingImages}
-                    loadedImages={imagesLoaded}
-                    generatedImages={generatedImages}
-                  />
-                  <div className="m-4">
-                    <div className="grid w-full gap-2">
-                      <Textarea
-                        placeholder="Type your prompt here."
-                        autoFocus
-                        value={promptText}
-                        onChange={(e) => setPromptText(e.target.value)}
-                        {...(loadingImages && { disabled: true })}
-                        className="rounded-lg"
-                      />
-                      {promptText === "" ? (
-                        <Button className="rounded-lg">Generate </Button>
-                      ) : loadingImages ? (
-                        <Button disabled className="rounded-lg">
-                          Generating <Loader className="h-4 w-4 animate-spin" />
-                        </Button>
-                      ) : (
-                        <Button onClick={onSubmit} className="rounded-lg">
-                          Generate
-                        </Button>
-                      )}
+                <div className="col-span-8 ml-4 rounded p-4">
+                  <div className="fixed bottom-4">
+                    <CreationDisplay
+                      loadingImages={loadingImages}
+                      loadedImages={imagesLoaded}
+                      generatedImages={generatedImages}
+                    />
+                    <div className="m-4">
+                      <div className="grid w-full gap-2">
+                        <Textarea
+                          placeholder="Type your prompt here."
+                          autoFocus
+                          value={promptText}
+                          onChange={(e) => setPromptText(e.target.value)}
+                          {...(loadingImages && { disabled: true })}
+                          className="m-1 rounded-lg"
+                        />
+                        {promptText === "" ? (
+                          <Button
+                            variant="ghost"
+                            className="border border-purple-500 rounded-lg"
+                          >
+                            <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                              Generate
+                            </p>
+                            <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
+                          </Button>
+                        ) : loadingImages ? (
+                          <Button
+                            variant="ghost"
+                            disabled
+                            className="border border-purple-400 rounded-lg"
+                          >
+                            <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                              Generating
+                            </p>
+                            <Loader className="w-4 h-4 m-1 text-purple-500 animate-spin" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            onClick={onSubmit}
+                            className="border border-purple-500 rounded-lg"
+                          >
+                            <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                              Generate
+                            </p>
+                            <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

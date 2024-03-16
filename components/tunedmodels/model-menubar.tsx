@@ -39,7 +39,7 @@ export default function ModelMenubar({
 }) {
   return (
     <>
-      <div className=" fixed top-0 left-0 right-0 z-10 p-2 bg-white border-b">
+      <div className=" fixed top-0 left-0 right-0 z-10 p-2  ">
         <Menubar className="border-none px-2">
           <MenubarMenu>
             <TooltipProvider>
@@ -47,7 +47,7 @@ export default function ModelMenubar({
                 <TooltipTrigger asChild>
                   <Link href="/" passHref>
                     <Button variant="ghost" className="w-18 p-1 rounded-lg">
-                      <ChevronLeft />
+                      <LogoSVG />
                     </Button>
                   </Link>
                 </TooltipTrigger>
@@ -56,7 +56,7 @@ export default function ModelMenubar({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <MenubarTrigger className="p-1 border rounded-lg">
+            <MenubarTrigger className="p-1 border border-neutral-300 rounded-lg">
               <div className="overflow-hidden rounded">
                 <Image
                   src={modelData?.display_image}
@@ -117,7 +117,7 @@ export default function ModelMenubar({
           </MenubarMenu>
           <div className="grow" />
           <MenubarMenu>
-            <MenubarTrigger className="flex p-1 border rounded-full">
+            <MenubarTrigger className="flex p-1 border border-purple-600 rounded-full">
               <div className="overflow-hidden rounded-full">
                 <Image
                   src={userData?.picture}

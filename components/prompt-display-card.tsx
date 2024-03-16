@@ -7,7 +7,6 @@ import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,6 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sparkles } from "lucide-react";
 
 interface PromptGallery {
   prompt: {
@@ -122,9 +122,15 @@ const PromptDisplayCard: React.FC<PromptGallery> = ({ prompt, className }) => {
                               <h1 className="text-1xl font-semibold tracking-tight">
                                 {prompt?.tunedmodel_id?.model_name}
                               </h1>
-                              <p className="text-xs text-muted-foreground mt-2, mb-2">
-                                {prompt?.tunedmodel_id?.description}
-                              </p>
+                              <Button
+                                variant="outline"
+                                className="mt-2 w-full bg-white rounded-lg"
+                              >
+                                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                  Generate art with this model
+                                </p>
+                                <Sparkles className="h-4 w-4 ml-2 inline-block text-indigo-500" />
+                              </Button>
                             </div>
                           </div>
                         </Link>

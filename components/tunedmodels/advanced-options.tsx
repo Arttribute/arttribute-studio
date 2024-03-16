@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 //import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function AdvancedOptions() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const [numSteps, setNumSteps] = useState(33);
   const [cfgScale, setCfgScale] = useState(5);
@@ -49,20 +49,20 @@ export default function AdvancedOptions() {
 
   return (
     <>
-      <div className="m-4 p-1 bg-white rounded-lg shadow-md">
+      <div className="m-4 p-1 rounded-lg border border-neutral-300">
         <Collapsible
           open={isOpen}
           onOpenChange={setIsOpen}
-          className="rounded-md  "
+          className="rounded-md   "
         >
-          <CollapsibleTrigger asChild className=" w-full ">
-            <Button variant="ghost" className=" p-2">
+          <CollapsibleTrigger asChild className="w-full ">
+            <Button variant="ghost" className="px-7 w-full border-purple-500">
               <div className="mr-2">Advanced Options </div>
               <Sliders className="h-4 w-4" />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="">
-            <ScrollArea className="rounded-md p-2" style={{ height: "78vh" }}>
+            <ScrollArea className="rounded-md p-2" style={{ height: "70vh" }}>
               <div className="mr-3">
                 <Select>
                   <div className="flex ml-3 mt-2 mb-1 text-sm font-medium">

@@ -57,10 +57,11 @@ export default function SelectCollectionDialog({
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger className="w-full">
-          <div className="border m-2 p-2 flex flex-col rounded-lg hover:bg-gray-50">
-            <div className="flex flex-col items-center justify-center">
-              <LayoutGrid />
-              <div className="text-sm font-semibold">Choose art collection</div>
+          <div className="border border-slate-400  m-2 p-2 flex flex-col rounded-lg hover:bg-gray-50">
+            <div className="flex items-center justify-center">
+              <div className="text-sm  font-medium text-slate-500">
+                Choose art collection
+              </div>
             </div>
           </div>
         </DialogTrigger>
