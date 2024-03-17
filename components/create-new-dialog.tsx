@@ -25,7 +25,7 @@ export function CreateNewDialog() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="flex justify-start w-full my-4 py-6"
+          className="border-indigo-400 flex justify-start w-full my-4 py-6"
         >
           <Sparkle className="text-indigo-500 w-4 h-4 mr-2" />
           <p className="text-md font-smibold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
@@ -50,7 +50,7 @@ export function CreateNewDialog() {
             <p className="text-md"> Custom model</p>
           </div>
         </Link>
-        <Link href="/collections/create" passHref>
+        <Link href="/challenges/create" passHref>
           <div className="flex  rounded-md border border p-3">
             <Trophy className="text-amber-500 h-4 w-4 mr-2 m-1" />
             <p className="text-md"> Challenge</p>

@@ -21,13 +21,6 @@ import { FeaturedModels } from "@/components/mainpage/featured-models";
 import { RecentCreations } from "@/components/mainpage/recent-creations";
 import { ExtraAnnouncements } from "@/components/mainpage/extra-announcements";
 
-import dbConnect from "@/lib/dbConnect";
-import Prompt from "@/models/Prompt";
-import TunedModel from "@/models/TunedModel";
-import Collection from "@/models/Collection";
-import User from "@/models/User";
-import { Main } from "next/document";
-
 async function getPrompts() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts`, {
     next: { revalidate: 10 },

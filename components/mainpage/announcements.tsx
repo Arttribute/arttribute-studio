@@ -1,13 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+
 export function Announcements() {
   return (
     <>
@@ -15,7 +9,7 @@ export function Announcements() {
         <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-amber-100 rounded-lg">
           <div className="grid grid-cols-11 gap-4 p-4">
             <div className="col-span-5">
-              <div className="flex items-center justify-center p-4">
+              <div className="flex items-center justify-center p-8">
                 <Image
                   src="/studiomodel.webp"
                   alt="Featured Model"

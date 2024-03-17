@@ -7,7 +7,6 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
-import { playlists } from "../../../data/playlists";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,30 +19,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+
 import { toast } from "@/components/ui/use-toast";
 import { v4 as uuid } from "uuid";
 import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { Loader } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+import { Loader, Lock, Scale, Trophy, Vote } from "lucide-react";
 
 import { create } from "@web3-storage/w3up-client";
+import { DatePicker } from "@/components/datepicker";
+import { ThumbnailUpload } from "@/components/thumbnail-upload";
+import { set } from "mongoose";
 
-const CreateCollectiion = () => {
+const CreateChallenge = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [fileError, setFileError] = useState(false);
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+  const [aannounceDate, setAnnounceDate] = useState<Date>();
+  const [privateChallenge, setPrivateChallenge] = useState<Boolean>(false);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
 
   const { push } = useRouter();
   useEffect(() => {
@@ -70,9 +73,7 @@ const CreateCollectiion = () => {
   type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
   // This can come from your database or API.
-  const defaultValues: Partial<ProfileFormValues> = {
-    description: "A collection of my favorite art pieces.",
-  };
+  const defaultValues: Partial<ProfileFormValues> = {};
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -148,7 +149,7 @@ const CreateCollectiion = () => {
         <div className="mt-14">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
-              <Sidebar playlists={playlists} className="hidden lg:block" />
+              <Sidebar className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 ">
                 {account != null ? (
                   <div className="h-full px-4 py-6 lg:px-8">
@@ -170,7 +171,7 @@ const CreateCollectiion = () => {
                         </svg>
                       </Link>
                       <h2 className="text-2xl font-semibold tracking-tight ml-1">
-                        New Art Collection
+                        New Challenge
                       </h2>
                     </div>
 
@@ -178,18 +179,38 @@ const CreateCollectiion = () => {
                       <Form {...form}>
                         <form
                           onSubmit={form.handleSubmit(onSubmit)}
-                          className="space-y-6"
+                          className="space-y-3"
                         >
+                          <div className="flex mt-4">
+                            <ThumbnailUpload
+                              setImageUrl={setThumbnailUrl}
+                              imageUrl={thumbnailUrl}
+                            />
+                            <div className="m-2 mt-auto">
+                              <p className="text-sm font-medium">Thumbnail</p>
+                              <p className="text-xs text-muted-foreground ">
+                                A thumbnail for your challenge
+                              </p>
+                              <p className="text-xs text-muted-foreground ">
+                                This will be the image that represents your
+                                challenge
+                              </p>
+                              <p className="text-xs text-muted-foreground ">
+                                The thumbnail must be a jpg png or gif file
+                              </p>
+                            </div>
+                          </div>
                           <FormField
                             control={form.control}
                             name="collection_name"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Collection Name</FormLabel>
+                                <FormLabel>Challenge Name</FormLabel>
                                 <FormControl>
                                   <Input
-                                    placeholder="My Art Collection"
+                                    placeholder="Challenge name"
                                     {...field}
+                                    autoFocus
                                   />
                                 </FormControl>
 
@@ -204,9 +225,8 @@ const CreateCollectiion = () => {
                               <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                  <Textarea
-                                    placeholder="Describe your collection."
-                                    className="resize-none"
+                                  <Input
+                                    placeholder="Exciting new challenge for artists!"
                                     {...field}
                                   />
                                 </FormControl>
@@ -214,65 +234,96 @@ const CreateCollectiion = () => {
                               </FormItem>
                             )}
                           />
-                          <FormField
-                            control={form.control}
-                            name="license"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Collection Licence</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select a Licence for your Collection" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="BY">BY</SelectItem>
-                                    <SelectItem value="BYSA">BY SA</SelectItem>
-                                    <SelectItem value="BYNCSA">
-                                      BY NC SA
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormDescription>
-                                  What are{" "}
-                                  <Link
-                                    href="/collections"
-                                    className=" underline"
-                                  >
-                                    Arttribute licenses
-                                  </Link>
-                                  ?
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormItem>
-                            <FormLabel>
-                              Upload Image files {"(Up to 25 files)"}
-                            </FormLabel>
-                            <div className="flex flex-col items-center justify-center p-2 border-2 border-dashed border-gray-300 rounded-lg">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleFileChange}
-                                className="w-full p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                        file:rounded file:border-0 file:text-sm file:font-semibold
-                        file:bg-violet-50 file:text-gray-00 hover:file:bg-violet-100"
+
+                          <div className="flex items-center space-x-2 mt-4">
+                            <Switch id="airplane-mode" />
+                            <div className="flex items-center space-x-1">
+                              <Lock />
+                              <div className="flex flex-col">
+                                <p className="text-sm font-medium">Private</p>
+                                <p className="text-xs text-muted-foreground">
+                                  Only invited participants can join
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex">
+                            <div className="flex flex-col mr-4">
+                              <FormLabel className="mb-1">Start date</FormLabel>
+                              <DatePicker
+                                setDate={setStartDate}
+                                date={startDate}
                               />
                             </div>
-                          </FormItem>
-                          {fileError ? (
-                            <p className="text-red-500">
-                              Please make sure you upload between 1 and 25
-                              files.
-                            </p>
-                          ) : null}
+                            <div className="flex flex-col mr-2 ">
+                              <FormLabel className="mb-1">End date</FormLabel>
+                              <DatePicker setDate={setEndDate} date={endDate} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <FormLabel>Who chooses the winner</FormLabel>
+                            <div className="mt-1">
+                              <RadioGroup defaultValue="comfortable">
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem value="default" id="r1" />
+                                  <Vote />
+                                  <div className="flex flex-col">
+                                    <p className="text-sm font-medium">
+                                      Public Voting
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      Anyone can vote for the winner
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem value="comfortable" id="r2" />
+                                  <Scale />
+                                  <div className="flex flex-col">
+                                    <p className="text-sm font-medium">
+                                      Judging
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      A panel of judges will choose the winner{" "}
+                                      {"(include judging criteria)"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </RadioGroup>
+                              <div className="mt-2">
+                                <Input placeholder="Judfing criteria" />
+                              </div>
+                            </div>
+                            <div className="mt-4">
+                              <FormLabel className="flex mb-2">
+                                Prize
+                                <Trophy className="h-3.5 w-3.5" />
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="Describe in detail the prize for the winner" />
+                              </FormControl>
+
+                              <FormDescription>
+                                The prize can be anything from a cash prize to
+                                exposure for the winner
+                              </FormDescription>
+                              <div className="flex flex-col mr-2 ">
+                                <div className="flex ">
+                                  <FormLabel className="mt-1 mb-1">
+                                    Winner announce date
+                                  </FormLabel>
+                                </div>
+
+                                <DatePicker
+                                  setDate={setAnnounceDate}
+                                  date={aannounceDate}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
                           {loading ? (
                             <Button disabled>
                               Creating Collection
@@ -281,7 +332,7 @@ const CreateCollectiion = () => {
                               </div>
                             </Button>
                           ) : (
-                            <Button type="submit">Create Collection</Button>
+                            <Button type="submit">Create Challenge</Button>
                           )}
                         </form>
                       </Form>
@@ -302,4 +353,4 @@ const CreateCollectiion = () => {
   );
 };
 
-export default CreateCollectiion;
+export default CreateChallenge;
