@@ -9,7 +9,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { BadgeCheck, Box, ChevronRight, Sparkles } from "lucide-react";
 import { useState } from "react";
 
-function ModelItem({ model }) {
+function ModelItem({ model }: any) {
   const [isHovered, setIsHovered] = useState(false); // State to track hover
 
   return (
