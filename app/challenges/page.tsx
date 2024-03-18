@@ -31,6 +31,8 @@ export default async function Challengespage() {
     return data;
   }
 
+  const challenges: any = await getChallenges();
+
   //functionthat searches for challenges based on regex input and array of challenges and returns the matching challenges
   function searchChallenges(search: string, challenges: any) {
     if (search === "") {
@@ -80,13 +82,12 @@ export default async function Challengespage() {
                     <SearchBar />
                     <br />
                     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                      <ChallengeCard />
-                      <ChallengeCard />
-                      <ChallengeCard />
-                      <ChallengeCard />
-                      <ChallengeCard />
-                      <ChallengeCard />
-                      <ChallengeCard />
+                      {challenges.map((challenge: any) => (
+                        <ChallengeCard
+                          key={challenge._id}
+                          challenge={challenge}
+                        />
+                      ))}
                     </div>
                   </TabsContent>
                   <TabsContent

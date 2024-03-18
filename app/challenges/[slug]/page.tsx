@@ -1,38 +1,61 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { ChallengeCard } from "@/components/challenges/challenge-card";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Info } from "lucide-react";
 
+import axios from "axios";
 import { LeaderBoard } from "@/components/challenges/leaderboard";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+import TextCopy from "@/components/text-copy";
+import { InfoPopover } from "@/components/info-popover";
 
-export default async function ChallengePage() {
-  async function getPrompts() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/prompts`, {
-      next: { revalidate: 10 },
-    });
-    const data = await res.json();
-    return data;
-  }
-  const prompts: any = await getPrompts();
+export default function ChallengePage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const [challenge, setChallenge] = useState<any>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [account, setAccount] = useState<any>(null);
+  const [loadedAccount, setLoadedAccount] = useState(false);
 
-  //functionthat searches for challenges based on regex input and array of challenges and returns the matching challenges
-  function searchChallenges(search: string, challenges: any) {
-    if (search === "") {
-      return challenges;
+  useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setLoadedAccount(true);
+    setAccount(user);
+    if (challenge == null) {
+      getChallenge();
     }
-    const regex = new RegExp(search, "i");
-    return challenges.filter((challenge: any) => {
-      return challenge.name.match(regex);
-    });
+  }, [challenge]);
+
+  async function getChallenge() {
+    try {
+      const { slug } = params;
+      const result = await axios.get(`/api/challenges/${slug}`, {
+        params: { slug: slug },
+      });
+      const challenge = result.data;
+      setChallenge(challenge);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -53,15 +76,28 @@ export default async function ChallengePage() {
                     className="rounded-lg aspect-[1]"
                   />
                   <div className="ml-4 ">
-                    <h2 className="text-xl font-semibold">Challenge page </h2>
+                    <h2 className="text-xl font-semibold">
+                      {challenge?.challenge_name}{" "}
+                    </h2>
                     <p className="text-sm text-muted-foreground ">
-                      by Astounding art
+                      by {challenge?.owner?.name}
                     </p>
                     <div className="flex rounded-lg  items-center">
                       <CalendarIcon className="h-3 w-3 text-muted-foreground m-0.5" />
                       <p className="text-xs text-muted-foreground ">
-                        22/03/24 - 22/03/24
+                        {challenge?.start_date}-{challenge?.end_date}
                       </p>
+                    </div>
+                  </div>
+                  <div className="ml-auto">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="flex">
+                        <p className="text-xs text-muted-foreground">
+                          Challenge code{" "}
+                        </p>
+                        <InfoPopover infoText="Use this code to submit your creations to this challenge" />
+                      </div>
+                      <TextCopy text={challenge?.code} />
                     </div>
                   </div>
                 </div>
@@ -76,18 +112,40 @@ export default async function ChallengePage() {
                       <TabsTrigger value="prizes">Prizes</TabsTrigger>
                     </TabsList>
                     <div className="ml-auto ">
-                      <Link href="/challenges/create" passHref>
-                        <Button size="sm" className="relative">
-                          Submit your creation
-                        </Button>
-                      </Link>
+                      <Dialog>
+                        <DialogTrigger>
+                          <Button size="sm" className="relative">
+                            Submit your creation
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Submit your creation</DialogTitle>
+                            <DialogDescription>
+                              Submit your creation to the challenge
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="flex flex-col space-y-4">
+                            <Input
+                              type="text"
+                              placeholder="Enter your creation link"
+                              className="w-full"
+                            />
+                            <Button size="sm" className="w-full">
+                              Submit
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                   <TabsContent
                     value="submissions"
                     className="border-none p-0 outline-none"
                   >
-                    <PromptGalleryGrid prompts={prompts} />
+                    <ScrollArea className="h-[700px] p-1">
+                      {/*<PromptGalleryGrid prompts={prompts} />*/}
+                    </ScrollArea>
                   </TabsContent>
                   <TabsContent
                     value="leaderboard"

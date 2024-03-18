@@ -41,12 +41,16 @@ const CreateChallenge = () => {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
   const [loadedAccount, setLoadedAccount] = useState(true);
-  const [fileError, setFileError] = useState(false);
+  const [challengeName, setChallengeName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [aannounceDate, setAnnounceDate] = useState<Date>();
   const [privateChallenge, setPrivateChallenge] = useState<Boolean>(false);
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const [decider, setDecider] = useState<string>("public");
+  const [judgingCriteria, setJudgingCriteria] = useState<string>("");
+  const [prizeDescription, setPrizeDescription] = useState<string>("");
 
   const { push } = useRouter();
   useEffect(() => {
@@ -80,57 +84,41 @@ const CreateChallenge = () => {
     mode: "onChange",
   });
 
-  async function onSubmit(data: ProfileFormValues) {
+  async function handleSubmit() {
     setLoading(true);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    try {
-      let storedFiles: any = [];
-      if (files.length < 1 || files.length > 25) {
-        setFileError(true);
-        setLoading(false);
-        return;
-      }
-      for (let i = 0; i < files.length; i++) {
-        const data = new FormData();
-        data.append("file", files[i]);
-        data.append("upload_preset", "studio-upload");
-        const res = await axios.post(
-          "https://api.cloudinary.com/v1_1/arttribute/upload",
-          data
-        );
-        console.log("Image data", res.data);
-        storedFiles.push(res.data.secure_url);
-      }
-      console.log(storedFiles);
 
-      const collection_uuid = uuid();
-      const collection_data = {
-        owner: account?._id, //TODO: account should not be null
-        collection_name: data.collection_name,
-        description: data.description,
-        license: data.license,
-        images: storedFiles,
-        slug: slugify(
-          `${data.collection_name}-${collection_uuid}`
-        ).toLowerCase(),
-        collection_uuid: collection_uuid,
+    try {
+      const challenge_uuid = uuid();
+      const challenge_code = challenge_uuid.slice(0, 8);
+      const challenge_slug = slugify(
+        (challengeName + "-" + challenge_code).toLowerCase()
+      );
+      const challenge_data = {
+        challenge_name: challengeName,
+        challenge_uuid: challenge_uuid,
+        slug: challenge_slug,
+        code: challenge_code,
+        description: description,
+        thumbnail: thumbnailUrl,
+        owner: account?.id,
+        start_date: startDate,
+        end_date: endDate,
+        announcement_date: aannounceDate,
+        private: privateChallenge,
+        is_publicvoting: decider === "public",
+        is_judged: decider === "judged",
+        judging_criteria: judgingCriteria,
+        prize_description: prizeDescription,
       };
-      console.log(collection_data);
+      console.log(challenge_data);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/collections`,
-        collection_data
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
+        challenge_data
       );
       console.log(res);
       setLoading(false);
       //redirect to collection page
-      push("/collections");
+      push("/challenges/" + challenge_slug);
     } catch (err) {
       console.log(err);
     }
@@ -177,10 +165,7 @@ const CreateChallenge = () => {
 
                     <div className="rounded-md border border-dashed p-10 pt-6 m-4 ">
                       <Form {...form}>
-                        <form
-                          onSubmit={form.handleSubmit(onSubmit)}
-                          className="space-y-3"
-                        >
+                        <div className="space-y-3">
                           <div className="flex mt-4">
                             <ThumbnailUpload
                               setImageUrl={setThumbnailUrl}
@@ -211,6 +196,9 @@ const CreateChallenge = () => {
                                     placeholder="Challenge name"
                                     {...field}
                                     autoFocus
+                                    onChange={(e) =>
+                                      setChallengeName(e.target.value)
+                                    }
                                   />
                                 </FormControl>
 
@@ -228,6 +216,9 @@ const CreateChallenge = () => {
                                   <Input
                                     placeholder="Exciting new challenge for artists!"
                                     {...field}
+                                    onChange={(e) =>
+                                      setDescription(e.target.value)
+                                    }
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -265,9 +256,14 @@ const CreateChallenge = () => {
                           <div>
                             <FormLabel>Who chooses the winner</FormLabel>
                             <div className="mt-1">
-                              <RadioGroup defaultValue="comfortable">
+                              <RadioGroup defaultValue="public">
                                 <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="default" id="r1" />
+                                  <RadioGroupItem
+                                    value="public"
+                                    id="public"
+                                    checked={decider === "public"}
+                                    onChange={() => setDecider("public")}
+                                  />
                                   <Vote />
                                   <div className="flex flex-col">
                                     <p className="text-sm font-medium">
@@ -279,7 +275,12 @@ const CreateChallenge = () => {
                                   </div>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="comfortable" id="r2" />
+                                  <RadioGroupItem
+                                    value="judged"
+                                    id="judged"
+                                    checked={decider === "judged"}
+                                    onChange={() => setDecider("judged")}
+                                  />
                                   <Scale />
                                   <div className="flex flex-col">
                                     <p className="text-sm font-medium">
@@ -302,7 +303,12 @@ const CreateChallenge = () => {
                                 <Trophy className="h-3.5 w-3.5" />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="Describe in detail the prize for the winner" />
+                                <Input
+                                  placeholder="Describe in detail the prize for the winner"
+                                  onChange={(e) =>
+                                    setPrizeDescription(e.target.value)
+                                  }
+                                />
                               </FormControl>
 
                               <FormDescription>
@@ -326,15 +332,17 @@ const CreateChallenge = () => {
 
                           {loading ? (
                             <Button disabled>
-                              Creating Collection
+                              Creating Challenge
                               <div className="ml-2 mt-1">
                                 <Loader className="h-4 w-4 animate-spin" />
                               </div>
                             </Button>
                           ) : (
-                            <Button type="submit">Create Challenge</Button>
+                            <Button onClick={handleSubmit}>
+                              Create Challenge
+                            </Button>
                           )}
-                        </form>
+                        </div>
                       </Form>
                     </div>
                   </div>

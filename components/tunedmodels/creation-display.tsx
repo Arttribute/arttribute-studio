@@ -19,6 +19,8 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { Loader2, Sparkles } from "lucide-react";
 import { ArttributeIconWhite } from "../custom-icons";
 
+import { SubmitCreation } from "@/components/challenges/submit-creation";
+
 export default function CreationDisplay({
   loadingImages,
   loadedImages,
@@ -131,35 +133,7 @@ export default function CreationDisplay({
                                 </div>
                               </div>
                             </div>
-                            <div className="grid w-full gap-2 ">
-                              <Dialog>
-                                <DialogTrigger>
-                                  <Button className="w-full gap-2 ">
-                                    Submit Creation
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      Submit your creation
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      Submit your creation to a challenge or a
-                                      collection
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <div className="m-1">
-                                    <Input
-                                      placeholder="Title your creation"
-                                      autoFocus
-                                      className="mb-2"
-                                    />
-
-                                    <Button className="w-full ">Submit</Button>
-                                  </div>
-                                </DialogContent>
-                              </Dialog>
-                            </div>
+                            <SubmitCreation />
                           </DialogContent>
                         </Dialog>
                       </div>
