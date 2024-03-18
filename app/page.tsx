@@ -1,21 +1,8 @@
 import { Metadata } from "next";
-import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import { CollectionArtwork } from "../components/collection-artwork";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "../components/sidebar";
-import { listenNowAlbums, madeForYouAlbums } from "../data/albums";
-import { playlists } from "../data/playlists";
 
-import { CollectionCard } from "@/components/collections-card";
-import PromptGalleryGrid from "@/components/prompt-gallery-grid";
-import { TunedModelCard } from "@/components/tuned-model-card";
-import PromptDisplayCard from "@/components/prompt-display-card";
 import { Announcements } from "@/components/mainpage/announcements";
 import { FeaturedModels } from "@/components/mainpage/featured-models";
 import { RecentCreations } from "@/components/mainpage/recent-creations";

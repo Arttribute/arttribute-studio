@@ -23,9 +23,9 @@ function ModelItem({ model }: any) {
         <Image
           src="/studiomodel.webp"
           alt={model.model_name}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-lg"
+          width={400}
+          height={300}
+          className="rounded-lg w-full aspect-[1] object-cover"
         />
         {/* Dark overlay that appears on hover */}
         <div
