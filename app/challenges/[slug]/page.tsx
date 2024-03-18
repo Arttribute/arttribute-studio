@@ -21,7 +21,7 @@ import { CalendarIcon, Info } from "lucide-react";
 
 import axios from "axios";
 import { LeaderBoard } from "@/components/challenges/leaderboard";
-import PromptGalleryGrid from "@/components/prompt-gallery-grid";
+import PromptDisplayCard from "@/components/prompt-display-card";
 import TextCopy from "@/components/text-copy";
 import { InfoPopover } from "@/components/info-popover";
 
@@ -31,6 +31,7 @@ export default function ChallengePage({
   params: { slug: string };
 }) {
   const [challenge, setChallenge] = useState<any>(null);
+  const [submissions, setSubmissions] = useState<any>(null);
   const [loaded, setLoaded] = useState(false);
   const [account, setAccount] = useState<any>(null);
   const [loadedAccount, setLoadedAccount] = useState(false);
@@ -48,11 +49,17 @@ export default function ChallengePage({
   async function getChallenge() {
     try {
       const { slug } = params;
-      const result = await axios.get(`/api/challenges/${slug}`, {
-        params: { slug: slug },
-      });
-      const challenge = result.data;
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges/${slug}`,
+        {
+          params: { slug: slug },
+        }
+      );
+      const challenge = result.data.challenge;
+      const submissions = result.data.submissions;
       setChallenge(challenge);
+      setSubmissions(submissions);
+      console.log(submissions);
     } catch (error) {
       console.error(error);
     }
@@ -144,7 +151,15 @@ export default function ChallengePage({
                     className="border-none p-0 outline-none"
                   >
                     <ScrollArea className="h-[700px] p-1">
-                      {/*<PromptGalleryGrid prompts={prompts} />*/}
+                      <div className="grid grid-cols-5 gap-4">
+                        {submissions &&
+                          submissions?.map((submission: any) => (
+                            <PromptDisplayCard
+                              key={submission._id}
+                              prompt={submission.prompt_id}
+                            />
+                          ))}
+                      </div>
                     </ScrollArea>
                   </TabsContent>
                   <TabsContent

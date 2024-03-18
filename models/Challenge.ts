@@ -14,7 +14,7 @@ export interface Challenge {
   end_date: Date;
   announcement_date: Date;
   private: boolean;
-  submissions: object[];
+  submissions: string[];
   perks: object[];
   prize_description: string;
   is_publicvoting: boolean;
@@ -68,15 +68,7 @@ const ChallengeSchema = new mongoose.Schema<Challenge>(
       default: false,
     },
     submissions: {
-      type: [
-        {
-          itemId: ObjectId,
-          submission_date: Date,
-          votes: Number,
-          is_winner: Boolean,
-        },
-      ],
-      ref: "Prompt",
+      type: [String],
     },
     //Consider xp points for each participants
     perks: {

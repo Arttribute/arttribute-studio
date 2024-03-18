@@ -8,6 +8,7 @@ export default function PromptHistory({
   setPastPromptData,
 }: {
   prompts: {
+    _id: string;
     images: string[];
     owner: {
       _id: string;

@@ -16,6 +16,7 @@ import LoadingScreen from "@/components/tunedmodels/loading-screen";
 import { User } from "@/models/User";
 
 import axios from "axios";
+import { set } from "mongoose";
 
 export default function TunedModelPage({
   params,
@@ -36,6 +37,7 @@ export default function TunedModelPage({
   const [promptId, setPromptId] = useState("");
 
   const [promptText, setPromptText] = useState("");
+  const [pastPrompt, setPastPrompt] = useState(false);
 
   //Advanced options
   const [negativePrompt, setNegativePrompt] = useState("");
@@ -66,11 +68,11 @@ export default function TunedModelPage({
       }, 30000);
     }
 
-    if (!updated && promptId && generatedImages.length != 0) {
+    if (!updated && promptId && generatedImages.length != 0 && !pastPrompt) {
       updatePromptData(promptData._id);
       console.log("prompt update called");
     }
-  }, [tunedModel, generatedImages, promptId, updated]);
+  }, [tunedModel, generatedImages, promptId, updated, pastPrompt]);
 
   async function getFineTunedModel() {
     setLoadingModel(true);
@@ -131,8 +133,10 @@ export default function TunedModelPage({
   }
 
   async function setPastPromptData(prompt: any) {
+    setPastPrompt(true);
     setGeneratedImages(prompt.images);
     setPromptText(prompt.text);
+    setPromptId(prompt._id);
     setImagesLoaded(true);
     setShowResetButton(true);
   }
@@ -140,6 +144,7 @@ export default function TunedModelPage({
   async function resetCanvas() {
     setGeneratedImages([]);
     setPromptText("");
+    setPromptId("");
     setImagesLoaded(false);
     setShowResetButton(false);
   }
@@ -228,6 +233,8 @@ export default function TunedModelPage({
                       loadingImages={loadingImages}
                       loadedImages={imagesLoaded}
                       generatedImages={generatedImages}
+                      promptId={promptId}
+                      currentUserId={account?._id}
                     />
                     <div className="m-4">
                       <div className="grid w-full gap-2">

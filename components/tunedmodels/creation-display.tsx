@@ -25,10 +25,14 @@ export default function CreationDisplay({
   loadingImages,
   loadedImages,
   generatedImages,
+  promptId,
+  currentUserId,
 }: {
   loadingImages: boolean;
   loadedImages: boolean;
   generatedImages: Array<string>;
+  promptId: string;
+  currentUserId: string;
 }) {
   return (
     <>
@@ -133,7 +137,13 @@ export default function CreationDisplay({
                                 </div>
                               </div>
                             </div>
-                            <SubmitCreation />
+                            <SubmitCreation
+                              data={{
+                                prompt_id: promptId,
+                                image_url: image,
+                                owner: currentUserId,
+                              }}
+                            />
                           </DialogContent>
                         </Dialog>
                       </div>
