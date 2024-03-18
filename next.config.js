@@ -10,13 +10,22 @@ const nextConfig = {
         protocol: "https",
         hostname: "**.ipfs.w3s.link",
       },
-    ],
-    domains: [
-      "images.unsplash.com",
-      "github.com",
-      "cdn1.iconfinder.com",
-      "api.astria.ai",
-      "res.cloudinary.com",
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.astria.ai",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
 
