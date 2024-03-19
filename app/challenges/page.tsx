@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
@@ -7,20 +9,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChallengeCard } from "@/components/challenges/challenge-card";
 
-async function getChallenges() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
-    {
-      next: { revalidate: 3 },
+import axios from "axios";
+
+export default function Challengespage() {
+  const [challenges, setChallenges] = useState<any>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    getChallenges();
+  }, []);
+
+  async function getChallenges() {
+    try {
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`
+      );
+      setChallenges(result.data);
+      setLoaded(true);
+    } catch (error) {
+      console.error(error);
     }
-  );
-  const data = await res.json();
-
-  return data;
-}
-
-export default async function Challengespage() {
-  const challenges = await getChallenges();
+  }
 
   //functionthat searches for challenges based on regex input and array of challenges and returns the matching challenges
   function searchChallenges(search: string, challenges: any) {
