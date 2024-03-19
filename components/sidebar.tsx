@@ -50,7 +50,7 @@ export function Sidebar({ className }: any) {
                 Creations
               </Button>
             </Link>
-            <Link href="/model" passHref>
+            <Link href="/tunedmodels" passHref>
               <Button
                 variant={pathname === "/models" ? "secondary" : "ghost"}
                 className="w-full justify-start py-6"
