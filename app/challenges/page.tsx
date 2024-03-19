@@ -1,5 +1,3 @@
-import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
@@ -7,17 +5,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { ChallengeCard } from "@/components/challenges/challenge-card";
-
-function SearchBar() {
-  return (
-    <div className="flex w-full max-w-md items-center space-x-2">
-      <Input type="text" placeholder="Find a challenge" />
-      <Button type="submit">Search</Button>
-    </div>
-  );
-}
 
 async function getChallenges() {
   const res = await fetch(
@@ -31,7 +19,7 @@ async function getChallenges() {
 }
 
 export default async function Challengespage() {
-  const challenges: any = await getChallenges();
+  const challenges = await getChallenges();
 
   //functionthat searches for challenges based on regex input and array of challenges and returns the matching challenges
   function searchChallenges(search: string, challenges: any) {
@@ -42,6 +30,15 @@ export default async function Challengespage() {
     return challenges.filter((challenge: any) => {
       return challenge.name.match(regex);
     });
+  }
+
+  function SearchBar() {
+    return (
+      <div className="flex w-full max-w-md items-center space-x-2">
+        <Input type="text" placeholder="Find a challenge" />
+        <Button type="submit">Search</Button>
+      </div>
+    );
   }
 
   return (
