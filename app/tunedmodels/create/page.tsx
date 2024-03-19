@@ -120,7 +120,8 @@ export default function CreateTundeModelPage() {
       model: {
         title: `${modelname}-Arttribute`,
         name: "style",
-        model_type: "lora",
+        branch: "sd15",
+        model_type: null,
         image_urls: imageUrls,
       },
       metadata: {
