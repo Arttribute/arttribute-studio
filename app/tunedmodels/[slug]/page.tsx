@@ -235,6 +235,7 @@ export default function TunedModelPage({
                       generatedImages={generatedImages}
                       promptId={promptId}
                       currentUserId={account?._id}
+                      modelId={tunedModel?.modeldata._id}
                     />
                     <div className="m-4">
                       <div className="grid w-full gap-2">

@@ -11,10 +11,11 @@ async function getChallenges() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
     {
-      next: { revalidate: 10 },
+      next: { revalidate: 3 },
     }
   );
   const data = await res.json();
+
   return data;
 }
 

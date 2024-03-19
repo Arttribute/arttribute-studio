@@ -16,9 +16,12 @@ export interface Challenge {
   private: boolean;
   submissions: string[];
   perks: object[];
+  rules: string;
   prize_description: string;
+  winners: object[];
   is_publicvoting: boolean;
   is_judged: boolean;
+  closed: boolean;
 }
 
 const ChallengeSchema = new mongoose.Schema<Challenge>(
@@ -50,6 +53,7 @@ const ChallengeSchema = new mongoose.Schema<Challenge>(
     owner: {
       type: ObjectId,
       ref: User,
+      required: true,
     },
     start_date: {
       type: Date,
@@ -80,6 +84,9 @@ const ChallengeSchema = new mongoose.Schema<Challenge>(
         },
       ],
     },
+    rules: {
+      type: String,
+    },
     prize_description: {
       type: String,
       required: true,
@@ -89,6 +96,14 @@ const ChallengeSchema = new mongoose.Schema<Challenge>(
       default: false,
     },
     is_judged: {
+      type: Boolean,
+      default: false,
+    },
+    winners: {
+      type: [ObjectId],
+      ref: "Submission",
+    },
+    closed: {
       type: Boolean,
       default: false,
     },

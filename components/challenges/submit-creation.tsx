@@ -34,6 +34,7 @@ export function SubmitCreation({ data }: any) {
         owner: data.owner,
         image_url: data.image_url,
         prompt_id: data.prompt_id,
+        tunedmodel_id: data.tunedmodel_id,
       };
       const result = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/submissions`,

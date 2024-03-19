@@ -5,6 +5,7 @@ const { ObjectId } = mongoose.Schema.Types;
 export interface Submission {
   challenge_id: object;
   prompt_id: object;
+  tunedmodel_id: object;
   owner: object;
   title: string;
   votes: number;
@@ -22,6 +23,11 @@ const SubmissionSchema = new mongoose.Schema<Submission>(
     prompt_id: {
       type: ObjectId,
       ref: "Prompt",
+      required: true,
+    },
+    tunedmodel_id: {
+      type: ObjectId,
+      ref: "TunedModel",
       required: true,
     },
     owner: {

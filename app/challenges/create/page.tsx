@@ -86,7 +86,7 @@ const CreateChallenge = () => {
 
   async function handleSubmit() {
     setLoading(true);
-
+    console.log(account);
     try {
       const challenge_uuid = uuid();
       const challenge_code = challenge_uuid.slice(0, 8);
@@ -100,7 +100,7 @@ const CreateChallenge = () => {
         code: challenge_code,
         description: description,
         thumbnail: thumbnailUrl,
-        owner: account?.id,
+        owner: account?._id,
         start_date: startDate,
         end_date: endDate,
         announcement_date: aannounceDate,
@@ -227,7 +227,12 @@ const CreateChallenge = () => {
                           />
 
                           <div className="flex items-center space-x-2 mt-4">
-                            <Switch id="airplane-mode" />
+                            <Switch
+                              id="private"
+                              onChange={() =>
+                                setPrivateChallenge(!privateChallenge)
+                              }
+                            />
                             <div className="flex items-center space-x-1">
                               <Lock />
                               <div className="flex flex-col">

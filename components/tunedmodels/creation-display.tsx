@@ -20,6 +20,7 @@ import { Loader2, Sparkles } from "lucide-react";
 import { ArttributeIconWhite } from "../custom-icons";
 
 import { SubmitCreation } from "@/components/challenges/submit-creation";
+import { model } from "mongoose";
 
 export default function CreationDisplay({
   loadingImages,
@@ -27,12 +28,14 @@ export default function CreationDisplay({
   generatedImages,
   promptId,
   currentUserId,
+  modelId,
 }: {
   loadingImages: boolean;
   loadedImages: boolean;
   generatedImages: Array<string>;
   promptId: string;
   currentUserId: string;
+  modelId: string;
 }) {
   return (
     <>
@@ -142,6 +145,7 @@ export default function CreationDisplay({
                                 prompt_id: promptId,
                                 image_url: image,
                                 owner: currentUserId,
+                                tunedmodel_id: modelId,
                               }}
                             />
                           </DialogContent>

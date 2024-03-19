@@ -10,59 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const submissions = [
-  {
-    submission: "INV001",
-    image: "/main.webp",
-    title: "Paid",
-    totalPoints: "250",
-    creator: "AI artist",
-  },
-  {
-    submission: "INV002",
-    image: "/main.webp",
-    title: "Pending",
-    totalPoints: "150",
-    creator: "PayPal",
-  },
-  {
-    submission: "INV003",
-    image: "/main.webp",
-    title: "Unpaid",
-    totalPoints: "350",
-    creator: "Traditional Artist",
-  },
-  {
-    submission: "INV004",
-    image: "/main.webp",
-    title: "Paid",
-    totalPoints: "450",
-    creator: "AI artist",
-  },
-  {
-    submission: "INV005",
-    image: "/main.webp",
-    title: "Paid",
-    totalPoints: "550",
-    creator: "PayPal",
-  },
-  {
-    submission: "INV006",
-    image: "/main.webp",
-    title: "Pending",
-    totalPoints: "200",
-    creator: "Traditional Artist",
-  },
-  {
-    submission: "INV007",
-    image: "/main.webp",
-    title: "Unpaid",
-    totalPoints: "300",
-    creator: "AI artist",
-  },
-];
+export function LeaderBoard({ submissions }: { submissions: any[] }) {
+  //sort submission by highest votes
+  submissions.sort((a, b) => b.votes - a.votes);
 
-export function LeaderBoard() {
   return (
     <div className=" border rounded-lg">
       <Table>
@@ -71,15 +22,15 @@ export function LeaderBoard() {
             <TableHead className="w-[100px]">Creation</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Creator</TableHead>
-            <TableHead className="text-right">Points</TableHead>
+            <TableHead className="text-right">Votes</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {submissions.map((submission) => (
-            <TableRow key={submission.submission}>
+            <TableRow key={submission._id}>
               <TableCell className="font-medium py-1.5">
                 <Image
-                  src={submission.image}
+                  src={submission.image_url}
                   alt="submission"
                   width={48}
                   height={48}
@@ -87,10 +38,8 @@ export function LeaderBoard() {
                 />
               </TableCell>
               <TableCell>{submission.title}</TableCell>
-              <TableCell>{submission.creator}</TableCell>
-              <TableCell className="text-right">
-                {submission.totalPoints}{" "}
-              </TableCell>
+              <TableCell>{submission.owner?.name}</TableCell>
+              <TableCell className="text-right">{submission.votes} </TableCell>
             </TableRow>
           ))}
         </TableBody>

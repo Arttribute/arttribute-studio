@@ -21,9 +21,13 @@ import { CalendarIcon, Info } from "lucide-react";
 
 import axios from "axios";
 import { LeaderBoard } from "@/components/challenges/leaderboard";
-import PromptDisplayCard from "@/components/prompt-display-card";
+import SubmissionCard from "@/components/challenges/submission-card";
 import TextCopy from "@/components/text-copy";
 import { InfoPopover } from "@/components/info-popover";
+
+import { SettingsIcon } from "lucide-react";
+import { AnnounceWinner } from "@/components/challenges/announce-winner";
+import EditChallenge from "@/components/challenges/edit-challenge";
 
 export default function ChallengePage({
   params,
@@ -35,6 +39,7 @@ export default function ChallengePage({
   const [loaded, setLoaded] = useState(false);
   const [account, setAccount] = useState<any>(null);
   const [loadedAccount, setLoadedAccount] = useState(false);
+  const [currentAccountisOwner, setCurrentAccountisOwner] = useState(false);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -43,6 +48,9 @@ export default function ChallengePage({
     setAccount(user);
     if (challenge == null) {
       getChallenge();
+    }
+    if (user && challenge) {
+      setCurrentAccountisOwner(user._id === challenge.owner._id);
     }
   }, [challenge]);
 
@@ -59,7 +67,22 @@ export default function ChallengePage({
       const submissions = result.data.submissions;
       setChallenge(challenge);
       setSubmissions(submissions);
-      console.log(submissions);
+      console.log("challenge", challenge);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function voteForSubmission(submissionId: string) {
+    try {
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/submissions/votes`,
+        {
+          submission_id: submissionId,
+          voter: account._id,
+        }
+      );
+      console.log(result);
     } catch (error) {
       console.error(error);
     }
@@ -116,34 +139,42 @@ export default function ChallengePage({
                       </TabsTrigger>
                       <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
                       <TabsTrigger value="about">Description</TabsTrigger>
-                      <TabsTrigger value="prizes">Prizes</TabsTrigger>
+                      <TabsTrigger value="perks">Perks</TabsTrigger>
+                      {currentAccountisOwner && (
+                        <TabsTrigger value="manage">
+                          <SettingsIcon className="h-4 w-4 mr-1" />
+                          Manage
+                        </TabsTrigger>
+                      )}
                     </TabsList>
                     <div className="ml-auto ">
-                      <Dialog>
-                        <DialogTrigger>
-                          <Button size="sm" className="relative">
-                            Submit your creation
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Submit your creation</DialogTitle>
-                            <DialogDescription>
-                              Submit your creation to the challenge
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="flex flex-col space-y-4">
-                            <Input
-                              type="text"
-                              placeholder="Enter your creation link"
-                              className="w-full"
-                            />
-                            <Button size="sm" className="w-full">
-                              Submit
+                      {!currentAccountisOwner && (
+                        <Dialog>
+                          <DialogTrigger>
+                            <Button size="sm" className="relative">
+                              Submit your creation
                             </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Submit your creation</DialogTitle>
+                              <DialogDescription>
+                                Submit your creation to the challenge
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex flex-col space-y-4">
+                              <Input
+                                type="text"
+                                placeholder="Enter your creation link"
+                                className="w-full"
+                              />
+                              <Button size="sm" className="w-full">
+                                Submit
+                              </Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      )}
                     </div>
                   </div>
                   <TabsContent
@@ -154,9 +185,10 @@ export default function ChallengePage({
                       <div className="grid grid-cols-5 gap-4">
                         {submissions &&
                           submissions?.map((submission: any) => (
-                            <PromptDisplayCard
+                            <SubmissionCard
                               key={submission._id}
-                              prompt={submission.prompt_id}
+                              submission={submission}
+                              voteForSubmission={voteForSubmission}
                             />
                           ))}
                       </div>
@@ -166,20 +198,45 @@ export default function ChallengePage({
                     value="leaderboard"
                     className="h-full flex-col border-none p-0 data-[state=active]:flex"
                   >
-                    <LeaderBoard />
+                    <LeaderBoard submissions={submissions} />
                   </TabsContent>
                   <TabsContent
                     value="about"
                     className="border-none p-0 outline-none"
-                  ></TabsContent>
+                  >
+                    <div className="">
+                      <p className="text-base font-semibold mb-2">
+                        Challenge Description
+                      </p>
+                      <p className="text-sm">{challenge?.description}</p>
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-base font-semibold mb-2">Prize</p>
+                      <p className="text-sm">{challenge?.prize_description}</p>
+                    </div>
+                    {challenge?.rules && (
+                      <div className="mt-4">
+                        <p className="text-base font-semibold mb-2">Rules</p>
+                        <p className="text-sm">{challenge?.rules}</p>
+                      </div>
+                    )}
+                  </TabsContent>
                   <TabsContent
-                    value="prizes"
+                    value="perks"
                     className="border-none p-0 outline-none"
                   ></TabsContent>
-                  <TabsContent
-                    value="rules"
-                    className="border-none p-0 outline-none"
-                  ></TabsContent>
+                  {currentAccountisOwner && (
+                    <TabsContent
+                      value="manage"
+                      className="border-none p-0 outline-none"
+                    >
+                      <AnnounceWinner
+                        challenge={challenge}
+                        submissions={submissions}
+                      />
+                      <EditChallenge challenge={challenge} />
+                    </TabsContent>
+                  )}
                 </Tabs>
               </div>
             </div>
