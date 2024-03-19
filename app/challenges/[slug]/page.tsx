@@ -76,11 +76,11 @@ export default function ChallengePage({
               <div className="h-full px-4 py-6 lg:px-8">
                 <div className="flex mb-4">
                   <Image
-                    src={"/main.webp"}
-                    alt={"challengename"}
+                    src={challenge?.thumbnail}
+                    alt={challenge?.challenge_name}
                     width={120}
                     height={120}
-                    className="rounded-lg aspect-[1]"
+                    className="rounded-lg object-cover transition-all aspect-[1]"
                   />
                   <div className="ml-4 ">
                     <h2 className="text-xl font-semibold">

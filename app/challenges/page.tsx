@@ -19,18 +19,18 @@ function SearchBar() {
   );
 }
 
-export default async function Challengespage() {
-  async function getChallenges() {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
-      {
-        next: { revalidate: 10 },
-      }
-    );
-    const data = await res.json();
-    return data;
-  }
+async function getChallenges() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
+    {
+      next: { revalidate: 10 },
+    }
+  );
+  const data = await res.json();
+  return data;
+}
 
+export default async function Challengespage() {
   const challenges: any = await getChallenges();
 
   //functionthat searches for challenges based on regex input and array of challenges and returns the matching challenges

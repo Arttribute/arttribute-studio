@@ -83,7 +83,7 @@ export function LeaderBoard() {
                   alt="submission"
                   width={48}
                   height={48}
-                  className="rounded-lg"
+                  className="rounded-lg object-cover transition-all aspect-[1]"
                 />
               </TableCell>
               <TableCell>{submission.title}</TableCell>
