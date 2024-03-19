@@ -34,6 +34,7 @@ import { User } from "@/models/User";
 import slugify from "slugify";
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { Loader } from "lucide-react";
 
 import { create } from "@web3-storage/w3up-client";
 
@@ -144,11 +145,11 @@ const CreateCollectiion = () => {
     <>
       <div className="md:block">
         <Menu />
-        <div className="mt-14 border-t">
+        <div className="mt-14">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
               <Sidebar playlists={playlists} className="hidden lg:block" />
-              <div className="col-span-3 lg:col-span-4 lg:border-l">
+              <div className="col-span-3 lg:col-span-4 ">
                 {account != null ? (
                   <div className="h-full px-4 py-6 lg:px-8">
                     <div className="flex items-center ">
@@ -276,14 +277,7 @@ const CreateCollectiion = () => {
                             <Button disabled>
                               Creating Collection
                               <div className="ml-2 mt-1">
-                                <l-squircle
-                                  size="22"
-                                  stroke="2"
-                                  stroke-length="0.15"
-                                  bg-opacity="0.1"
-                                  speed="0.9"
-                                  color="white"
-                                ></l-squircle>
+                                <Loader className="h-4 w-4 animate-spin" />
                               </div>
                             </Button>
                           ) : (

@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BadgeCheck, Sparkles } from "lucide-react";
 
 interface ArtGalleryGridProps {
   prompts: {
@@ -46,22 +47,22 @@ interface ArtGalleryGridProps {
 
 const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
   return (
-    <div className="grid grid-cols-4 lg:grid-cols-5 gap-2">
+    <div className="grid grid-cols-4 lg:grid-cols-6 gap-1">
       {prompts &&
         prompts.map((prompt, index) => (
           <ContextMenu key={index}>
             <ContextMenuTrigger>
-              <div className="overflow-hidden rounded-md">
+              <div className="overflow-hidden rounded-lg">
                 <Dialog>
                   <DialogTrigger>
                     <Image
                       src={prompt.images[0]}
                       alt={prompt.text}
-                      width={490}
-                      height={490}
+                      width={300}
+                      height={300}
                       className={cn(
-                        "h-auto w-auto object-cover transition-all hover:scale-105",
-                        "aspect-[3/4]"
+                        "object-cover transition-all rounded-lg hover:scale-105 ",
+                        "aspect-[5/6]"
                       )}
                     />
                   </DialogTrigger>
@@ -82,7 +83,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                             alt={prompt.text}
                             width={490}
                             height={490}
-                            className="aspect-[1]"
+                            className="aspect-[1] rounded-lg"
                           />
                         </div>
                         <div className="space-y-1 col-span-2 mr-4">
@@ -109,38 +110,44 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                             readOnly
                           />
                           <Label>Model</Label>
-                          <div className="flex  shrink-0  rounded-md border border p-1">
+                          <div className="flex  shrink-0  rounded-lg border border p-1">
                             <Link
                               href={`/tunedmodels/${prompt.tunedmodel_id?.slug}`}
                             >
-                              <div className="grid grid-cols-3 items-start gap-4 space-y-0 ">
+                              <div className="grid grid-cols-4 items-start gap-4 space-y-0 ">
                                 <div className="hidden lg:flex items-center space-x-1 rounded-md ">
-                                  <div className="overflow-hidden rounded-md">
+                                  <div className="col-span-1overflow-hidden rounded-md">
                                     <Image
                                       src={prompt?.tunedmodel_id?.display_image}
                                       alt={prompt?.tunedmodel_id?.model_name}
                                       width={490}
                                       height={490}
-                                      className="aspect-[1]"
+                                      className="aspect-[1] border rounded-md"
                                     />
                                   </div>
                                 </div>
-                                <div className="space-y-1 col-span-3 lg:col-span-2 pt-2">
-                                  <h1 className="text-1xl font-semibold tracking-tight">
+                                <div className=" col-span-3 lg:col-span-3 pt-2">
+                                  <p className="flex text-xs text-gray-500 font-medium">
+                                    by {prompt?.tunedmodel_id?.model_name}{" "}
+                                    <BadgeCheck className="h-3.5 w-3.5 m-0.5 text-blue-500" />
+                                  </p>
+                                  <p className="text-xl font-semibold ">
                                     {prompt?.tunedmodel_id?.model_name}
-                                  </h1>
-                                  <p className="text-xs text-muted-foreground mt-2, mb-2">
-                                    {prompt?.tunedmodel_id?.description}
                                   </p>
                                 </div>
                               </div>
+                              <Button
+                                variant="outline"
+                                className="mt-2 w-full bg-white rounded-lg"
+                              >
+                                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                  Generate art with this model
+                                </p>
+                                <Sparkles className="h-4 w-4 ml-2 inline-block text-indigo-500" />
+                              </Button>
                             </Link>
                           </div>
-                          <div>
-                            <p className="text-md text-muted-foreground mt-4">
-                              License: {prompt.tunedmodel_id?.license}
-                            </p>
-                          </div>
+                          <div></div>
                         </div>
                       </div>
                       {prompt.images.length > 1 && (
