@@ -65,9 +65,7 @@ export default async function CreationsPage() {
                       <RecentCreations creations={prompts} />
                     </div>
 
-                    <div className="mb-8">
-                      <ExtraAnnouncements />
-                    </div>
+                    <div className="mb-8">{/*<ExtraAnnouncements />*/}</div>
                   </div>
                 </div>
               </div>
