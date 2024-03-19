@@ -8,30 +8,14 @@ import { Input } from "@/components/ui/input";
 import { ChallengeCard } from "@/components/challenges/challenge-card";
 
 async function getChallenges() {
-  const response = await fetch(
+  const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges`,
     {
       next: { revalidate: 10 },
     }
   );
-
-  // Check if the response is OK (status 200-299) and content type is JSON
-  if (
-    response.ok &&
-    response.headers.get("content-type")?.includes("application/json")
-  ) {
-    const data = await response.json();
-    return data;
-  } else {
-    // Log details for debugging or throw a custom error
-    console.error(
-      "Failed to fetch challenges. Status:",
-      response.status,
-      "Content-Type:",
-      response.headers.get("content-type")
-    );
-    throw new Error("Failed to fetch challenges: Response was not JSON.");
-  }
+  const data = await res.json();
+  return data;
 }
 
 export default async function Challengespage() {
