@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { TimerIcon } from "lucide-react";
@@ -25,6 +26,8 @@ export function SubmitCreation({ data }: any) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const { push } = useRouter();
+
   async function submitCreation() {
     try {
       setLoading(true);
@@ -40,7 +43,8 @@ export function SubmitCreation({ data }: any) {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/submissions`,
         submissionData
       );
-      console.log(result);
+
+      push(`/challenges/${result.data.challenge.slug}`);
     } catch (error) {
       console.error(error);
       setError("There was an error submitting your creation");
@@ -80,7 +84,7 @@ export function SubmitCreation({ data }: any) {
             />
 
             {loading ? (
-              <Button className="disbled w-full" onClick={submitCreation}>
+              <Button className=" w-full" onClick={submitCreation}>
                 Submiting <Loader className="h-5 w-5 animate-spin" />
               </Button>
             ) : (

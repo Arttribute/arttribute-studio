@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BadgeCheck, Sparkles } from "lucide-react";
-
+import { SubmitCreation } from "./challenges/submit-creation";
 interface ArtGalleryGridProps {
   prompts: {
     _id: string;
@@ -110,7 +110,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                             readOnly
                           />
                           <Label>Model</Label>
-                          <div className="flex  shrink-0  rounded-lg border border p-1">
+                          <div className="flex rounded-lg border border p-1">
                             <Link
                               href={`/tunedmodels/${prompt.tunedmodel_id?.slug}`}
                             >
@@ -147,7 +147,13 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                               </Button>
                             </Link>
                           </div>
-                          <div></div>
+                          <div className="p-2" />
+                          <div className="mt-4">
+                            <SubmitCreation
+                              promptId={prompt._id}
+                              promptName={prompt.prompt_name}
+                            />
+                          </div>
                         </div>
                       </div>
                       {prompt.images.length > 1 && (

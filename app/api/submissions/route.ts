@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     const submission = await Submission.create(submissionData);
 
-    return new NextResponse(JSON.stringify(submission), {
+    return new NextResponse(JSON.stringify({ submission, challenge }), {
       status: 201,
     });
   } catch (error: any) {
