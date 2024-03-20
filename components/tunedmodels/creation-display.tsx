@@ -114,9 +114,23 @@ export default function CreationDisplay({
                                     className="text-white border rounded-lg"
                                   >
                                     <BoxIcon className="mr-1" />
-                                    3Dfy{" "}
+                                    Mint{" "}
                                   </Button>
                                   <Button
+                                    variant="ghost"
+                                    className="text-white border rounded-lg"
+                                  >
+                                    <VideoIcon className="mr-1" />
+                                    Vidfy{" "}
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    className="text-white border rounded-lg"
+                                  >
+                                    <MoreHorizontalIcon className="mr-1" />
+                                    More
+                                  </Button>
+                                  {/* <Button
                                     variant="ghost"
                                     className="text-white border rounded-lg"
                                   >
@@ -136,7 +150,7 @@ export default function CreationDisplay({
                                   >
                                     <MoreHorizontalIcon className="mr-1" />
                                     More
-                                  </Button>
+                                  </Button> */}
                                 </div>
                               </div>
                             </div>
