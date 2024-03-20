@@ -29,6 +29,7 @@ import { SettingsIcon } from "lucide-react";
 import { AnnounceWinner } from "@/components/challenges/announce-winner";
 import EditChallenge from "@/components/challenges/edit-challenge";
 
+import { SubmissionEmptyPlaceholder } from "@/components/challenges/submissions-empty-placeholder";
 import CountdownTimer from "@/components/countdown-timer";
 export default function ChallengePage({
   params,
@@ -192,13 +193,21 @@ export default function ChallengePage({
                             />
                           ))}
                       </div>
+                      {submissions?.length === 0 && (
+                        <SubmissionEmptyPlaceholder />
+                      )}
                     </ScrollArea>
                   </TabsContent>
                   <TabsContent
                     value="leaderboard"
-                    className="h-full flex-col border-none p-0 data-[state=active]:flex"
+                    className="h-full flex-col border-none p-1 data-[state=active]:flex"
                   >
-                    <LeaderBoard submissions={submissions} />
+                    {submissions?.length > 0 && (
+                      <LeaderBoard submissions={submissions} />
+                    )}
+                    {submissions?.length === 0 && (
+                      <SubmissionEmptyPlaceholder />
+                    )}
                   </TabsContent>
                   <TabsContent
                     value="about"
