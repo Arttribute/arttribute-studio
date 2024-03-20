@@ -61,7 +61,7 @@ export function RequireAuthPlaceholder() {
         </p>
 
         <ConnectButton
-          action="Connect"
+          action="Connect account"
           setAccount={setAccount}
           buttonVariant="outline"
         />

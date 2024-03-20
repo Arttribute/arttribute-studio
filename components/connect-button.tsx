@@ -6,8 +6,8 @@ import { useMagicContext } from "./providers/MagicProvider";
 import { User } from "@/models/User";
 
 interface Props {
-  action: "Connect" | "Disconnect";
-  buttonVariant?: "ghost" | "outline";
+  action: "Connect account" | "Disconnect";
+  buttonVariant?: "ghost" | "outline" | "default";
   setAccount: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
@@ -75,9 +75,22 @@ const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
       variant={buttonVariant || "ghost"}
       size="sm"
       disabled={disabled}
-      onClick={action == "Connect" ? connect : disconnect}
+      onClick={action == "Connect account" ? connect : disconnect}
+      className="rounded-lg px-8 font-semibold"
     >
-      {disabled ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : action}
+      <p
+        className={
+          action == "Connect account"
+            ? "bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+            : "font-medium"
+        }
+      >
+        {disabled ? (
+          <Loader2 className="mx-auto h-4 w-4 animate-spin text-indigo-700" />
+        ) : (
+          action
+        )}
+      </p>
     </Button>
   );
 };

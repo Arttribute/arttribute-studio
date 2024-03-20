@@ -16,14 +16,16 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ConnectButton from "./connect-button";
-import AccountDialog from "./account-dialog";
 import { User } from "@/models/User";
 import { Logo } from "@/components/logo";
 import { MobileMenu } from "./mobile-menu";
 import { tokensIcon } from "./custom-icons";
+import { UserIcon } from "lucide-react";
 
 export function Menu() {
   const [account, setAccount] = useState<User | null>(null);
@@ -60,20 +62,40 @@ export function Menu() {
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <div className="grow" />
         {account ? (
           <>
             <MenubarMenu>
-              <MenubarTrigger className="hidden md:block">
-                Account
+              <MenubarTrigger className="flex p-1 border border-purple-600 rounded-full ">
+                <div className="overflow-hidden rounded-full">
+                  <Image
+                    src={account?.picture}
+                    alt={account?.name}
+                    width={28}
+                    height={28}
+                    className="aspect-[1]"
+                  />
+                </div>
+                <div className="block ml-2 mr-4 overflow-hidden whitespace-nowrap text-ellipsis">
+                  <div className="flex">
+                    <div className="flex text-sm font-semibold">
+                      {account?.name}
+                    </div>
+                  </div>
+                </div>
               </MenubarTrigger>
               <MenubarContent forceMount>
-                <MenubarLabel inset>Account</MenubarLabel>
-                <MenubarSeparator />
-                <MenubarRadioGroup value={account.name}>
-                  <MenubarRadioItem value={account.name}>
+                <MenubarLabel inset>
+                  <Link href="/profile" passHref>
                     {account.name}
-                  </MenubarRadioItem>
-                </MenubarRadioGroup>
+                  </Link>
+                </MenubarLabel>
+                <MenubarSeparator />
+                <MenubarItem inset>
+                  <Link href="/profile" passHref>
+                    <p>View Profile</p>
+                  </Link>
+                </MenubarItem>
                 <MenubarSeparator />
                 <MenubarItem inset>
                   <Link href="/buy" passHref className="flex">
@@ -89,13 +111,18 @@ export function Menu() {
                   </Link>
                 </MenubarItem>
                 <MenubarSeparator />
-                <AccountDialog user={account} setAccount={setAccount} />
+                <div className="w-full">
+                  <ConnectButton action="Disconnect" setAccount={setAccount} />
+                </div>
               </MenubarContent>
             </MenubarMenu>
-            <ConnectButton action="Disconnect" setAccount={setAccount} />
           </>
         ) : (
-          <ConnectButton action="Connect" setAccount={setAccount} />
+          <ConnectButton
+            action="Connect account"
+            setAccount={setAccount}
+            buttonVariant="outline"
+          />
         )}
       </Menubar>
     </div>

@@ -28,19 +28,19 @@ import { Loader } from "lucide-react";
 
 import { ChallengeCard } from "@/components/challenges/challenge-card";
 
-interface Params {
-  params: {
-    slug: string;
-  };
-}
+import AccountDialog from "@/components/account-dialog";
 
-export default function ArtistsPage({ params: { slug } }: Params) {
+export default function ArtistsPage() {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    setAccount(user);
     if (userData == null) {
-      getUserByAddress(slug);
+      getUserByAddress(user.web3Address);
     }
   }, [userData]);
 
@@ -183,6 +183,14 @@ export default function ArtistsPage({ params: { slug } }: Params) {
                             Challenges
                           </TabsTrigger>
                         </TabsList>
+                        <div className="ml-auto ">
+                          {account && (
+                            <AccountDialog
+                              user={account}
+                              setAccount={setAccount}
+                            />
+                          )}
+                        </div>
                       </div>
 
                       {userData && (
@@ -267,7 +275,7 @@ export default function ArtistsPage({ params: { slug } }: Params) {
                           </TabsContent>
                           <TabsContent
                             value="challenges"
-                            className="border-none p-0 outline-none"
+                            className="border-none p-0 outline-none w-full"
                           >
                             <div className="items-center justify-between">
                               <div className="space-y-1">
@@ -276,7 +284,7 @@ export default function ArtistsPage({ params: { slug } }: Params) {
                                 </h2>
 
                                 {userData?.challenges.length !== 0 ? (
-                                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2">
+                                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                                     {userData?.challenges.map(
                                       (challenge: any) => (
                                         <ChallengeCard
