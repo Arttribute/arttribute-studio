@@ -122,6 +122,25 @@ const InputForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+        <div className="flex justify-center items-center space-x-3">
+          <div className="rounded-md overflow-hidden">
+            <Image
+              src={picture || defaultProfile}
+              alt="profile"
+              width={100}
+              height={100}
+              className="h-auto w-auto object-cover aspect-square rounded-full"
+            />
+          </div>
+
+          <FormItem>
+            <FormLabel>Picture</FormLabel>
+            <FormControl>
+              <Input type="file" accept="image/*" onChange={handleFileChange} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </div>
         <FormField
           control={form.control}
           name="name"
@@ -196,25 +215,6 @@ const InputForm = ({
             </FormItem>
           )}
         />
-        <div className="flex justify-center items-center space-x-3">
-          <div className="rounded-md overflow-hidden">
-            <Image
-              src={picture || defaultProfile}
-              alt="profile"
-              width={100}
-              height={100}
-              className="h-auto w-auto object-cover aspect-square"
-            />
-          </div>
-
-          <FormItem>
-            <FormLabel>Picture</FormLabel>
-            <FormControl>
-              <Input type="file" accept="image/*" onChange={handleFileChange} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </div>
         <DialogFooter>
           <div className="w-full flex justify-between">
             {/*<ConfirmDeleteDialog
