@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export function Announcements() {
   return (
@@ -22,12 +23,14 @@ export function Announcements() {
                 <Button className="m-1 font-bold p-6 rounded-lg px-12">
                   Create Art with AI <Sparkles className="m-1 h-4 w-4" />
                 </Button>
-                <Button
-                  variant="outline"
-                  className="m-1 font-bold p-6 rounded-lg opacity-90"
-                >
-                  Create your own AI model
-                </Button>
+                <Link href="/tunedmodels/create">
+                  <Button
+                    variant="outline"
+                    className="m-1 font-bold p-6 rounded-lg opacity-90"
+                  >
+                    Create your own AI model
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
