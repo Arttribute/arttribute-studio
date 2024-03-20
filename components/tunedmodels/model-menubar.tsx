@@ -116,43 +116,46 @@ export default function ModelMenubar({
             </MenubarContent>
           </MenubarMenu>
           <div className="grow" />
-          <MenubarMenu>
-            <MenubarTrigger className="flex p-1 border border-purple-600 rounded-full">
-              <div className="overflow-hidden rounded-full">
-                <Image
-                  src={userData?.picture}
-                  alt={userData?.name}
-                  width={28}
-                  height={28}
-                  className="aspect-[1]"
-                />
-              </div>
-              <div className="block ml-2 mr-4">
-                <div className="flex">
-                  <div className="mt-0.5 mr-2"> {tokensIcon}</div>
-                  <div className="flex text-sm font-semibold">
-                    {userData?.credits}
+          {userData !== null ? (
+            <MenubarMenu>
+              <MenubarTrigger className="flex p-1 border border-purple-600 rounded-full">
+                <div className="overflow-hidden rounded-full">
+                  <Image
+                    src={userData?.picture}
+                    alt={userData?.name}
+                    width={28}
+                    height={28}
+                    className="aspect-[1]"
+                  />
+                </div>
+                <div className="block ml-2 mr-4">
+                  <div className="flex">
+                    <div className="mt-0.5 mr-2"> {tokensIcon}</div>
+                    <div className="flex text-sm font-semibold">
+                      {userData?.credits}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </MenubarTrigger>
-            <MenubarContent>
-              <MenubarLabel>{userData?.name}</MenubarLabel>
-              <MenubarSeparator />
-              <MenubarItem>
-                <Link href="/buy" passHref className="flex">
-                  <div className="mr-2 m-0.5">{tokensIcon}</div> Get more tokens
-                </Link>
-              </MenubarItem>
-              <MenubarSeparator />
+              </MenubarTrigger>
+              <MenubarContent>
+                <MenubarLabel>{userData?.name}</MenubarLabel>
+                <MenubarSeparator />
+                <MenubarItem>
+                  <Link href="/buy" passHref className="flex">
+                    <div className="mr-2 m-0.5">{tokensIcon}</div> Get more
+                    tokens
+                  </Link>
+                </MenubarItem>
+                <MenubarSeparator />
 
-              <MenubarItem className="border mt-1">
-                <Link href="/tunedmodels" passHref>
-                  Disconnect
-                </Link>
-              </MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
+                <MenubarItem className="border mt-1">
+                  <Link href="/tunedmodels" passHref>
+                    Disconnect
+                  </Link>
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          ) : null}
         </Menubar>
       </div>
     </>
