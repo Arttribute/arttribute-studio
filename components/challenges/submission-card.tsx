@@ -1,4 +1,5 @@
-// components/CollectionGalleryGrid.tsx
+"use client";
+import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +59,12 @@ const SubmissionCard: React.FC<PromptGallery> = ({
   voteForSubmission,
   className,
 }) => {
+  const [votes, setVotes] = useState(submission.votes);
+
+  async function handleVote(submissionId: string) {
+    await voteForSubmission(submissionId);
+    setVotes(votes + 1);
+  }
   return (
     <div className={className}>
       <ContextMenu>
@@ -108,13 +115,11 @@ const SubmissionCard: React.FC<PromptGallery> = ({
                       </div>
                       <div className="flex items-center space-x-2">
                         <Vote className="h-4 w-4" />
-                        <p className="text-md text-muted-foreground">
-                          {submission.votes}
-                        </p>
+                        <p className="text-md text-muted-foreground">{votes}</p>
                         <Button
                           variant="outline"
-                          onClick={() => voteForSubmission(submission._id)}
-                          className="p-2"
+                          onClick={() => handleVote(submission._id)}
+                          className="px-2 py-0 rounded-lg"
                         >
                           <Plus className="h-3 w-3" />
                           <p className="text-xs">Vote</p>
