@@ -1,3 +1,4 @@
+"use client";
 import {
   CircleIcon,
   PlusIcon,
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { TimerIcon } from "lucide-react";
+import CountdownTimer from "../countdown-timer";
 
 export function ChallengeCard({ challenge }: any) {
   //const easyTimeDisplay = new Date(remainingTime).toISOString().substr(11, 8);
@@ -34,11 +36,7 @@ export function ChallengeCard({ challenge }: any) {
 
             <div className="flex rounded-lg  items-center">
               <div className="flex py-0.5">
-                <TimerIcon className="h-3.5 w-3.5 mr-1 text-indigo-500 " />
-                <p className="text-xs text-indigo-700">
-                  {" "}
-                  {challenge?.end_date} left
-                </p>
+                <CountdownTimer endDate={challenge?.end_date} />
               </div>
             </div>
             <div className="flex space-x-4 text-sm text-muted-foreground">

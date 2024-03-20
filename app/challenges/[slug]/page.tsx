@@ -29,6 +29,7 @@ import { SettingsIcon } from "lucide-react";
 import { AnnounceWinner } from "@/components/challenges/announce-winner";
 import EditChallenge from "@/components/challenges/edit-challenge";
 
+import CountdownTimer from "@/components/countdown-timer";
 export default function ChallengePage({
   params,
 }: {
@@ -112,11 +113,8 @@ export default function ChallengePage({
                     <p className="text-sm text-muted-foreground ">
                       by {challenge?.owner?.name}
                     </p>
-                    <div className="flex rounded-lg  items-center">
-                      <CalendarIcon className="h-3 w-3 text-muted-foreground m-0.5" />
-                      <p className="text-xs text-muted-foreground ">
-                        {challenge?.start_date}-{challenge?.end_date}
-                      </p>
+                    <div className="flex rounded-lg  items-center mt-2">
+                      <CountdownTimer endDate={challenge?.end_date} />
                     </div>
                   </div>
                   <div className="ml-auto">

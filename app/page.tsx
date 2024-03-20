@@ -51,23 +51,19 @@ export default async function CreationsPage() {
           <Sidebar className="hidden lg:block" />
           <div className="col-span-4 lg:col-span-4 ">
             <div className="bg-background">
-              <div className="">
-                <div className="">
-                  <div className="h-full px-4 py-6 lg:px-8">
-                    <div className="mb-8">
-                      <Announcements />
-                    </div>
-                    <div className="mb-8">
-                      <FeaturedModels models={tunedmodels} />
-                    </div>
-
-                    <div className="mb-8">
-                      <RecentCreations creations={prompts} />
-                    </div>
-
-                    <div className="mb-8">{/*<ExtraAnnouncements />*/}</div>
-                  </div>
+              <div className="h-full px-4 py-6 lg:px-8">
+                <div className="mb-8">
+                  <Announcements />
                 </div>
+                <div className="mb-8">
+                  <FeaturedModels models={tunedmodels} />
+                </div>
+
+                <div className="mb-8">
+                  <RecentCreations creations={prompts} />
+                </div>
+
+                <div className="mb-8">{/*<ExtraAnnouncements />*/}</div>
               </div>
             </div>
           </div>
