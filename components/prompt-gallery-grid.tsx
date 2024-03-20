@@ -149,10 +149,12 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           </div>
                           <div className="p-2" />
                           <div className="mt-4">
-                            <SubmitCreation
-                              promptId={prompt._id}
-                              promptName={prompt.prompt_name}
-                            />
+                            {
+                              <SubmitCreation
+                                promptId={prompt._id}
+                                promptName={prompt.prompt_name}
+                              />
+                            }
                           </div>
                         </div>
                       </div>
