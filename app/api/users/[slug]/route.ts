@@ -3,6 +3,7 @@ import User from "@/models/User";
 import Prompt from "@/models/Prompt";
 import TunedModel from "@/models/TunedModel";
 import Collection from "@/models/Collection";
+import Challenge from "@/models/Challenge";
 import { NextResponse } from "next/server";
 
 type Params = {
@@ -38,11 +39,18 @@ export async function GET(request: Request, { params }: { params: Params }) {
     const collections = await Collection.find({ owner: user._id }).sort({
       createdAt: -1,
     });
+    const challenges = await Challenge.find({ owner: user._id })
+      .populate("owner")
+      .sort({
+        createdAt: -1,
+      });
+
     const userData = {
       user,
       prompts,
       tunedModels,
       collections,
+      challenges,
     };
     return new NextResponse(JSON.stringify(userData), {
       status: 200,

@@ -7,11 +7,11 @@ export function Logo({ text }: LogoProps) {
   return (
     <Link
       href="/"
-      className=" ml-2 text-md transition-colors hover:text-primary font-bold"
+      className=" ml-2 text-base transition-colors hover:text-primary font-bold"
     >
       <div className="flex">
         <LogoSVG />
-        <div className="ml-1 m-2">{text}</div>
+        <div className="ml-1 m-1">{text}</div>
       </div>
     </Link>
   );

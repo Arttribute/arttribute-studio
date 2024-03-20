@@ -140,8 +140,8 @@ export default function ModelMenubar({
               <MenubarLabel>{userData?.name}</MenubarLabel>
               <MenubarSeparator />
               <MenubarItem>
-                <Link href="/tunedmodels/shadcn" passHref>
-                  Get more tokens
+                <Link href="/buy" passHref className="flex">
+                  <div className="mr-2 m-0.5">{tokensIcon}</div> Get more tokens
                 </Link>
               </MenubarItem>
               <MenubarSeparator />
