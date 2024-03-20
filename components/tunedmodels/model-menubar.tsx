@@ -29,7 +29,7 @@ import {
 import { ChevronLeft } from "lucide-react";
 import { LogoSVG } from "@/components/logo";
 import { tokensIcon } from "@/components/custom-icons";
-
+import ConnectButton from "@/components/connect-button";
 export default function ModelMenubar({
   modelData,
   userData,
