@@ -113,9 +113,11 @@ export default function ChallengePage({
                     <p className="text-sm text-muted-foreground ">
                       by {challenge?.owner?.name}
                     </p>
-                    <div className="flex rounded-lg  items-center mt-2">
-                      <CountdownTimer endDate={challenge?.end_date} />
-                    </div>
+                    {challenge && (
+                      <div className="flex rounded-lg  items-center mt-2">
+                        <CountdownTimer endDate={challenge?.end_date} />
+                      </div>
+                    )}
                   </div>
                   <div className="ml-auto">
                     <div className="flex flex-col items-center justify-center">
