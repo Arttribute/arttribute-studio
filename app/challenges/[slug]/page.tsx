@@ -178,13 +178,23 @@ export default function ChallengePage({
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="flex flex-col space-y-4">
-                                <Input
-                                  type="text"
-                                  placeholder="Enter your creation link"
+                                <div className="border rounded-lg p-2">
+                                  <p className="text-sm text-muted-foreground m-2">
+                                    You can submit your creation to this
+                                    challenge using the following challenge
+                                    code. Copy the code and use it to submit
+                                    your creation in the creation's dialog.
+                                  </p>
+                                  <TextCopy text={challenge?.code} />
+                                </div>
+                                <Button
+                                  size="sm"
                                   className="w-full"
-                                />
-                                <Button size="sm" className="w-full">
-                                  Submit
+                                  onClick={() => {
+                                    window.location.href = `/creations`;
+                                  }}
+                                >
+                                  Done
                                 </Button>
                               </div>
                             </DialogContent>
