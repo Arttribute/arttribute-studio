@@ -93,9 +93,9 @@ export function FeaturedModels({ models }: { models: any }) {
           </div>
         </div>
         <Separator className="my-1" />
-        <div className="relative mt-6">
+        <div className="relative ">
           <ScrollArea>
-            <div className="flex space-x-4 pb-4">
+            <div className="flex space-x-4 pb-4 ">
               {models.map((model: any) => (
                 <ModelItem key={model._id} model={model} />
               ))}

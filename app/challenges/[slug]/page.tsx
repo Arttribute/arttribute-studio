@@ -183,7 +183,7 @@ export default function ChallengePage({
                                     You can submit your creation to this
                                     challenge using the following challenge
                                     code. Copy the code and use it to submit
-                                    your creation in the creation's dialog.
+                                    your creation in the creations dialog.
                                   </p>
                                   <TextCopy text={challenge?.code} />
                                 </div>
