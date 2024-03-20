@@ -269,7 +269,7 @@ export default function ArtistsPage({ params: { slug } }: Params) {
                             value="challenges"
                             className="border-none p-0 outline-none"
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="items-center justify-between">
                               <div className="space-y-1">
                                 <h2 className="text-xl font-semibold tracking-tight">
                                   Challenges
@@ -281,7 +281,7 @@ export default function ArtistsPage({ params: { slug } }: Params) {
                                       (challenge: any) => (
                                         <ChallengeCard
                                           key={challenge._id}
-                                          data={challenge}
+                                          challenge={challenge}
                                         />
                                       )
                                     )}

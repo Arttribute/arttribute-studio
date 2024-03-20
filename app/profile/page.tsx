@@ -275,21 +275,21 @@ export default function ArtistsPage() {
                           </TabsContent>
                           <TabsContent
                             value="challenges"
-                            className="border-none p-0 outline-none"
+                            className="border-none p-0 outline-none w-full"
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="items-center justify-between">
                               <div className="space-y-1">
                                 <h2 className="text-xl font-semibold tracking-tight">
                                   Challenges
                                 </h2>
 
                                 {userData?.challenges.length !== 0 ? (
-                                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2">
+                                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                                     {userData?.challenges.map(
                                       (challenge: any) => (
                                         <ChallengeCard
                                           key={challenge._id}
-                                          data={challenge}
+                                          challenge={challenge}
                                         />
                                       )
                                     )}
