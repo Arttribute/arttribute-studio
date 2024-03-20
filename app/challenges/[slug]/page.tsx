@@ -31,6 +31,8 @@ import EditChallenge from "@/components/challenges/edit-challenge";
 
 import { SubmissionEmptyPlaceholder } from "@/components/challenges/submissions-empty-placeholder";
 import CountdownTimer from "@/components/countdown-timer";
+import { Loader2Icon } from "lucide-react";
+import { set } from "mongoose";
 export default function ChallengePage({
   params,
 }: {
@@ -39,6 +41,7 @@ export default function ChallengePage({
   const [challenge, setChallenge] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any>(null);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState<any>(null);
   const [loadedAccount, setLoadedAccount] = useState(false);
   const [currentAccountisOwner, setCurrentAccountisOwner] = useState(false);
@@ -58,6 +61,7 @@ export default function ChallengePage({
 
   async function getChallenge() {
     try {
+      setLoading(true);
       const { slug } = params;
       const result = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenges/${slug}`,
@@ -69,6 +73,7 @@ export default function ChallengePage({
       const submissions = result.data.submissions;
       setChallenge(challenge);
       setSubmissions(submissions);
+      setLoading(false);
       console.log("challenge", challenge);
     } catch (error) {
       console.error(error);
@@ -98,156 +103,178 @@ export default function ChallengePage({
           <Sidebar className="hidden lg:block" />
           <div className="col-span-4 lg:col-span-4 ">
             <div className="bg-background ">
-              <div className="h-full px-4 py-6 lg:px-8">
-                <div className="flex mb-4">
-                  <Image
-                    src={challenge?.thumbnail}
-                    alt={challenge?.challenge_name}
-                    width={120}
-                    height={120}
-                    className="rounded-lg object-cover transition-all aspect-[1]"
-                  />
-                  <div className="ml-4 ">
-                    <h2 className="text-xl font-semibold">
-                      {challenge?.challenge_name}{" "}
-                    </h2>
-                    <p className="text-sm text-muted-foreground ">
-                      by {challenge?.owner?.name}
-                    </p>
-                    {challenge && (
-                      <div className="flex rounded-lg  items-center mt-2">
-                        <CountdownTimer endDate={challenge?.end_date} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="ml-auto">
-                    <div className="flex flex-col items-center justify-center">
-                      <div className="flex">
-                        <p className="text-xs text-muted-foreground">
-                          Challenge code{" "}
-                        </p>
-                        <InfoPopover infoText="Use this code to submit your creations to this challenge" />
-                      </div>
-                      <TextCopy text={challenge?.code} />
-                    </div>
+              {loading ? (
+                <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed m-8">
+                  <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+                    <Loader2Icon className="h-4 w-4 animate-spin" />
                   </div>
                 </div>
-                <Tabs defaultValue="submissions" className="h-full space-y-6">
-                  <div className="space-between flex items-center">
-                    <TabsList>
-                      <TabsTrigger value="submissions" className="relative">
-                        Submissions
-                      </TabsTrigger>
-                      <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
-                      <TabsTrigger value="about">Description</TabsTrigger>
-                      <TabsTrigger value="perks">Perks</TabsTrigger>
-                      {currentAccountisOwner && (
-                        <TabsTrigger value="manage">
-                          <SettingsIcon className="h-4 w-4 mr-1" />
-                          Manage
-                        </TabsTrigger>
-                      )}
-                    </TabsList>
-                    <div className="ml-auto ">
-                      {!currentAccountisOwner && (
-                        <Dialog>
-                          <DialogTrigger>
-                            <Button size="sm" className="relative">
-                              Submit your creation
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Submit your creation</DialogTitle>
-                              <DialogDescription>
-                                Submit your creation to the challenge
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="flex flex-col space-y-4">
-                              <Input
-                                type="text"
-                                placeholder="Enter your creation link"
-                                className="w-full"
-                              />
-                              <Button size="sm" className="w-full">
-                                Submit
-                              </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+              ) : (
+                <div className="h-full px-4 py-6 lg:px-8">
+                  <div className="flex mb-4">
+                    <Image
+                      src={challenge?.thumbnail}
+                      alt={challenge?.challenge_name}
+                      width={120}
+                      height={120}
+                      className="rounded-lg object-cover transition-all aspect-[1]"
+                    />
+                    <div className="ml-4 ">
+                      <h2 className="text-xl font-semibold">
+                        {challenge?.challenge_name}{" "}
+                      </h2>
+                      <p className="text-sm text-muted-foreground ">
+                        by {challenge?.owner?.name}
+                      </p>
+                      {challenge && (
+                        <div className="flex rounded-lg  items-center mt-2">
+                          <CountdownTimer endDate={challenge?.end_date} />
+                        </div>
                       )}
                     </div>
-                  </div>
-                  <TabsContent
-                    value="submissions"
-                    className="border-none p-0 outline-none"
-                  >
-                    <ScrollArea className="h-[700px] p-1">
-                      <div className="grid grid-cols-5 gap-4">
-                        {submissions &&
-                          submissions?.map((submission: any) => (
-                            <SubmissionCard
-                              key={submission._id}
-                              submission={submission}
-                              voteForSubmission={voteForSubmission}
-                            />
-                          ))}
+                    <div className="ml-auto">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="flex">
+                          <p className="text-xs text-muted-foreground">
+                            Challenge code{" "}
+                          </p>
+                          <InfoPopover infoText="Use this code to submit your creations to this challenge" />
+                        </div>
+                        <TextCopy text={challenge?.code} />
                       </div>
+                    </div>
+                  </div>
+                  <Tabs defaultValue="submissions" className="h-full space-y-6">
+                    <div className="space-between flex items-center">
+                      <TabsList>
+                        <TabsTrigger value="submissions" className="relative">
+                          Submissions
+                        </TabsTrigger>
+                        <TabsTrigger value="leaderboard">
+                          Leaderboard
+                        </TabsTrigger>
+                        <TabsTrigger value="about">Description</TabsTrigger>
+                        <TabsTrigger value="perks">Perks</TabsTrigger>
+                        {currentAccountisOwner && (
+                          <TabsTrigger value="manage">
+                            <SettingsIcon className="h-4 w-4 mr-1" />
+                            Manage
+                          </TabsTrigger>
+                        )}
+                      </TabsList>
+                      <div className="ml-auto ">
+                        {!currentAccountisOwner && (
+                          <Dialog>
+                            <DialogTrigger>
+                              <Button size="sm" className="relative">
+                                Submit your creation
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Submit your creation</DialogTitle>
+                                <DialogDescription>
+                                  Submit your creation to the challenge
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex flex-col space-y-4">
+                                <div className="border rounded-lg p-2">
+                                  <p className="text-sm text-muted-foreground m-2">
+                                    You can submit your creation to this
+                                    challenge using the following challenge
+                                    code. Copy the code and use it to submit
+                                    your creation in the creations dialog.
+                                  </p>
+                                  <TextCopy text={challenge?.code} />
+                                </div>
+                                <Button
+                                  size="sm"
+                                  className="w-full"
+                                  onClick={() => {
+                                    window.location.href = `/creations`;
+                                  }}
+                                >
+                                  Done
+                                </Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                      </div>
+                    </div>
+                    <TabsContent
+                      value="submissions"
+                      className="border-none p-0 outline-none"
+                    >
+                      <ScrollArea className="h-[700px] p-1">
+                        <div className="grid grid-cols-5 gap-4">
+                          {submissions &&
+                            submissions?.map((submission: any) => (
+                              <SubmissionCard
+                                key={submission._id}
+                                submission={submission}
+                                voteForSubmission={voteForSubmission}
+                              />
+                            ))}
+                        </div>
+                        {submissions?.length === 0 && (
+                          <SubmissionEmptyPlaceholder />
+                        )}
+                      </ScrollArea>
+                    </TabsContent>
+                    <TabsContent
+                      value="leaderboard"
+                      className="h-full flex-col border-none p-1 data-[state=active]:flex"
+                    >
+                      {submissions?.length > 0 && (
+                        <LeaderBoard submissions={submissions} />
+                      )}
                       {submissions?.length === 0 && (
                         <SubmissionEmptyPlaceholder />
                       )}
-                    </ScrollArea>
-                  </TabsContent>
-                  <TabsContent
-                    value="leaderboard"
-                    className="h-full flex-col border-none p-1 data-[state=active]:flex"
-                  >
-                    {submissions?.length > 0 && (
-                      <LeaderBoard submissions={submissions} />
-                    )}
-                    {submissions?.length === 0 && (
-                      <SubmissionEmptyPlaceholder />
-                    )}
-                  </TabsContent>
-                  <TabsContent
-                    value="about"
-                    className="border-none p-0 outline-none"
-                  >
-                    <div className="">
-                      <p className="text-base font-semibold mb-2">
-                        Challenge Description
-                      </p>
-                      <p className="text-sm">{challenge?.description}</p>
-                    </div>
-                    <div className="mt-4">
-                      <p className="text-base font-semibold mb-2">Prize</p>
-                      <p className="text-sm">{challenge?.prize_description}</p>
-                    </div>
-                    {challenge?.rules && (
-                      <div className="mt-4">
-                        <p className="text-base font-semibold mb-2">Rules</p>
-                        <p className="text-sm">{challenge?.rules}</p>
-                      </div>
-                    )}
-                  </TabsContent>
-                  <TabsContent
-                    value="perks"
-                    className="border-none p-0 outline-none"
-                  ></TabsContent>
-                  {currentAccountisOwner && (
+                    </TabsContent>
                     <TabsContent
-                      value="manage"
+                      value="about"
                       className="border-none p-0 outline-none"
                     >
-                      <AnnounceWinner
-                        challenge={challenge}
-                        submissions={submissions}
-                      />
-                      <EditChallenge challenge={challenge} />
+                      <div className="">
+                        <p className="text-base font-semibold mb-2">
+                          Challenge Description
+                        </p>
+                        <p className="text-sm">{challenge?.description}</p>
+                      </div>
+                      <div className="mt-4">
+                        <p className="text-base font-semibold mb-2">Prize</p>
+                        <p className="text-sm">
+                          {challenge?.prize_description}
+                        </p>
+                      </div>
+                      {challenge?.rules && (
+                        <div className="mt-4">
+                          <p className="text-base font-semibold mb-2">Rules</p>
+                          <p className="text-sm">{challenge?.rules}</p>
+                        </div>
+                      )}
                     </TabsContent>
-                  )}
-                </Tabs>
-              </div>
+                    <TabsContent
+                      value="perks"
+                      className="border-none p-0 outline-none"
+                    ></TabsContent>
+                    {currentAccountisOwner && (
+                      <TabsContent
+                        value="manage"
+                        className="border-none p-0 outline-none"
+                      >
+                        <AnnounceWinner
+                          challenge={challenge}
+                          submissions={submissions}
+                        />
+                        <EditChallenge challenge={challenge} />
+                      </TabsContent>
+                    )}
+                  </Tabs>
+                </div>
+              )}
             </div>
           </div>
         </div>
