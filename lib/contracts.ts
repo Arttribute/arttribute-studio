@@ -1,0 +1,6 @@
+//Base
+export const BaseContracts = {
+  ArttributeCertificate: "0x77b54500ba3D8e3981a548b5C7f59c025A63C051",
+  AIModelRegistry: "0xaD7E0FBeC906367b36131989DB070F7524C47CCA",
+  AIArtNFT: "0x1D79c30B4d7EBA1547EbE25CD3b9E0cb29374b56",
+};
