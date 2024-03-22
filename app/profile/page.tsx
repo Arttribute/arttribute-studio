@@ -18,13 +18,13 @@ import Image from "next/image";
 import { formatCount } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import { TunedModelCard } from "@/components/tuned-model-card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CollectionCard } from "@/components/collections-card";
-import FollowButton from "@/components/follow-button";
-import PromptDisplayCard from "@/components/prompt-display-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PromptGalleryGrid from "@/components/prompt-gallery-grid";
 import { Loader } from "lucide-react";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 import { ChallengeCard } from "@/components/challenges/challenge-card";
 
@@ -225,9 +225,18 @@ export default function ArtistsPage() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="space-y-1">
-                                <h2 className="text-xl font-semibold tracking-tight">
-                                  Collections
-                                </h2>
+                                <div className="h-full space-between flex items-center">
+                                  <h2 className="text-xl font-semibold tracking-tight">
+                                    Collections
+                                  </h2>
+                                  <div className="ml-auto ">
+                                    <Link href="/collections/create" passHref>
+                                      <Button size="sm" className="relative">
+                                        Create a new Collection
+                                      </Button>
+                                    </Link>
+                                  </div>
+                                </div>
 
                                 {userData?.collections.length !== 0 ? (
                                   <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -252,12 +261,21 @@ export default function ArtistsPage() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="space-y-1">
-                                <h2 className="text-xl font-semibold tracking-tight">
-                                  Models
-                                </h2>
+                                <div className="flex">
+                                  <h2 className="text-xl font-semibold tracking-tight">
+                                    Models
+                                  </h2>
+                                  <div className="grow" />
+
+                                  <Link href="/tunedmodels/create" passHref>
+                                    <Button size="sm" className="relative">
+                                      Create a new Custom Model
+                                    </Button>
+                                  </Link>
+                                </div>
 
                                 {userData?.tunedModels.length !== 0 ? (
-                                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 ">
                                     {userData.tunedModels.map(
                                       (tunedmodel: any) => (
                                         <TunedModelCard
@@ -279,9 +297,18 @@ export default function ArtistsPage() {
                           >
                             <div className="items-center justify-between">
                               <div className="space-y-1">
-                                <h2 className="text-xl font-semibold tracking-tight">
-                                  Challenges
-                                </h2>
+                                <div className="flex">
+                                  <h2 className="text-xl font-semibold tracking-tight">
+                                    Challenges
+                                  </h2>
+                                  <div className="grow" />
+
+                                  <Link href="/challenges/create" passHref>
+                                    <Button size="sm" className="relative">
+                                      Create a new Challenge
+                                    </Button>
+                                  </Link>
+                                </div>
 
                                 {userData?.challenges.length !== 0 ? (
                                   <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">

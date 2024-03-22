@@ -41,7 +41,7 @@ const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
 
       const userInfo = await magic.user.getInfo();
       console.log("User Info", userInfo);
-      const email = userInfo.email || "";
+      const email = userInfo.email || accounts[0];
       console.log("Email", email);
       console.log("Accounts", accounts[0]);
 
