@@ -21,6 +21,7 @@ import { ArttributeIconWhite } from "../custom-icons";
 
 import { SubmitCreation } from "@/components/challenges/submit-creation";
 import { model } from "mongoose";
+import { MintCreationDialog } from "./mint-creation-dialog";
 
 export default function CreationDisplay({
   loadingImages,
@@ -109,13 +110,7 @@ export default function CreationDisplay({
                             >
                               <div className="absolute inset-0 bg-gradient-to-bl from-black via-black/10 to-transparent rounded">
                                 <div className="absolute top-0 right-0 p-5 flex flex-col space-y-2">
-                                  <Button
-                                    variant="ghost"
-                                    className="text-white border rounded-lg"
-                                  >
-                                    <BoxIcon className="mr-1" />
-                                    Mint{" "}
-                                  </Button>
+                                  <MintCreationDialog />
                                   <Button
                                     variant="ghost"
                                     className="text-white border rounded-lg"
