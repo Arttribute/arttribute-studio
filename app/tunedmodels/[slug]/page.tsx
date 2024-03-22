@@ -69,7 +69,7 @@ export default function TunedModelPage({
     if (promptId && generatedImages.length === 0) {
       setTimeout(() => {
         fetchPromptData(promptId, tunedModel.modeldata.model_id);
-      }, 30000);
+      }, 10000);
     }
 
     if (!updated && promptId && generatedImages.length != 0 && !pastPrompt) {
