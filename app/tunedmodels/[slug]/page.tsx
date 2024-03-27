@@ -230,7 +230,7 @@ export default function TunedModelPage({
           <div className="mt-14">
             <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
-                <div className="col-span-2">
+                <div className="hidden lg:block lg:col-span-2">
                   <AdvancedOptions />
                   <div className="m-4 bg-background rounded-md shadow-md">
                     {showResetButton && (
@@ -315,7 +315,7 @@ export default function TunedModelPage({
                   ) : null}
                 </div>
 
-                <div className="col-span-2">
+                <div className="col-span-12  lg:col-span-2">
                   <PromptHistory
                     prompts={tunedModel?.prompts}
                     userId={account?._id}
