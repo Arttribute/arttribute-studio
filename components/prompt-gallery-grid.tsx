@@ -157,6 +157,7 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                                   image_url: prompt?.images[0],
                                   owner: prompt?.owner?._id,
                                   tunedmodel_id: prompt?.tunedmodel_id?._id,
+                                  owner_id: prompt?.owner?._id,
                                 }}
                               />
                             }
