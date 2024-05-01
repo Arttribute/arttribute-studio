@@ -211,7 +211,6 @@ export default function CreateTundeModelPage() {
                               <FormControl>
                                 <Input
                                   placeholder="Describe your tuned model."
-                                  {...field}
                                   onChange={(e) =>
                                     setDescription(e.target.value)
                                   }

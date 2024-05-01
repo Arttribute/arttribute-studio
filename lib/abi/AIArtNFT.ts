@@ -1,4 +1,4 @@
-export const AIModelRegistry = [
+export const AIArtNFT = [
   {
     inputs: [
       {

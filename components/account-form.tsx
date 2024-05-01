@@ -37,7 +37,6 @@ interface Props {
 
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
   bio: z.string().max(160, {
     message: "Bio must not be longer than 30 characters.",
   }),
@@ -47,7 +46,6 @@ const FormSchema = z.object({
 const InputForm = ({
   web3Address,
   name,
-  email,
   description,
   tags,
   picture,
@@ -63,7 +61,6 @@ const InputForm = ({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name,
-      email,
       bio: description,
       tags,
     },
@@ -154,19 +151,7 @@ const InputForm = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="bio"

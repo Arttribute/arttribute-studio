@@ -17,6 +17,9 @@ import { User } from "@/models/User";
 
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
+import { model } from "mongoose";
+
+import { ModelNotReadyPalceHolder } from "@/components/tunedmodels/model-notready-placeholder";
 
 export default function TunedModelPage({
   params,
@@ -50,6 +53,7 @@ export default function TunedModelPage({
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [scheduler, setScheduler] = useState("Euler");
   const [colorGrading, setColorGrading] = useState("Film Velvia");
+  const [modelReady, setModelReady] = useState(false);
 
   const promptCost = 5; //TODO: get this from the db
 
@@ -65,7 +69,7 @@ export default function TunedModelPage({
     if (promptId && generatedImages.length === 0) {
       setTimeout(() => {
         fetchPromptData(promptId, tunedModel.modeldata.model_id);
-      }, 30000);
+      }, 10000);
     }
 
     if (!updated && promptId && generatedImages.length != 0 && !pastPrompt) {
@@ -85,6 +89,20 @@ export default function TunedModelPage({
         }
       );
       const tunedModel = result.data;
+      const tunedModelExistenceTime =
+        +new Date() - +new Date(tunedModel.modeldata.createdAt);
+      console.log("tuned model", tunedModel);
+      console.log("tuned model time", tunedModelExistenceTime);
+
+      if (tunedModelExistenceTime < 600000) {
+        setModelReady(false);
+        setTimeout(() => {
+          getFineTunedModel();
+        }, 10000);
+      } else {
+        setModelReady(true);
+      }
+      console.log("tuned model time", tunedModelExistenceTime);
       setTunedModel(tunedModel);
       setLoadingModel(false);
     } catch (error) {
@@ -212,7 +230,7 @@ export default function TunedModelPage({
           <div className="mt-14">
             <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
-                <div className="col-span-2">
+                <div className="hidden lg:block lg:col-span-2">
                   <AdvancedOptions />
                   <div className="m-4 bg-background rounded-md shadow-md">
                     {showResetButton && (
@@ -230,61 +248,65 @@ export default function TunedModelPage({
 
                 <div className="col-span-8 ml-4 rounded p-4">
                   {account != null ? (
-                    <div className="fixed bottom-4">
-                      <CreationDisplay
-                        loadingImages={loadingImages}
-                        loadedImages={imagesLoaded}
-                        generatedImages={generatedImages}
-                        promptId={promptId}
-                        currentUserId={account?._id}
-                        modelId={tunedModel?.modeldata._id}
-                      />
-                      <div className="m-4">
-                        <div className="grid w-full gap-2">
-                          <Textarea
-                            placeholder="Type your prompt here."
-                            autoFocus
-                            value={promptText}
-                            onChange={(e) => setPromptText(e.target.value)}
-                            {...(loadingImages && { disabled: true })}
-                            className="m-1 rounded-lg"
-                          />
-                          {promptText === "" ? (
-                            <Button
-                              variant="ghost"
-                              className="border border-purple-500 rounded-lg"
-                            >
-                              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                                Generate
-                              </p>
-                              <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
-                            </Button>
-                          ) : loadingImages ? (
-                            <Button
-                              variant="ghost"
-                              disabled
-                              className="border border-purple-400 rounded-lg"
-                            >
-                              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                                Generating
-                              </p>
-                              <Loader className="w-4 h-4 m-1 text-purple-500 animate-spin" />
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="ghost"
-                              onClick={onSubmit}
-                              className="border border-purple-500 rounded-lg"
-                            >
-                              <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-                                Generate
-                              </p>
-                              <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
-                            </Button>
-                          )}
+                    modelReady ? (
+                      <div className="fixed bottom-4">
+                        <CreationDisplay
+                          loadingImages={loadingImages}
+                          loadedImages={imagesLoaded}
+                          generatedImages={generatedImages}
+                          promptId={promptId}
+                          currentUserId={account?._id}
+                          modelId={tunedModel?.modeldata._id}
+                        />
+                        <div className="m-4">
+                          <div className="grid w-full gap-2">
+                            <Textarea
+                              placeholder="Type your prompt here."
+                              autoFocus
+                              value={promptText}
+                              onChange={(e) => setPromptText(e.target.value)}
+                              {...(loadingImages && { disabled: true })}
+                              className="m-1 rounded-lg"
+                            />
+                            {promptText === "" ? (
+                              <Button
+                                variant="ghost"
+                                className="border border-purple-500 rounded-lg"
+                              >
+                                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                  Generate
+                                </p>
+                                <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
+                              </Button>
+                            ) : loadingImages ? (
+                              <Button
+                                variant="ghost"
+                                disabled
+                                className="border border-purple-400 rounded-lg"
+                              >
+                                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                  Generating
+                                </p>
+                                <Loader className="w-4 h-4 m-1 text-purple-500 animate-spin" />
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                onClick={onSubmit}
+                                className="border border-purple-500 rounded-lg"
+                              >
+                                <p className="text-sm font-medium bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                  Generate
+                                </p>
+                                <Sparkles className="w-4 h-4 m-1 text-indigo-500" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      <ModelNotReadyPalceHolder />
+                    )
                   ) : null}
                   {loadedAccount && !account ? (
                     <div className="m-12">
@@ -293,7 +315,7 @@ export default function TunedModelPage({
                   ) : null}
                 </div>
 
-                <div className="col-span-2">
+                <div className="col-span-12  lg:col-span-2">
                   <PromptHistory
                     prompts={tunedModel?.prompts}
                     userId={account?._id}

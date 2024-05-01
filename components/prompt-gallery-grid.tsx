@@ -36,6 +36,7 @@ interface ArtGalleryGridProps {
     negative_prompt: string;
     created_at: string;
     tunedmodel_id: {
+      _id: string;
       display_image: string;
       description: string;
       model_name: string;
@@ -151,8 +152,13 @@ const PromptGalleryGrid: React.FC<ArtGalleryGridProps> = ({ prompts }) => {
                           <div className="mt-4">
                             {
                               <SubmitCreation
-                                promptId={prompt._id}
-                                promptName={prompt.prompt_name}
+                                data={{
+                                  prompt_id: prompt?._id,
+                                  image_url: prompt?.images[0],
+                                  owner: prompt?.owner?._id,
+                                  tunedmodel_id: prompt?.tunedmodel_id?._id,
+                                  owner_id: prompt?.owner?._id,
+                                }}
                               />
                             }
                           </div>

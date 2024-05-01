@@ -1,26 +1,16 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "../ui/input";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 import { VideoIcon } from "lucide-react";
-import { BoxIcon } from "lucide-react";
-import { IterationCcwIcon } from "lucide-react";
 import { MoreHorizontalIcon } from "lucide-react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ArttributeIconWhite } from "../custom-icons";
 
 import { SubmitCreation } from "@/components/challenges/submit-creation";
-import { model } from "mongoose";
+import { MintCreationDialog } from "./mint-creation-dialog";
 
 export default function CreationDisplay({
   loadingImages,
@@ -109,13 +99,14 @@ export default function CreationDisplay({
                             >
                               <div className="absolute inset-0 bg-gradient-to-bl from-black via-black/10 to-transparent rounded">
                                 <div className="absolute top-0 right-0 p-5 flex flex-col space-y-2">
-                                  <Button
-                                    variant="ghost"
-                                    className="text-white border rounded-lg"
-                                  >
-                                    <BoxIcon className="mr-1" />
-                                    Mint{" "}
-                                  </Button>
+                                  <MintCreationDialog
+                                    data={{
+                                      prompt_id: promptId,
+                                      image_url: image,
+                                      tunedmodel_id: modelId,
+                                      owner_id: currentUserId,
+                                    }}
+                                  />
                                   <Button
                                     variant="ghost"
                                     className="text-white border rounded-lg"
@@ -160,6 +151,7 @@ export default function CreationDisplay({
                                 image_url: image,
                                 owner: currentUserId,
                                 tunedmodel_id: modelId,
+                                owner_id: currentUserId,
                               }}
                             />
                           </DialogContent>
@@ -172,7 +164,7 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : loadingImages ? (
-          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 w-[600px]">
+          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 w-[600px] ">
             <div className="animate-pulse rounded-lg  p-48 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 <Loader2 className="h-6 w-6 animate-spin" />
