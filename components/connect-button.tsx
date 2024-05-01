@@ -41,14 +41,19 @@ const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
 
       const userInfo = await magic.user.getInfo();
       console.log("User Info", userInfo);
-      const email = userInfo.email || accounts[0];
+      const email = userInfo.email || accounts[0]; //If the user does not have an email, we will use the account as the email
       console.log("Email", email);
       console.log("Accounts", accounts[0]);
 
       const data = await postConnect(accounts[0], email);
-      console.log(data);
+      const userdata = {
+        ...data,
+        thirdpartyWallet: email === accounts[0], //Since we are using magic to get the email, we can assume that the user is using a third party wallet if the email is the same as the account
+      };
 
-      localStorage.setItem("user", JSON.stringify(data));
+      console.log("User Data", userdata);
+
+      localStorage.setItem("user", JSON.stringify(userdata));
       setAccount(data);
     } catch (error) {
       setDisabled(false);

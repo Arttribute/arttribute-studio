@@ -99,7 +99,14 @@ export default function CreationDisplay({
                             >
                               <div className="absolute inset-0 bg-gradient-to-bl from-black via-black/10 to-transparent rounded">
                                 <div className="absolute top-0 right-0 p-5 flex flex-col space-y-2">
-                                  <MintCreationDialog />
+                                  <MintCreationDialog
+                                    data={{
+                                      prompt_id: promptId,
+                                      image_url: image,
+                                      tunedmodel_id: modelId,
+                                      owner_id: currentUserId,
+                                    }}
+                                  />
                                   <Button
                                     variant="ghost"
                                     className="text-white border rounded-lg"

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { TimerIcon } from "lucide-react";
+import { getChainId, getNetworkUrl } from "@/lib/networks";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +20,16 @@ import { Label } from "@/components/ui/label";
 
 import { BoxIcon, Loader } from "lucide-react";
 
-import axios from "axios";
-import { set } from "mongoose";
-export function MintCreationDialog() {
+import { ethers } from "ethers";
+import { BaseSepoliaContracts, AlfajoresContracts } from "@/lib/contracts";
+import { AIArtNFT } from "@/lib/abi/AIArtNFT";
+import { Magic } from "magic-sdk";
+
+import Web3Modal from "web3modal";
+import { connect } from "http2";
+
+export function MintCreationDialog({ data }: any) {
   const [title, setTitle] = useState("");
-  const [challengeCode, setChallengeCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -32,12 +38,46 @@ export function MintCreationDialog() {
   async function mintCreation() {
     try {
       setLoading(true);
-      //mint creation
+      handleMint();
       setLoading(false);
     } catch (error) {
       console.error(error);
       setError("There was an error submitting your creation");
     }
+  }
+
+  async function handleMint() {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    const magic = await new Magic(
+      process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
+      {
+        network: {
+          rpcUrl: "https://sepolia.base.org",
+        },
+      }
+    );
+
+    let rpcProvider = magic.rpcProvider;
+
+    if (user.thirdpartyWallet) {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      rpcProvider = connection;
+    }
+
+    const provider = new ethers.BrowserProvider(rpcProvider);
+    const signer = await provider.getSigner();
+    let contract = new ethers.Contract(
+      AlfajoresContracts.AIArtNFT,
+      AIArtNFT,
+      signer
+    );
+
+    const address = await signer.getAddress();
+
+    await contract.mintAIArt(1, address, data.image_url);
   }
 
   return (
@@ -69,7 +109,7 @@ export function MintCreationDialog() {
             />
 
             {loading ? (
-              <Button className=" w-full" onClick={mintCreation}>
+              <Button disabled className=" w-full">
                 Minting <Loader className="h-5 w-5 animate-spin" />
               </Button>
             ) : (

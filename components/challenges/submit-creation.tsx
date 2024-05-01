@@ -25,7 +25,7 @@ export function SubmitCreation({ data }: any) {
   const [title, setTitle] = useState("");
   const [challengeCode, setChallengeCode] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
 
   useEffect(() => {
