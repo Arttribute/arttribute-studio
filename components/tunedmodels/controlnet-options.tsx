@@ -31,13 +31,15 @@ export default function ControlnetOptions({
   setPromptStrength,
   referenceImage,
   setReferenceImage,
+  setOpenControlnetOptions,
 }: {
   promptStrength: number;
   setPromptStrength: any;
   referenceImage: string;
   setReferenceImage: any;
+  setOpenControlnetOptions: any;
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [numSteps, setNumSteps] = useState(33);
   const [cfgScale, setCfgScale] = useState(5);
@@ -45,12 +47,17 @@ export default function ControlnetOptions({
   const [height, setHeight] = useState(512);
   const [scheduler, setScheduler] = useState("Euler");
 
+  const handleOpenChange = () => {
+    setIsOpen(!isOpen);
+    setOpenControlnetOptions(!isOpen);
+  };
+
   return (
     <>
       <div className="m-4 p-1 rounded-lg border border-neutral-300">
         <Collapsible
           open={isOpen}
-          onOpenChange={setIsOpen}
+          onOpenChange={handleOpenChange}
           className="rounded-md "
         >
           <CollapsibleTrigger asChild className="w-full ">

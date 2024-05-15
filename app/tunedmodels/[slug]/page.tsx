@@ -42,6 +42,7 @@ export default function TunedModelPage({
   const [pastPrompt, setPastPrompt] = useState(false);
 
   //Advanced options
+  const [openControlnetOptions, setOpenControlnetOptions] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [numSteps, setNumSteps] = useState(33);
   const [cfgScale, setCfgScale] = useState(5);
@@ -244,12 +245,15 @@ export default function TunedModelPage({
             <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="hidden lg:block lg:col-span-2">
-                  <AdvancedOptions />
+                  <AdvancedOptions
+                    openControlnetOptions={openControlnetOptions}
+                  />
                   <ControlnetOptions
                     promptStrength={promptStrength}
                     setPromptStrength={setPromptStrength}
                     referenceImage={referenceImage}
                     setReferenceImage={setReferenceImage}
+                    setOpenControlnetOptions={setOpenControlnetOptions}
                   />
                   <div className="m-4 bg-background rounded-md shadow-md">
                     {showResetButton && (

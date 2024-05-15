@@ -25,7 +25,11 @@ import { Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 //import { ScrollArea } from "@radix-ui/react-scroll-area";
 
-export default function AdvancedOptions() {
+export default function AdvancedOptions({
+  openControlnetOptions,
+}: {
+  openControlnetOptions: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(true);
 
   const [numSteps, setNumSteps] = useState(33);
@@ -37,15 +41,6 @@ export default function AdvancedOptions() {
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [scheduler, setScheduler] = useState("Euler");
   const [colorGrading, setColorGrading] = useState("Film Velvia");
-
-  useEffect(() => {
-    //updateDimensions(aspectRatio);
-  }, [aspectRatio, width, height]);
-
-  const updateDimensions = (aspectRatio: string) => {
-    const [w, h] = aspectRatio.split(":").map(Number);
-    //adjust the width and height based on the aspect ratio respectively
-  };
 
   return (
     <>
@@ -62,7 +57,12 @@ export default function AdvancedOptions() {
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="">
-            <ScrollArea className="rounded-md p-2" style={{ height: "70vh" }}>
+            <ScrollArea
+              className="rounded-md p-2"
+              style={
+                openControlnetOptions ? { height: "25vh" } : { height: "68vh" }
+              }
+            >
               <div className="mr-3">
                 <Select>
                   <div className="flex ml-3 mt-2 mb-1 text-sm font-medium">
