@@ -30,15 +30,20 @@ export async function POST(request: Request) {
 
   try {
     await dbConnect();
+    const formData = new FormData();
+    Object.keys(prompt).forEach((key) => {
+      if (prompt[key] !== undefined) {
+        formData.append(`prompt[${key}]`, prompt[key]);
+      }
+    });
     const promptRes = await fetch(
       `https://api.astria.ai/tunes/${model_id}/prompts`,
       {
         method: "POST",
         headers: {
           Authorization: "Bearer " + API_KEY,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify(prompt),
+        body: formData,
       }
     );
     const promptData = await promptRes.json();

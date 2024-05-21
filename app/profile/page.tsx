@@ -3,16 +3,7 @@ import { Menu } from "@/components/menu";
 import { Sidebar } from "@/components/sidebar";
 import { playlists } from "@/data/playlists";
 import { User } from "@/models/User";
-import {
-  JSXElementConstructor,
-  Key,
-  PromiseLikeOfReactNode,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { formatCount } from "@/lib/utils";
@@ -102,30 +93,7 @@ export default function ArtistsPage() {
                         <p className="text-base text-muted-foreground">
                           {userData?.user?.description || "No bio"}
                         </p>
-                        <p>
-                          {userData?.user?.tags?.map(
-                            (
-                              tag:
-                                | string
-                                | number
-                                | boolean
-                                | ReactElement<
-                                    any,
-                                    string | JSXElementConstructor<any>
-                                  >
-                                | Iterable<ReactNode>
-                                | ReactPortal
-                                | PromiseLikeOfReactNode
-                                | null
-                                | undefined,
-                              i: Key | null | undefined
-                            ) => (
-                              <span key={i} className="text-xs text-foreground">
-                                #{tag} {i !== 2 && " • "}
-                              </span>
-                            )
-                          )}
-                        </p>
+                        <p>{/*User tags*/}</p>
                         <p className="text-xs text-muted-foreground">
                           Joined on{" "}
                           {new Date(

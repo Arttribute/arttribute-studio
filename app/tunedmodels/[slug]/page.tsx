@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RotateCcw } from "lucide-react";
 import { Loader, Sparkles } from "lucide-react";
 
 import ModelMenubar from "@/components/tunedmodels/model-menubar";
 import AdvancedOptions from "@/components/tunedmodels/advanced-options";
+import ControlnetOptions from "@/components/tunedmodels/controlnet-options";
 import CreationDisplay from "@/components/tunedmodels/creation-display";
 import PromptHistory from "@/components/tunedmodels/prompt-history";
 import LoadingScreen from "@/components/tunedmodels/loading-screen";
@@ -17,7 +17,6 @@ import { User } from "@/models/User";
 
 import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
-import { model } from "mongoose";
 
 import { ModelNotReadyPalceHolder } from "@/components/tunedmodels/model-notready-placeholder";
 
@@ -43,6 +42,7 @@ export default function TunedModelPage({
   const [pastPrompt, setPastPrompt] = useState(false);
 
   //Advanced options
+  const [openControlnetOptions, setOpenControlnetOptions] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [numSteps, setNumSteps] = useState(33);
   const [cfgScale, setCfgScale] = useState(5);
@@ -54,6 +54,8 @@ export default function TunedModelPage({
   const [scheduler, setScheduler] = useState("Euler");
   const [colorGrading, setColorGrading] = useState("Film Velvia");
   const [modelReady, setModelReady] = useState(false);
+  const [promptStrength, setPromptStrength] = useState(8);
+  const [referenceImage, setReferenceImage] = useState("");
 
   const promptCost = 5; //TODO: get this from the db
 
@@ -177,6 +179,17 @@ export default function TunedModelPage({
     let promptToken = `${tunedModel.modeldata.token} style` || "sks style";
     //<lora:${tunedModel.modeldata.model_id}:0.75>
     console.log("prompt token", promptToken);
+    console.log("reference image", referenceImage);
+
+    const controlnetData = referenceImage
+      ? {
+          input_image_url: referenceImage,
+          controlnet: "depth",
+          denoising_strength: promptStrength / 10,
+          controlnet_txt2img: false,
+        }
+      : {};
+
     const prompt_data = {
       model_id: tunedModel.modeldata.model_id,
       prompt: {
@@ -186,6 +199,7 @@ export default function TunedModelPage({
         face_correct: true,
         num_images: numberOfImages,
         callback: 0,
+        ...controlnetData,
       },
       metadata: {
         prompt_title: ".",
@@ -231,7 +245,16 @@ export default function TunedModelPage({
             <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="hidden lg:block lg:col-span-2">
-                  <AdvancedOptions />
+                  <AdvancedOptions
+                    openControlnetOptions={openControlnetOptions}
+                  />
+                  <ControlnetOptions
+                    promptStrength={promptStrength}
+                    setPromptStrength={setPromptStrength}
+                    referenceImage={referenceImage}
+                    setReferenceImage={setReferenceImage}
+                    setOpenControlnetOptions={setOpenControlnetOptions}
+                  />
                   <div className="m-4 bg-background rounded-md shadow-md">
                     {showResetButton && (
                       <Button
