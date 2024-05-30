@@ -13,6 +13,7 @@ export interface Prompt {
   featured: boolean;
   tunedmodel_id: object;
   status: string;
+  attribution_data: object;
 }
 
 const PromptSchema = new mongoose.Schema<Prompt>(
@@ -52,6 +53,13 @@ const PromptSchema = new mongoose.Schema<Prompt>(
     status: {
       type: String,
       default: "queued",
+    },
+    attribution_data: {
+      type: Object,
+      default: {
+        artifactId: "",
+        id: "",
+      },
     },
   },
   { timestamps: true }

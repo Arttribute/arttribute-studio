@@ -12,6 +12,12 @@ import { ArttributeIconWhite } from "../custom-icons";
 import { SubmitCreation } from "@/components/challenges/submit-creation";
 import { MintCreationDialog } from "./mint-creation-dialog";
 
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
 export default function CreationDisplay({
   loadingImages,
   loadedImages,
@@ -19,6 +25,7 @@ export default function CreationDisplay({
   promptId,
   currentUserId,
   modelId,
+  attributionData,
 }: {
   loadingImages: boolean;
   loadedImages: boolean;
@@ -26,6 +33,7 @@ export default function CreationDisplay({
   promptId: string;
   currentUserId: string;
   modelId: string;
+  attributionData: any;
 }) {
   return (
     <>
@@ -114,13 +122,32 @@ export default function CreationDisplay({
                                     <VideoIcon className="mr-1" />
                                     Vidfy{" "}
                                   </Button>
-                                  <Button
-                                    variant="ghost"
-                                    className="text-white border rounded-lg"
-                                  >
-                                    <MoreHorizontalIcon className="mr-1" />
-                                    More
-                                  </Button>
+                                  <HoverCard>
+                                    <HoverCardTrigger>
+                                      <Button
+                                        variant="ghost"
+                                        className="text-white border rounded-lg"
+                                      >
+                                        Arttributions
+                                      </Button>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent>
+                                      <p className="text-sm">
+                                        {" "}
+                                        <p className="font-bold">
+                                          Attribution id:
+                                        </p>{" "}
+                                        {attributionData.id}
+                                      </p>
+                                      <p className="text-sm">
+                                        <p className="font-bold">
+                                          Artifact id:{" "}
+                                        </p>
+                                        {attributionData.artifactId}
+                                      </p>
+                                    </HoverCardContent>
+                                  </HoverCard>
+
                                   {/* <Button
                                     variant="ghost"
                                     className="text-white border rounded-lg"
