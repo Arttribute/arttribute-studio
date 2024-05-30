@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import Prompt from "@/models/Prompt";
 const API_KEY = process.env.ASTRIA_API_KEY;
 
+export const revalidate = 0;
+
 type Params = {
   id: string;
 };

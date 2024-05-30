@@ -40,7 +40,7 @@ export default function ModelMenubar({
   return (
     <>
       <div className=" fixed top-0 left-0 right-0 z-10 p-2  ">
-        <Menubar className="border-none px-2">
+        <Menubar className="border-none px-2 bg-transparent">
           <MenubarMenu>
             <TooltipProvider>
               <Tooltip>
