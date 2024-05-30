@@ -45,7 +45,10 @@ export default function TunedModelPage({
   const [attributionCheckPassed, setAttributionCheckPassed] = useState(false);
   const [attributionChecked, setAttributionChecked] = useState(false);
   const [attributionMessage, setAttributionMessage] = useState("");
-  const [attributionData, setAttributionData] = useState<any>(null);
+  const [attributionData, setAttributionData] = useState<any>({
+    artifactId: "",
+    id: "",
+  });
 
   const [promptText, setPromptText] = useState("");
   const [pastPrompt, setPastPrompt] = useState(false);
@@ -146,9 +149,11 @@ export default function TunedModelPage({
 
   //update prompt db on fetch complete
   async function updatePromptData(promptId: string) {
+    console.log("Attribution data", attributionData);
     const prompt_data = {
       images: generatedImages,
       status: "completed",
+      attribution_data: attributionData,
     };
     try {
       const result = await axios.patch(
@@ -400,6 +405,7 @@ export default function TunedModelPage({
                           promptId={promptId}
                           currentUserId={account?._id}
                           modelId={tunedModel?.modeldata._id}
+                          attributionData={attributionData}
                         />
                         <div className="m-2">
                           <div className="grid w-full gap-2">
@@ -462,7 +468,7 @@ export default function TunedModelPage({
                               {...(loadingImages && { disabled: true })}
                               className="m-1 rounded-lg"
                             />
-                            {promptText === "" ? (
+                            {promptText === "" || !attributionCheckPassed ? (
                               <Button
                                 variant="ghost"
                                 className="border border-purple-500 rounded-lg"
