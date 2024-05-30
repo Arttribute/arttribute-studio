@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RotateCcw } from "lucide-react";
-import { Loader, Sparkles } from "lucide-react";
+import { Loader, Loader2, Sparkles } from "lucide-react";
 
 import ModelMenubar from "@/components/tunedmodels/model-menubar";
 import AdvancedOptions from "@/components/tunedmodels/advanced-options";
@@ -12,6 +12,8 @@ import ControlnetOptions from "@/components/tunedmodels/controlnet-options";
 import CreationDisplay from "@/components/tunedmodels/creation-display";
 import PromptHistory from "@/components/tunedmodels/prompt-history";
 import LoadingScreen from "@/components/tunedmodels/loading-screen";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 
 import { User } from "@/models/User";
 
@@ -19,6 +21,8 @@ import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 
 import { ModelNotReadyPalceHolder } from "@/components/tunedmodels/model-notready-placeholder";
+import { set } from "mongoose";
+import { Magic } from "magic-sdk";
 
 export default function TunedModelPage({
   params,
@@ -37,6 +41,11 @@ export default function TunedModelPage({
   const [updated, setUpdated] = useState(false);
   const [promptData, setPromptData] = useState<any>(null);
   const [promptId, setPromptId] = useState("");
+  const [checkingAttribution, setCheckingAttribution] = useState(false);
+  const [attributionCheckPassed, setAttributionCheckPassed] = useState(false);
+  const [attributionChecked, setAttributionChecked] = useState(false);
+  const [attributionMessage, setAttributionMessage] = useState("");
+  const [attributionData, setAttributionData] = useState<any>(null);
 
   const [promptText, setPromptText] = useState("");
   const [pastPrompt, setPastPrompt] = useState(false);
@@ -58,6 +67,13 @@ export default function TunedModelPage({
   const [referenceImage, setReferenceImage] = useState("");
 
   const promptCost = 5; //TODO: get this from the db
+
+  useEffect(() => {
+    if (referenceImage) {
+      checkForAttribution();
+      console.log("Attribution check complete");
+    }
+  }, [referenceImage]);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -169,6 +185,109 @@ export default function TunedModelPage({
     setShowResetButton(false);
   }
 
+  const imageUrlToBase64 = async (imageUrl: string) => {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const checkForAttribution = async () => {
+    setCheckingAttribution(true);
+    setAttributionCheckPassed(false);
+    setAttributionChecked(false);
+    setAttributionMessage("");
+
+    const fileAsBase64 = await imageUrlToBase64(referenceImage);
+
+    const message = "Please sign this message to verify your identity.";
+    const magic = await new Magic(
+      process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
+      {
+        network: {
+          rpcUrl: "https://sepolia.base.org",
+        },
+      }
+    );
+    let rpcProvider = magic.rpcProvider;
+
+    const provider = new ethers.BrowserProvider(rpcProvider);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+    const signature = await signer.signMessage(message);
+
+    console.log("Signature:", signature);
+    console.log("Address:", address);
+    const requestBody = [
+      {
+        asset: {
+          data: fileAsBase64, // Base64 string of the image
+          mimetype: "image/jpeg", // Adjust the mimetype as needed
+          name: "referenceImage.jpg", // Adjust the name as needed
+        },
+        name: "Reference Image",
+        license: "Open", // Adjust the license as needed
+        imageUrl: referenceImage, // Original URL
+        whitelist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
+        blacklist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
+      },
+    ];
+    try {
+      const response = await fetch(
+        "https://api.arttribute.io/v2/artifacts/check",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-authentication-address": address,
+            "x-authentication-message": message,
+            "x-authentication-signature": signature,
+          },
+
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("Attribution check result:", result);
+      const { data } = result;
+      if (data[0].attribution === false) {
+        setAttributionCheckPassed(false);
+        setCheckingAttribution(false);
+        setAttributionChecked(true);
+
+        const attributionUrl = `https://artifacts.arttribute.io/artifacts/${data[0].imageId}/attribute`;
+        console.log("Attribution URL:", attributionUrl);
+        setAttributionMessage(attributionUrl);
+      }
+      if (data[0].imageId && data[0].attribution) {
+        setAttributionCheckPassed(true);
+        setAttributionData(data[0].attribution);
+        setAttributionChecked(true);
+        setCheckingAttribution(false);
+        setAttributionMessage(" Fair use checks passed 👍 🎉");
+      }
+      if (data[0].imageId === null) {
+        setAttributionCheckPassed(false);
+        setCheckingAttribution(false);
+        setAttributionMessage(
+          "Are you the creator of this image? Register it on Arttribute artufact registry here "
+        );
+      }
+      setCheckingAttribution(false);
+    } catch (error) {
+      console.error("Error checking for attribution:", error);
+    }
+  };
+
   async function onSubmit() {
     setImagesLoaded(false);
     setGeneratedImages([]);
@@ -176,6 +295,7 @@ export default function TunedModelPage({
     setPromptId("");
     setUpdated(false);
     setLoadingImages(true);
+
     let promptToken = `${tunedModel.modeldata.token} style` || "sks style";
     //<lora:${tunedModel.modeldata.model_id}:0.75>
     console.log("prompt token", promptToken);
@@ -197,7 +317,7 @@ export default function TunedModelPage({
         negative_prompt: negativePrompt,
         super_resolution: true,
         face_correct: true,
-        num_images: numberOfImages,
+        num_images: 1,
         callback: 0,
         ...controlnetData,
       },
@@ -281,8 +401,59 @@ export default function TunedModelPage({
                           currentUserId={account?._id}
                           modelId={tunedModel?.modeldata._id}
                         />
-                        <div className="m-4">
+                        <div className="m-2">
                           <div className="grid w-full gap-2">
+                            <div className="flex items-center justify-center">
+                              {checkingAttribution && (
+                                <div className="flex">
+                                  <Loader2 className="w-4 h-4 m-0.5  animate-spin" />
+                                  <p className="text-sm  text-neutral-500">
+                                    We are performing fair use checks on the
+                                    reference image
+                                  </p>
+                                </div>
+                              )}
+                              {attributionCheckPassed && (
+                                <div className="flex">
+                                  <p className="text-sm  text-neutral-500">
+                                    {attributionMessage}
+                                  </p>
+                                </div>
+                              )}
+                              {attributionChecked &&
+                                !attributionCheckPassed && (
+                                  <div className="flex items-center">
+                                    <div className="text-sm  text-neutral-500">
+                                      {attributionMessage.includes("http") ? (
+                                        <p>
+                                          Fair use checks failed. Please{" "}
+                                          <a
+                                            href={attributionMessage}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-purple-500 underline"
+                                          >
+                                            use this link
+                                          </a>{" "}
+                                          to make an attribution for the
+                                          reference image.
+                                        </p>
+                                      ) : (
+                                        <p>{attributionMessage}</p>
+                                      )}
+                                    </div>
+                                    <button
+                                      className="border border-grey-500 rounded-lg p-1 text-sm ml-2 px-2 "
+                                      onClick={checkForAttribution}
+                                    >
+                                      <p className="text-xs  bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                                        Run check again
+                                      </p>
+                                    </button>
+                                  </div>
+                                )}
+                            </div>
+
                             <Textarea
                               placeholder="Type your prompt here."
                               autoFocus
