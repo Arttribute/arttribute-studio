@@ -42,7 +42,7 @@ export default function TunedModelPage({
   const [promptData, setPromptData] = useState<any>(null);
   const [promptId, setPromptId] = useState("");
   const [checkingAttribution, setCheckingAttribution] = useState(false);
-  const [attributionCheckPassed, setAttributionCheckPassed] = useState(false);
+  const [attributionCheckPassed, setAttributionCheckPassed] = useState(true);
   const [attributionChecked, setAttributionChecked] = useState(false);
   const [attributionMessage, setAttributionMessage] = useState("");
   const [attributionData, setAttributionData] = useState<any>({
