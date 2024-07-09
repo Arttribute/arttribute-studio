@@ -1,22 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import ModelMobileMenu from "./model-mobile-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Menubar,
-  MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
   MenubarLabel,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
   MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import {
@@ -26,16 +20,26 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { ChevronLeft } from "lucide-react";
 import { LogoSVG } from "@/components/logo";
 import { tokensIcon } from "@/components/custom-icons";
-import ConnectButton from "@/components/connect-button";
 export default function ModelMenubar({
   modelData,
   userData,
+  openControlnetOptions,
+  promptStrength,
+  setPromptStrength,
+  referenceImage,
+  setReferenceImage,
+  setOpenControlnetOptions,
 }: {
   modelData: any;
   userData: any;
+  openControlnetOptions: boolean;
+  promptStrength: number;
+  setPromptStrength: any;
+  referenceImage: any;
+  setReferenceImage: any;
+  setOpenControlnetOptions: any;
 }) {
   return (
     <>
@@ -116,9 +120,17 @@ export default function ModelMenubar({
             </MenubarContent>
           </MenubarMenu>
           <div className="grow" />
+          <ModelMobileMenu
+            openControlnetOptions={openControlnetOptions}
+            promptStrength={promptStrength}
+            setPromptStrength={setPromptStrength}
+            referenceImage={referenceImage}
+            setReferenceImage={setReferenceImage}
+            setOpenControlnetOptions={setOpenControlnetOptions}
+          />
           {userData !== null ? (
             <MenubarMenu>
-              <MenubarTrigger className="flex p-1 border border-purple-600 rounded-full">
+              <MenubarTrigger className="hidden lg:flex p-1 border border-purple-600 rounded-full">
                 <div className="overflow-hidden rounded-full">
                   <Image
                     src={userData?.picture}

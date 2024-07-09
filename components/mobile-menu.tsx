@@ -1,14 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { LogoSVG } from "./logo";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { playlists } from "../data/playlists";
@@ -35,7 +30,10 @@ export function MobileMenu() {
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader>
-          <Logo text="Arttribute Studio" />
+          <div className="flex">
+            <LogoSVG />
+            <div className="font-semibold ml-1 m-1">Arttribute Studio</div>
+          </div>
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <Sidebar playlists={playlists} className="block" />

@@ -365,7 +365,16 @@ export default function TunedModelPage({
         <LoadingScreen />
       ) : (
         <div className="fixed md:block ">
-          <ModelMenubar modelData={tunedModel?.modeldata} userData={account} />
+          <ModelMenubar
+            modelData={tunedModel?.modeldata}
+            userData={account}
+            openControlnetOptions={openControlnetOptions}
+            promptStrength={promptStrength}
+            setPromptStrength={setPromptStrength}
+            referenceImage={referenceImage}
+            setReferenceImage={setReferenceImage}
+            setOpenControlnetOptions={setOpenControlnetOptions}
+          />
           <div className="mt-14">
             <div className=" h-screen">
               <div className="lg:grid lg:grid-cols-12">
@@ -380,6 +389,7 @@ export default function TunedModelPage({
                     setReferenceImage={setReferenceImage}
                     setOpenControlnetOptions={setOpenControlnetOptions}
                   />
+
                   <div className="m-4 bg-background rounded-md shadow-md">
                     {showResetButton && (
                       <Button
@@ -397,7 +407,7 @@ export default function TunedModelPage({
                 <div className="col-span-8 ml-4 rounded p-4">
                   {account != null ? (
                     modelReady ? (
-                      <div className="fixed bottom-4">
+                      <div className="lg:fixed lg:bottom-4">
                         <CreationDisplay
                           loadingImages={loadingImages}
                           loadedImages={imagesLoaded}
@@ -412,8 +422,8 @@ export default function TunedModelPage({
                             <div className="flex items-center justify-center">
                               {checkingAttribution && (
                                 <div className="flex">
-                                  <Loader2 className="w-4 h-4 m-0.5  animate-spin" />
-                                  <p className="text-sm  text-neutral-500">
+                                  <Loader2 className=" w-3 h-3 lg:w-4 lg:h-4 m-0.5  animate-spin" />
+                                  <p className="text-xs lg:text-sm  text-neutral-500">
                                     We are performing fair use checks on the
                                     reference image
                                   </p>
@@ -515,7 +525,7 @@ export default function TunedModelPage({
                   ) : null}
                 </div>
 
-                <div className="col-span-12  lg:col-span-2">
+                <div className=" col-span-12 lg:col-span-2">
                   <PromptHistory
                     prompts={tunedModel?.prompts}
                     userId={account?._id}
