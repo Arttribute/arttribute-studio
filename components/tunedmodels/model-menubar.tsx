@@ -75,7 +75,7 @@ export default function ModelMenubar({
                 <div className="flex text-xs text-neutral-500">
                   Fine-tuned model
                 </div>
-                <div className="flex text-sm font-semibold">
+                <div className="flex text-sm font-semibold truncate w-48 lg:w-full">
                   {modelData?.model_name}
                 </div>
               </div>
