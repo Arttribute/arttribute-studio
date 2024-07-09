@@ -191,16 +191,16 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : loadingImages ? (
-          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 lg:w-[600px] ">
-            <div className="animate-pulse rounded-lg  p-40 lg:p-48 bg-slate-50 ">
+          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-2 lg:m-4 lg:w-[600px] ">
+            <div className="animate-pulse rounded-lg w-72 h-72 lg:w-full lg:h-full lg:p-48 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 <Loader2 className="h-6 w-6 animate-spin" />
               </div>
             </div>
           </div>
         ) : (
-          <div className="p-0.5 border border-neutral-300 to-pink-500 rounded-lg m-4 lg:w-[600px]">
-            <div className="rounded-lg p-40 bg-slate-50 ">
+          <div className="p-0.5 border border-neutral-300 to-pink-500 rounded-lg m-2 lg:m-4 lg:w-[600px]">
+            <div className="rounded-lg w-72 h-72 lg:w-full lg:h-full lg:p-40 bg-slate-50 ">
               <div className="p-1"></div>
               <div className="hidden lg:flex items-center justify-center">
                 {ArttributeIconWhite}

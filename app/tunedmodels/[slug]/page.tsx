@@ -407,7 +407,7 @@ export default function TunedModelPage({
                 <div className="col-span-8 ml-4 rounded p-4">
                   {account != null ? (
                     modelReady ? (
-                      <div className="lg:fixed lg:bottom-4">
+                      <div className="lg:fixed lg:bottom-4 ">
                         <CreationDisplay
                           loadingImages={loadingImages}
                           loadedImages={imagesLoaded}
