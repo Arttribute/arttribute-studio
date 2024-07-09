@@ -93,7 +93,7 @@ export function FeaturedModels({ models }: { models: any }) {
           </div>
         </div>
         <Separator className="my-1" />
-        <div className="relative ">
+        <div className="relative w-72 lg:w-full">
           <ScrollArea>
             <div className="flex space-x-4 pb-4 ">
               {models.map((model: any) => (

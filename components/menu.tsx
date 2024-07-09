@@ -43,7 +43,7 @@ export function Menu() {
           <div className=" lg:hidden">
             <MobileMenu />
           </div>
-          <MenubarTrigger>
+          <MenubarTrigger className="px-1">
             <Logo text="Arttribute Studio" />
           </MenubarTrigger>
           <MenubarContent>

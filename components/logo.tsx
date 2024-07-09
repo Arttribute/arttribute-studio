@@ -11,7 +11,7 @@ export function Logo({ text }: LogoProps) {
     >
       <div className="flex">
         <LogoSVG />
-        <div className="ml-1 m-1">{text}</div>
+        <div className="hidden lg:flex ml-1 m-1">{text}</div>
       </div>
     </Link>
   );

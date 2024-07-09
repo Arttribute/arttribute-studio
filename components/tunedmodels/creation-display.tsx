@@ -41,7 +41,7 @@ export default function CreationDisplay({
         className={
           generatedImages.length === 2
             ? "px-2  flex items-center justify-center h-full"
-            : "px-36 flex items-center justify-center h-full"
+            : "lg:px-36 flex items-center justify-center h-full"
         }
       >
         {loadedImages ? (
@@ -84,7 +84,7 @@ export default function CreationDisplay({
                                     "object-cover transition-all hover:scale-105 rounded-lg ",
                                     `${
                                       generatedImages.length === 1
-                                        ? "aspect-[20/14] rounded-lg"
+                                        ? "aspect-[14/14] lg:aspect-[20/14] rounded-lg"
                                         : generatedImages.length === 2
                                         ? "aspect-[20/19.5] rounded-lg m-0.5"
                                         : "aspect-[20/14] rounded-lg"
@@ -191,17 +191,18 @@ export default function CreationDisplay({
             </div>
           </div>
         ) : loadingImages ? (
-          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 w-[600px] ">
-            <div className="animate-pulse rounded-lg  p-48 bg-slate-50 ">
+          <div className="p-0 border border-neutral-300 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-lg m-4 lg:w-[600px] ">
+            <div className="animate-pulse rounded-lg  p-40 lg:p-48 bg-slate-50 ">
               <div className="flex items-center justify-center">
                 <Loader2 className="h-6 w-6 animate-spin" />
               </div>
             </div>
           </div>
         ) : (
-          <div className="p-0.5 border border-neutral-300 to-pink-500 rounded-lg m-4 w-[600px]">
+          <div className="p-0.5 border border-neutral-300 to-pink-500 rounded-lg m-4 lg:w-[600px]">
             <div className="rounded-lg p-40 bg-slate-50 ">
-              <div className="flex items-center justify-center">
+              <div className="p-1"></div>
+              <div className="hidden lg:flex items-center justify-center">
                 {ArttributeIconWhite}
               </div>
             </div>
