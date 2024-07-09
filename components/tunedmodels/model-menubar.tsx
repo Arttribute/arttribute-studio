@@ -120,14 +120,16 @@ export default function ModelMenubar({
             </MenubarContent>
           </MenubarMenu>
           <div className="grow" />
-          <ModelMobileMenu
-            openControlnetOptions={openControlnetOptions}
-            promptStrength={promptStrength}
-            setPromptStrength={setPromptStrength}
-            referenceImage={referenceImage}
-            setReferenceImage={setReferenceImage}
-            setOpenControlnetOptions={setOpenControlnetOptions}
-          />
+          <div className="lg:hidden">
+            <ModelMobileMenu
+              openControlnetOptions={openControlnetOptions}
+              promptStrength={promptStrength}
+              setPromptStrength={setPromptStrength}
+              referenceImage={referenceImage}
+              setReferenceImage={setReferenceImage}
+              setOpenControlnetOptions={setOpenControlnetOptions}
+            />
+          </div>
           {userData !== null ? (
             <MenubarMenu>
               <MenubarTrigger className="hidden lg:flex p-1 border border-purple-600 rounded-full">
