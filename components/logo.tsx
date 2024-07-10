@@ -7,7 +7,7 @@ export function Logo({ text }: LogoProps) {
   return (
     <Link
       href="/"
-      className=" ml-2 text-base transition-colors hover:text-primary font-bold"
+      className="lg:ml-2 text-base transition-colors hover:text-primary font-bold"
     >
       <div className="flex">
         <LogoSVG />
