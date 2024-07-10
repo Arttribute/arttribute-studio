@@ -26,9 +26,12 @@ import { Logo } from "@/components/logo";
 import { MobileMenu } from "./mobile-menu";
 import { tokensIcon } from "./custom-icons";
 import { UserIcon } from "lucide-react";
+import { useMinipay } from "./providers/MinipayProvider";
+import MinipayButton from "./minipay-button";
 
 export function Menu() {
   const [account, setAccount] = useState<User | null>(null);
+  const { minipay } = useMinipay();
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -111,9 +114,20 @@ export function Menu() {
                   </Link>
                 </MenubarItem>
                 <MenubarSeparator />
-                <div className="w-full">
-                  <ConnectButton action="Disconnect" setAccount={setAccount} />
-                </div>
+                <MenubarItem inset>
+                  {minipay ? (
+                    <div className="w-full">
+                      <MinipayButton balance={minipay.balance} />
+                    </div>
+                  ) : (
+                    <div className="w-full">
+                      <ConnectButton
+                        action="Disconnect"
+                        setAccount={setAccount}
+                      />
+                    </div>
+                  )}
+                </MenubarItem>
               </MenubarContent>
             </MenubarMenu>
           </>

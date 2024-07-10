@@ -3,7 +3,9 @@ import { useCallback, useState } from "react";
 import { Button, buttonVariants } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useMagicContext } from "./providers/MagicProvider";
+import { useMinipay } from "./providers/MinipayProvider";
 import { User } from "@/models/User";
+import axios from "axios";
 
 interface Props {
   action: "Connect account" | "Disconnect";
@@ -14,52 +16,71 @@ interface Props {
 const ConnectButton = ({ action, setAccount, buttonVariant }: Props) => {
   const [disabled, setDisabled] = useState(false);
   const { magic } = useMagicContext();
+  const { minipay } = useMinipay();
 
   const postConnect = async (account: string, email?: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ web3Address: account, email }),
-    });
-    if (res.ok) {
-      console.log("Connected to server");
-    } else {
-      console.error("Failed to connect to server");
-    }
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
+        {
+          web3Address: account,
+          email,
+        }
+      );
 
-    const data = await res.json();
-    return data;
+      if (res.status === 200 || res.status === 201) {
+        console.log("Connected to server");
+        return res.data;
+      } else {
+        throw new Error(`${res.statusText}: ${res.data}`);
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (typeof error === "string") return error;
+      return error.toString();
+    }
   };
 
   const connect = useCallback(async () => {
-    if (!magic) return;
     try {
       setDisabled(true);
-      const accounts = await magic.wallet.connectWithUI();
 
-      const userInfo = await magic.user.getInfo();
-      console.log("User Info", userInfo);
-      const email = userInfo.email || accounts[0]; //If the user does not have an email, we will use the account as the email
-      console.log("Email", email);
-      console.log("Accounts", accounts[0]);
+      if (minipay) {
+        const data = await postConnect(minipay.address);
+        const userdata = {
+          ...data,
+          thirdpartyWallet: false,
+        };
 
-      const data = await postConnect(accounts[0], email);
-      const userdata = {
-        ...data,
-        thirdpartyWallet: email === accounts[0], //Since we are using magic to get the email, we can assume that the user is using a third party wallet if the email is the same as the account
-      };
+        localStorage.setItem("user", JSON.stringify(userdata));
+        setAccount(data);
+      } else {
+        if (!magic) throw new Error("Magic not connected");
+        const accounts = await magic.wallet.connectWithUI();
 
-      console.log("User Data", userdata);
+        const userInfo = await magic.user.getInfo();
+        console.log("User Info", userInfo);
+        const email = userInfo.email || accounts[0]; //If the user does not have an email, we will use the account as the email
+        console.log("Email", email);
+        console.log("Accounts", accounts[0]);
 
-      localStorage.setItem("user", JSON.stringify(userdata));
-      setAccount(data);
-    } catch (error) {
-      setDisabled(false);
+        const data = await postConnect(accounts[0], email);
+        const userdata = {
+          ...data,
+          thirdpartyWallet: email === accounts[0], //Since we are using magic to get the email, we can assume that the user is using a third party wallet if the email is the same as the account
+        };
+
+        console.log("User Data", userdata);
+
+        localStorage.setItem("user", JSON.stringify(userdata));
+        setAccount(data);
+      }
+    } catch (error: any) {
       console.error(error);
+    } finally {
+      setDisabled(false);
     }
-  }, [magic, setAccount]);
+  }, [magic, minipay, setAccount]);
 
   const disconnect = useCallback(async () => {
     if (!magic) return;
