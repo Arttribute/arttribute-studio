@@ -88,9 +88,7 @@ export const checkBalance = async (
   return balanceInEthers;
 };
 
-export const signMinipayMessage = async (message: string | null) => {
-  if (!message) return null;
-
+export const signMinipayMessage = async (message: string) => {
   const walletClient = createMinipayClient();
   const [account] = await walletClient.getAddresses();
 

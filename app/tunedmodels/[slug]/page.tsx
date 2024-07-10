@@ -23,6 +23,8 @@ import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 import { ModelNotReadyPalceHolder } from "@/components/tunedmodels/model-notready-placeholder";
 import { set } from "mongoose";
 import { Magic } from "magic-sdk";
+import { useMinipay } from "@/components/providers/MinipayProvider";
+import { signMinipayMessage } from "@/lib/minipay";
 
 export default function TunedModelPage({
   params,
@@ -70,6 +72,8 @@ export default function TunedModelPage({
   const [referenceImage, setReferenceImage] = useState("");
 
   const promptCost = 5; //TODO: get this from the db
+
+  const { minipay } = useMinipay();
 
   useEffect(() => {
     if (referenceImage) {
@@ -201,15 +205,7 @@ export default function TunedModelPage({
     });
   };
 
-  const checkForAttribution = async () => {
-    setCheckingAttribution(true);
-    setAttributionCheckPassed(false);
-    setAttributionChecked(false);
-    setAttributionMessage("");
-
-    const fileAsBase64 = await imageUrlToBase64(referenceImage);
-
-    const message = "Please sign this message to verify your identity.";
+  const signMessageWithEthers = async (message: string) => {
     const magic = await new Magic(
       process.env.NEXT_PUBLIC_MAGIC_API_KEY as string,
       {
@@ -222,11 +218,28 @@ export default function TunedModelPage({
 
     const provider = new ethers.BrowserProvider(rpcProvider);
     const signer = await provider.getSigner();
-    const address = await signer.getAddress();
     const signature = await signer.signMessage(message);
 
+    return signature;
+  };
+
+  const checkForAttribution = async () => {
+    setCheckingAttribution(true);
+    setAttributionCheckPassed(false);
+    setAttributionChecked(false);
+    setAttributionMessage("");
+
+    const fileAsBase64 = await imageUrlToBase64(referenceImage);
+
+    const message = "Please sign this message to verify your identity.";
+    const web3Address = minipay ? minipay.address : account!.web3Address;
+
+    const signature = Boolean(minipay)
+      ? await signMinipayMessage(message)
+      : await signMessageWithEthers(message);
+
     console.log("Signature:", signature);
-    console.log("Address:", address);
+    console.log("Address:", web3Address);
     const requestBody = [
       {
         asset: {
@@ -248,7 +261,7 @@ export default function TunedModelPage({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-authentication-address": address,
+            "x-authentication-address": web3Address,
             "x-authentication-message": message,
             "x-authentication-signature": signature,
           },
