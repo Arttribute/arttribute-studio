@@ -13,7 +13,6 @@ import CreationDisplay from "@/components/tunedmodels/creation-display";
 import PromptHistory from "@/components/tunedmodels/prompt-history";
 import LoadingScreen from "@/components/tunedmodels/loading-screen";
 import { ethers } from "ethers";
-import Web3Modal from "web3modal";
 
 import { User } from "@/models/User";
 
@@ -21,7 +20,6 @@ import axios from "axios";
 import { RequireAuthPlaceholder } from "@/components/require-auth-placeholder";
 
 import { ModelNotReadyPalceHolder } from "@/components/tunedmodels/model-notready-placeholder";
-import { set } from "mongoose";
 import { Magic } from "magic-sdk";
 import { useMinipay } from "@/components/providers/MinipayProvider";
 import { signMinipayMessage } from "@/lib/minipay";
@@ -47,6 +45,7 @@ export default function TunedModelPage({
   const [attributionCheckPassed, setAttributionCheckPassed] = useState(true);
   const [attributionChecked, setAttributionChecked] = useState(false);
   const [attributionMessage, setAttributionMessage] = useState("");
+  const [attributionUrl, setAttributionUrl] = useState("");
   const [attributionData, setAttributionData] = useState<any>({
     artifactId: "",
     id: "",
@@ -74,34 +73,6 @@ export default function TunedModelPage({
   const promptCost = 5; //TODO: get this from the db
 
   const { minipay } = useMinipay();
-
-  useEffect(() => {
-    if (referenceImage) {
-      checkForAttribution();
-      console.log("Attribution check complete");
-    }
-  }, [referenceImage]);
-
-  useEffect(() => {
-    const userJson = localStorage.getItem("user");
-    const user = userJson ? JSON.parse(userJson) : null;
-
-    setLoadedAccount(true);
-    setAccount(user);
-    if (!tunedModel) {
-      getFineTunedModel();
-    }
-    if (promptId && generatedImages.length === 0) {
-      setTimeout(() => {
-        fetchPromptData(promptId, tunedModel.modeldata.model_id);
-      }, 1000);
-    }
-
-    if (!updated && promptId && generatedImages.length != 0 && !pastPrompt) {
-      updatePromptData(promptData._id);
-      console.log("prompt update called");
-    }
-  }, [tunedModel, generatedImages, promptId, updated, pastPrompt]);
 
   async function getFineTunedModel() {
     setLoadingModel(true);
@@ -224,37 +195,47 @@ export default function TunedModelPage({
   };
 
   const checkForAttribution = async () => {
-    setCheckingAttribution(true);
-    setAttributionCheckPassed(false);
-    setAttributionChecked(false);
-    setAttributionMessage("");
-
-    const fileAsBase64 = await imageUrlToBase64(referenceImage);
-
-    const message = "Please sign this message to verify your identity.";
-    const web3Address = minipay ? minipay.address : account!.web3Address;
-
-    const signature = Boolean(minipay)
-      ? await signMinipayMessage(message)
-      : await signMessageWithEthers(message);
-
-    console.log("Signature:", signature);
-    console.log("Address:", web3Address);
-    const requestBody = [
-      {
-        asset: {
-          data: fileAsBase64, // Base64 string of the image
-          mimetype: "image/jpeg", // Adjust the mimetype as needed
-          name: "referenceImage.jpg", // Adjust the name as needed
-        },
-        name: "Reference Image",
-        license: "Open", // Adjust the license as needed
-        imageUrl: referenceImage, // Original URL
-        whitelist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
-        blacklist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
-      },
-    ];
     try {
+      if (!referenceImage) {
+        throw new Error("No reference image provided");
+      }
+      setCheckingAttribution(true);
+      setAttributionCheckPassed(false);
+      setAttributionChecked(false);
+      setAttributionMessage("");
+
+      const message = "Please sign this message to verify your identity.";
+
+      let web3Address: string;
+      let signature: string;
+
+      if (minipay) {
+        web3Address = minipay.address;
+        signature = await signMinipayMessage(message);
+      } else {
+        web3Address = account!.web3Address;
+        signature = await signMessageWithEthers(message);
+      }
+
+      const fileAsBase64 = await imageUrlToBase64(referenceImage);
+
+      console.log("Signature:", signature);
+
+      const requestBody = [
+        {
+          asset: {
+            data: fileAsBase64, // Base64 string of the image
+            mimetype: "image/jpeg", // Adjust the mimetype as needed
+            name: "referenceImage.jpg", // Adjust the name as needed
+          },
+          name: "Reference Image",
+          license: "Open", // Adjust the license as needed
+          imageUrl: referenceImage, // Original URL
+          whitelist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
+          blacklist: ["3fa85f64-5717-4562-b3fc-2c963f66afa6"], // Adjust as needed
+        },
+      ];
+
       const response = await fetch(
         "https://api.arttribute.io/v2/artifacts/check",
         {
@@ -282,9 +263,13 @@ export default function TunedModelPage({
         setCheckingAttribution(false);
         setAttributionChecked(true);
 
-        const attributionUrl = `https://artifacts.arttribute.io/artifacts/${data[0].imageId}/attribute`;
+        setAttributionUrl(
+          `https://artifacts.arttribute.io/artifacts/${data[0].imageId}/attribute`
+        );
         console.log("Attribution URL:", attributionUrl);
-        setAttributionMessage(attributionUrl);
+        setAttributionMessage(
+          "Fair use checks failed. Please use the following link to make an attribution for the reference image: "
+        );
       }
       if (data[0].imageId && data[0].attribution) {
         setAttributionCheckPassed(true);
@@ -296,12 +281,14 @@ export default function TunedModelPage({
       if (data[0].imageId === null) {
         setAttributionCheckPassed(false);
         setCheckingAttribution(false);
+        setAttributionUrl("https://artifacts.arttribute.io/artifacts/create");
         setAttributionMessage(
-          "Are you the creator of this image? Register it on Arttribute artufact registry here "
+          "Are you the creator of this image? Register it on Arttribute artifacts registry here: "
         );
       }
       setCheckingAttribution(false);
-    } catch (error) {
+      console.log("Attribution check complete");
+    } catch (error: any) {
       console.error("Error checking for attribution:", error);
     }
   };
@@ -371,6 +358,33 @@ export default function TunedModelPage({
       console.error("Error in API call:", error);
     }
   }
+
+  useEffect(() => {
+    if (referenceImage) {
+      checkForAttribution();
+    }
+  }, [referenceImage]);
+
+  useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    setLoadedAccount(true);
+    setAccount(user);
+    if (!tunedModel) {
+      getFineTunedModel();
+    }
+    if (promptId && generatedImages.length === 0) {
+      setTimeout(() => {
+        fetchPromptData(promptId, tunedModel.modeldata.model_id);
+      }, 1000);
+    }
+
+    if (!updated && promptId && generatedImages.length != 0 && !pastPrompt) {
+      updatePromptData(promptData._id);
+      console.log("prompt update called");
+    }
+  }, [tunedModel, generatedImages, promptId, updated, pastPrompt]);
 
   return (
     <>
@@ -453,19 +467,19 @@ export default function TunedModelPage({
                                 !attributionCheckPassed && (
                                   <div className="flex items-center">
                                     <div className="text-sm  text-neutral-500">
-                                      {attributionMessage.includes("http") ? (
+                                      {attributionUrl ? (
                                         <p>
-                                          Fair use checks failed. Please{" "}
+                                          {attributionMessage}
                                           <a
-                                            href={attributionMessage}
+                                            href={attributionUrl}
                                             target="_blank"
                                             rel="noreferrer"
                                             className="text-purple-500 underline"
                                           >
-                                            use this link
-                                          </a>{" "}
-                                          to make an attribution for the
-                                          reference image.
+                                            {attributionUrl.includes("create")
+                                              ? "Register image"
+                                              : "Make attribution"}
+                                          </a>
                                         </p>
                                       ) : (
                                         <p>{attributionMessage}</p>
