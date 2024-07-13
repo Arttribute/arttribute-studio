@@ -465,28 +465,30 @@ export default function TunedModelPage({
                               )}
                               {attributionChecked &&
                                 !attributionCheckPassed && (
-                                  <div className="flex items-center">
+                                  <div className="block lg:flex items-center justify-center text-center">
                                     <div className="text-sm  text-neutral-500">
                                       {attributionUrl ? (
-                                        <p>
-                                          {attributionMessage}
-                                          <a
-                                            href={attributionUrl}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="text-purple-500 underline"
-                                          >
-                                            {attributionUrl.includes("create")
-                                              ? "Register image"
-                                              : "Make attribution"}
-                                          </a>
-                                        </p>
+                                        <div className="block lg:flex">
+                                          <p>{attributionMessage} </p>
+                                          <p className="lg:ml-1">
+                                            <a
+                                              href={attributionUrl}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="text-purple-500 underline"
+                                            >
+                                              {attributionUrl.includes("create")
+                                                ? "Register image"
+                                                : "Make attribution"}
+                                            </a>
+                                          </p>
+                                        </div>
                                       ) : (
                                         <p>{attributionMessage}</p>
                                       )}
                                     </div>
                                     <button
-                                      className="border border-grey-500 rounded-lg p-1 text-sm ml-2 px-2 "
+                                      className=" border border-grey-500 rounded-lg p-1 text-sm ml-2 px-2 w-full lg:w-auto"
                                       onClick={checkForAttribution}
                                     >
                                       <p className="text-xs  bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
