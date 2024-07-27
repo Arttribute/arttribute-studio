@@ -230,10 +230,18 @@ const CreateCollectiion = () => {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    <SelectItem value="BY">BY</SelectItem>
-                                    <SelectItem value="BYSA">BY SA</SelectItem>
-                                    <SelectItem value="BYNCSA">
-                                      BY NC SA
+                                    <SelectItem value="Open">
+                                      Arttribute Open License
+                                    </SelectItem>
+                                    <SelectItem value="Exclusive">
+                                      Arttribute Exclusive License
+                                    </SelectItem>
+                                    <SelectItem value=" Non-commercial">
+                                      Arttribute Non-commercial License
+                                    </SelectItem>
+                                    <SelectItem value=" Exclusive Non-commercial">
+                                      Arttribute Exclusive Non-commercial
+                                      License
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
