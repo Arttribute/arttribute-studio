@@ -27,20 +27,54 @@ import { Button } from "@/components/ui/button";
 
 export default function AdvancedOptions({
   openControlnetOptions,
+  numberOfImages,
+  numSteps,
+  cfgScale,
+  width,
+  height,
+  superResolution,
+  privateCreation,
+  aspectRatio,
+  scheduler,
+  colorGrading,
+  negativePrompt,
+  setNumSteps,
+  setNumberOfImages,
+  setCfgScale,
+  setWidth,
+  setHeight,
+  setSuperResolution,
+  setPrivateCreation,
+  setAspectRatio,
+  setScheduler,
+  setColorGrading,
+  setNegativePrompt,
 }: {
   openControlnetOptions: boolean;
+  numberOfImages: number;
+  numSteps: number;
+  cfgScale: number;
+  width: number;
+  height: number;
+  superResolution: boolean;
+  privateCreation: boolean;
+  aspectRatio: string;
+  scheduler: string;
+  colorGrading: string;
+  negativePrompt: string;
+  setNumberOfImages: (value: number) => void;
+  setNumSteps: (value: number) => void;
+  setCfgScale: (value: number) => void;
+  setWidth: (value: number) => void;
+  setHeight: (value: number) => void;
+  setSuperResolution: (value: boolean) => void;
+  setPrivateCreation: (value: boolean) => void;
+  setAspectRatio: (value: string) => void;
+  setScheduler: (value: string) => void;
+  setColorGrading: (value: string) => void;
+  setNegativePrompt: (value: string) => void;
 }) {
   const [isOpen, setIsOpen] = useState(true);
-
-  const [numSteps, setNumSteps] = useState(33);
-  const [cfgScale, setCfgScale] = useState(5);
-  const [width, setWidth] = useState(512);
-  const [height, setHeight] = useState(512);
-  const [superResolution, setSuperResolution] = useState(false);
-  const [privateCreation, setPrivateCreation] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [scheduler, setScheduler] = useState("Euler");
-  const [colorGrading, setColorGrading] = useState("Film Velvia");
 
   return (
     <>
@@ -64,12 +98,14 @@ export default function AdvancedOptions({
               }
             >
               <div className="mr-3">
-                <Select>
+                <Select
+                  onValueChange={(value) => setNumberOfImages(Number(value))}
+                >
                   <div className="flex ml-3 mt-2 mb-1 text-sm font-medium">
                     Number of images
                   </div>
                   <SelectTrigger className="m-2">
-                    <SelectValue placeholder="4" />
+                    <SelectValue placeholder="1" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -101,7 +137,7 @@ export default function AdvancedOptions({
                   </div>
                 </div>
 
-                <Select>
+                <Select onValueChange={(value) => setAspectRatio(value)}>
                   <div className="flex ml-3 mt-2 mb-1 text-sm font-medium">
                     Aspect Ratio
                   </div>
@@ -171,7 +207,7 @@ export default function AdvancedOptions({
                   </SelectContent>
                 </Select>
 
-                <Select>
+                <Select onValueChange={(value) => setColorGrading(value)}>
                   <div className="flex ml-3 mt-2  text-sm font-medium">
                     Color grading
                   </div>
@@ -224,7 +260,11 @@ export default function AdvancedOptions({
                   <div className="flex ml-0 mt-3 mb-2 text-sm font-medium">
                     Negative Prompt
                   </div>
-                  <Textarea placeholder="Negative Prompt" />
+                  <Textarea
+                    placeholder="Negative Prompt"
+                    value={negativePrompt}
+                    onChange={(e) => setNegativePrompt(e.target.value)}
+                  />
                 </div>
               </div>
             </ScrollArea>
