@@ -31,6 +31,28 @@ export default function ModelMenubar({
   referenceImage,
   setReferenceImage,
   setOpenControlnetOptions,
+  numberOfImages,
+  setNumberOfImages,
+  numSteps,
+  setNumSteps,
+  cfgScale,
+  setCfgScale,
+  width,
+  setWidth,
+  height,
+  setHeight,
+  superResolution,
+  setSuperResolution,
+  privateCreation,
+  setPrivateCreation,
+  aspectRatio,
+  setAspectRatio,
+  scheduler,
+  setScheduler,
+  colorGrading,
+  setColorGrading,
+  negativePrompt,
+  setNegativePrompt,
 }: {
   modelData: any;
   userData: any;
@@ -40,6 +62,28 @@ export default function ModelMenubar({
   referenceImage: any;
   setReferenceImage: any;
   setOpenControlnetOptions: any;
+  numberOfImages: number;
+  setNumberOfImages: any;
+  numSteps: number;
+  setNumSteps: any;
+  cfgScale: number;
+  setCfgScale: any;
+  width: number;
+  setWidth: any;
+  height: number;
+  setHeight: any;
+  superResolution: boolean;
+  setSuperResolution: any;
+  privateCreation: boolean;
+  setPrivateCreation: any;
+  aspectRatio: string;
+  setAspectRatio: any;
+  scheduler: string;
+  setScheduler: any;
+  colorGrading: string;
+  setColorGrading: any;
+  negativePrompt: string;
+  setNegativePrompt: any;
 }) {
   return (
     <>
@@ -128,6 +172,28 @@ export default function ModelMenubar({
               referenceImage={referenceImage}
               setReferenceImage={setReferenceImage}
               setOpenControlnetOptions={setOpenControlnetOptions}
+              numberOfImages={numberOfImages}
+              setNumberOfImages={setNumberOfImages}
+              numSteps={numSteps}
+              setNumSteps={setNumSteps}
+              cfgScale={cfgScale}
+              setCfgScale={setCfgScale}
+              width={width}
+              setWidth={setWidth}
+              height={height}
+              setHeight={setHeight}
+              superResolution={superResolution}
+              setSuperResolution={setSuperResolution}
+              privateCreation={privateCreation}
+              setPrivateCreation={setPrivateCreation}
+              aspectRatio={aspectRatio}
+              setAspectRatio={setAspectRatio}
+              scheduler={scheduler}
+              setScheduler={setScheduler}
+              colorGrading={colorGrading}
+              setColorGrading={setColorGrading}
+              negativePrompt={negativePrompt}
+              setNegativePrompt={setNegativePrompt}
             />
           </div>
           {userData !== null ? (
