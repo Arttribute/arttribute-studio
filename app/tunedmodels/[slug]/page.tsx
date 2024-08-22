@@ -37,7 +37,6 @@ export default function TunedModelPage({
   const [loadedAccount, setLoadedAccount] = useState(true);
   const [showResetButton, setShowResetButton] = useState(false);
   const [account, setAccount] = useState<User | null>(null);
-  const [numberOfImages, setNumberOfImages] = useState(1);
   const [updated, setUpdated] = useState(false);
   const [promptData, setPromptData] = useState<any>(null);
   const [promptId, setPromptId] = useState("");
@@ -55,8 +54,9 @@ export default function TunedModelPage({
   const [pastPrompt, setPastPrompt] = useState(false);
 
   //Advanced options
+  const [numberOfImages, setNumberOfImages] = useState(1);
   const [openControlnetOptions, setOpenControlnetOptions] = useState(false);
-  const [negativePrompt, setNegativePrompt] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState("ugly");
   const [numSteps, setNumSteps] = useState(33);
   const [cfgScale, setCfgScale] = useState(5);
   const [width, setWidth] = useState(512);
@@ -322,7 +322,12 @@ export default function TunedModelPage({
         negative_prompt: negativePrompt,
         super_resolution: true,
         face_correct: true,
-        num_images: 1,
+        num_images: numberOfImages,
+        steps: numSteps,
+        cfg_scale: cfgScale,
+        w: width,
+        h: height,
+        color_grading: colorGrading,
         callback: 0,
         ...controlnetData,
       },
@@ -408,6 +413,28 @@ export default function TunedModelPage({
                 <div className="hidden lg:block lg:col-span-2">
                   <AdvancedOptions
                     openControlnetOptions={openControlnetOptions}
+                    numberOfImages={numberOfImages}
+                    setNumberOfImages={setNumberOfImages}
+                    numSteps={numSteps}
+                    setNumSteps={setNumSteps}
+                    cfgScale={cfgScale}
+                    setCfgScale={setCfgScale}
+                    width={width}
+                    setWidth={setWidth}
+                    height={height}
+                    setHeight={setHeight}
+                    superResolution={superResolution}
+                    setSuperResolution={setSuperResolution}
+                    privateCreation={privateCreation}
+                    setPrivateCreation={setPrivateCreation}
+                    aspectRatio={aspectRatio}
+                    setAspectRatio={setAspectRatio}
+                    scheduler={scheduler}
+                    setScheduler={setScheduler}
+                    colorGrading={colorGrading}
+                    setColorGrading={setColorGrading}
+                    negativePrompt={negativePrompt}
+                    setNegativePrompt={setNegativePrompt}
                   />
                   <ControlnetOptions
                     promptStrength={promptStrength}
